@@ -2,11 +2,11 @@ import { Task, TaskState, ProjectGroup } from '@/classes'
 
 export default class Project {
     public deadline: Date | undefined
-    public name: String
+    public name: string
     public group: ProjectGroup 
     public tasks: Array<Task>
     public startDate: Date | undefined
-    public description: String | undefined
+    public description: string | undefined
     public _state: ProjectState
 
     get state(): ProjectState {
@@ -27,7 +27,7 @@ export default class Project {
 
     }
 
-    constructor(name: String, group: ProjectGroup, deadline?: Date, startDate?: Date, description?: String) {
+    constructor(name: string, group: ProjectGroup, deadline?: Date, startDate?: Date, description?: string) {
         this.name = name
         this.group = group
         this.deadline = deadline
@@ -39,6 +39,10 @@ export default class Project {
 
     public setState(state: ProjectState) {
         this._state = state
+    }
+
+    public addTask(task: Task) {
+        this.tasks.push(task)
     }
 
 }

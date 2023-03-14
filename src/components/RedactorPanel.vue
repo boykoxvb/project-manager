@@ -1,159 +1,144 @@
 <template>
-    <div class="main-container">
-        <div class="info">
-            <div class="info-header">
-                <div class="info-header-projects">
-                    Projects
-                </div>
-                <div class="info-header-date">
-                    <span>21 October</span> 
-                </div>
+    <div class="redactor-panel">
+        <div class="panel-row panel-row__header">
+            <div class="project__name">
+                <input type="text" :value="project.name" >
             </div>
-            <div class="info-panel">
-                <div class="info-panel__project-count">
-                    <span>45</span> 
-                    <span class="project-state">In-progress</span>
-                </div>
-                <div class="info-panel__project-count">
-                    <span>16</span> 
-                    <span class="project-state">Incoming</span>
-                </div>
-                <div class="info-panel__project-count">
-                    <span>5</span> 
-                    <span class="project-state">Completed</span>
+            <div class="project__group">
+                (-)
+            </div>
+        </div>
+        <div class="panel-row panel-row__tasks">
+            <div class="tasks-container">
+                <div 
+                class="task"
+                v-for="task in project.tasks"
+                :key="'task_id' + task.name"
+                >
+                    <TaskCard :task="task"></TaskCard>
                 </div>
             </div>
         </div>
-        <div class="projects">
-                <div class="projects-grid"> 
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                </div>
+        <div class="footer__window">
+            <div class="button button__save">
+                Сохранить 
+            </div>
+            <div class="button button__cancel">
+                Отменить
+            </div>
         </div>
+
     </div>
 </template>
 
 <script lang="ts">
-import ProjectCardCompact from '@/components/ProjectCard/ProjectCardCompact.vue'
-import { defineComponent } from 'vue'
+import { TaskCard } from '@/components'
+import { defineComponent, reactive, type PropType } from 'vue'
 import * as ProjectManager from '@/classes'
 
 export default defineComponent ({
     name: 'ProjectPanel',
     components: {
-        ProjectCardCompact
+        TaskCard
     },
-    data() {
+    props: {
+        project: { type: Object as PropType<ProjectManager.Project>, required: true }
+    },
+    setup(props) {
+
+
+        const testProject: ProjectManager.Project = 
+            reactive(new ProjectManager.Project
+                        ('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
+                    )
+        
+        testProject.addTask(new ProjectManager.Task('Погулять с собакой'))
+        testProject.addTask(new ProjectManager.Task('Выпить пива'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        
         return {
-        testProject: new ProjectManager.Project('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
+            testProject
         }
+        
     }
 })
 </script>
 
 
 <style lang="scss" scoped>
-
-.main-container {
-  // Если есть проблемы с прокруткой проектов - нужно ограничить высоту контейнера, куда кладем этот компонент.
-  font-size: 24px;
-  background-color: rgb(226, 255, 243);
-  height: 800px;
-  max-height: 800px;
-  width: 100%;
-  border-radius: 30px;
-  padding: 30px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font: {
-        family: "MS Sans Serif";
-        weight: 600;
-    }
-
-  .info {
-    flex-grow: 0;
-    padding: 10px;
-    width: 100%;
+.redactor-panel {
+    position: relative;
+    display: flex;
+    height: 100%;
+    padding: 20px;
+    flex-direction: column;
+    background-color: rgba($color: #eefbdf, $alpha: 1.0);
     box-sizing: border-box;
+    border-radius: 30px;
 
-    &-header {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        margin-bottom: 30px;
-
-        &-projects {
-            display: block;
-            font-size: 2em;
-        }
-
-        &-date {
-            display: block;
-            font-size: 1.6em;
-            margin: auto 0px;
-        }
-    }
-
-    &-panel {
-        display: flex;
-
-        &__project-count {
-            transition: 0.3s;
-            padding: 15px;
-            font-size: 1.6em;
-            display: flex;
-            flex-direction: column;
-            border-radius: 10px;
-            cursor: pointer;
-
-            &:hover {
-                transition: 0.3s;
-                background-color: rgb(216, 216, 216);
-            }
-
-            .project-state {
-                font-size: 0.5em;
-            }
-
-            
-        }
-    }
-
-  }
-
-    .projects {
+    .panel-row {
         display: block;
-        flex-grow: 1;
-        max-width: 100%;
-        overflow: auto;
+        width: 100%;
+    }
 
-        &-grid {
-                padding: 10px;
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 15px;
-                justify-content: center;
-                grid-auto-flow: row;
+    .panel-row__header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        font-family: Tahoma, Geneva, sans-serif;
+        font-size: 1.3em;
+        font-weight: 600;
+        padding: 0 0 20px 0;
+        box-sizing: border-box;
+
+        .project__name {
+            flex-grow: 1;
+
+            input {
+                outline: none;
+                font-size: 1.2em;
+                font-family: Tahoma, Geneva, sans-serif;
+                font-weight: 600;
+                width: 100%;
+                border: none;
+                box-sizing: border-box;
+                background-color: inherit;
+            }
+        }
+    }
+
+    .footer__window {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 75px;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        box-sizing: border-box;
+        background-color: rgba($color: #8c8e89, $alpha: 1.0);
+        justify-content: center;
+        align-content: center;
+        gap: 40%;
+
+        .button {
+            width: auto;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: rgba($color: #e3e3e378, $alpha: 1.0);
         }
 
+        .button__save {
+            background-color: rgba($color: #5cc44a, $alpha: 1.0)
+        }
+        .button__cancel {
+            background-color: rgba($color: #8f0707, $alpha: 1.0)
+        }
 
     }
 
 }
-
 </style>

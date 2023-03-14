@@ -1,6 +1,6 @@
 export default class Task {
 
-    public name: String
+    public name: string
     public deadline: Date | undefined
     
     get state(): TaskState {
@@ -11,7 +11,7 @@ export default class Task {
     public _state: TaskState
     
 
-    public constructor(name: String, deadline?: Date) {
+    public constructor(name: string, deadline?: Date) {
         this.name = name
         this.deadline = deadline
         this._state = TaskState.CREATED
