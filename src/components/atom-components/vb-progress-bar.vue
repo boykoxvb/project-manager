@@ -1,30 +1,53 @@
 <template>
-    <div class="progress-bar">
-        <div class="progress-bar-progress" :class="{'full-border' : progress == 100}" :style="{width: progress + '%'}"></div>
-        <div class="progress-bar-falseProgress" :class="{'full-border' : falseProgress == 100}" :style="{width: falseProgress + '%'}"></div>
-        <div class="progress-bar-remained" :class="{'full-border': progress == 0}" :style="{width: remained + '%'}"></div>
+    <div class="progress-bar" id="vbProgressBar">
+        <div 
+            class="progress-bar-progress left-border" 
+            :class="{'full-border': progress == 100}" 
+            :style="{width: progress + '%'}">
+        </div>
+        <div 
+            class="progress-bar-falseProgress" 
+            :class="{'left-border' : falseProgress >= 0 && progress == 0, 'right-border': falseProgress >= 0 && remained == 0}" 
+            :style="{width: falseProgress + '%'}">
+        </div>
+        <div 
+            class="progress-bar-remained right-border" 
+            :class="{'left-border' : remained == 100, 'right-border': remained >= 0}" 
+            :style="{width: remained + '%'}">
+        </div>
     </div>
 </template>
   
 <script lang="ts">
 
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 
 export default defineComponent({
     name: 'vb-progress-bar',
     props: {
-        progress: { type: Number, default: 0, },
+        progress: { type: Number, default: 0, required: true},
         falseProgress: { type: Number, default: 0, },
-        height: { type: Number, default: 0, },
+        height: { type: Number, default: 10, },
         color: { type: String, default: '#66cb38', },
+        secondColor: { type: String, default: '#d3d3d3'}
     },
 
     setup(props) {
-        const falseProgress = ref(props.falseProgress)
 
-        // const remained = computed(() => {
-        //     return 100 - progress - falseProgress
-        // })
+        onMounted(() => {
+            const container = document.getElementById('vbProgressBar')
+            container?.style.setProperty("--height", String(props.height) + 'px')
+            container?.style.setProperty("--color", props.color)
+            container?.style.setProperty("--second-color", props.secondColor)
+        })
+
+        const remained = computed(() => {
+            return 100 - props.progress - props.falseProgress
+        })
+
+        return {
+            remained
+        }
 
     }
 
@@ -37,7 +60,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 .progress-bar {
 
-    --height: 0px;
+    --height: 10px;
+    --color: #66cb38;
+    --second-color: #d3d3d3;
 
     @keyframes bg-sliding {
         from {
@@ -54,35 +79,45 @@ export default defineComponent({
     &-progress {
         transition: 0.2s;
         display: inline-block;
-        border-radius: 3px 0 0 3px;
-        height: 7px;
-        background-color: rgba($color: #66cb38, $alpha: 1.0)
+        height: var(--height);
+        background-color: var(--color)
     }
 
     &-falseProgress {
         transition: 0.2s;
         display: inline-block;
-        // border-radius: 3px 0 0 3px;
-        height: 7px;
+        height: var(--height);
         background: repeating-linear-gradient(
-            45deg,
-            #ccc 0 10px,
-            #66cb38 10px 20px
+            -90deg,
+            var(--second-color) 0 50%,
+            var(--color) 50% 100%
         );
-        background-size: 200%;
-        animation: bg-sliding 3s infinite linear;
+        background-size: 200% 200%;
+        animation: bg-sliding 1s infinite linear;
     }
 
     &-remained {
         transition: 0.2s;
         display: inline-block;
-        border-radius: 0 3px 3px 0;
-        height: 7px;
-        background-color: rgba($color: #d3d3d3, $alpha: 1.0);
+        height: var(--height);
+        background-color: var(--second-color);
     }
 
+
+
+    
     .full-border {
-        border-radius: 3px;
+        border-radius: calc(var(--height)/2);
+    }
+
+    .left-border {
+        border-top-left-radius: calc(var(--height)/2);
+        border-bottom-left-radius: calc(var(--height)/2);
+    }
+
+    .right-border {
+        border-top-right-radius: calc(var(--height)/2);
+        border-bottom-right-radius: calc(var(--height)/2);
     }
 
 

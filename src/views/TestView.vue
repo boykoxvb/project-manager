@@ -1,16 +1,28 @@
 <template>
-  <vb-progress-bar :progress="40" :falseProgress="10"></vb-progress-bar>
-  wekjfwjef
+  <!-- <vb-progress-bar :progress="70" :falseProgress="30" :height="10"></vb-progress-bar> -->
+  <!-- <HeaderPanel></HeaderPanel>
+  <ProjectsPanel></ProjectsPanel> -->
+  <TaskCard></TaskCard>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import vbProgressBar from '@/components/atom-components/vb-progress-bar.vue';
+import * as ProjectManager from '@/classes'
+import {vbProgressBar, HeaderPanel, ProjectCardCompact, ProjectsPanel, TaskCard} from '@/components'
 
 export default defineComponent({
   name: 'TestView',
   components: {
-    vbProgressBar
+    vbProgressBar,
+    HeaderPanel,
+    ProjectCardCompact,
+    ProjectsPanel,
+    TaskCard,
   },
+  data() {
+    return {
+      testTask: new ProjectManager.Task('TestTask', new Date())
+    }
+  }
 });
 </script>
