@@ -4,7 +4,14 @@
             <input class="task__label" type="text" :value="task?.name" @input="onLabelChange($event)" placeholder="Новая задача">
         </div>
         <div class="task__check">
-            <input class="task__checkbox" type="checkbox" name="taskcheckbox" @change="onCheck($event)">
+            <v-checkbox
+            @change="onCheck($event)"
+            default="off"
+            color="indigo"
+            density="comfortable"
+            :ripple="false"
+            hide-details
+            ></v-checkbox>
         </div>
         <!-- <div class="task__deadline">
             <input class="task__checkbox" type="checkbox" name="taskcheckbox">
@@ -22,7 +29,7 @@ export default defineComponent ({
     props: {
         task: Object as PropType<ProjectManager.Task>
     },
-    emits: ['task:finished', 'task:change'],
+    emits: ['task_finished', 'task_change'],
     setup(props, {emit}) {
 
         const checked = ref(props.task?.state === ProjectManager.TaskState.FINISHED)
@@ -32,13 +39,13 @@ export default defineComponent ({
 
             if (checked) {
                 setTimeout(() => {
-                    emit('task:finished')
+                    emit('task_finished')
                 }, 3000)
             }
         }
 
         const onLabelChange = (e: any): void => {
-            emit('task:change', e.target.value)
+            emit('task_change', e.target.value)
         }
 
         return {
@@ -72,12 +79,12 @@ export default defineComponent ({
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 5px 10px;
+        height: 100%;
         
         .task__label {
             color: rgba(#000000, 0.7);
             font-family: Tahoma, Geneva, sans-serif;
-            font-size: 1em;
+            font-size: 1.2em;
             outline: none;
             background-color: inherit;
             border-width: 0;
@@ -86,8 +93,8 @@ export default defineComponent ({
             width: 100%;
 
             &:hover, &:focus {
-                color: #3a3d90;
-                border-color: #3a3d90;
+                color: #3f51b5;
+                border-color: #3f51b5;
             }
         }
 

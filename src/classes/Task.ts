@@ -24,7 +24,7 @@ export default class Task {
 }
 
 export enum TaskState {
-    CREATED,
+    CREATED = 2,
     STARTED,
     PAUSED,
     FINISHED

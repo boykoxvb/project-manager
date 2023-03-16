@@ -29,18 +29,6 @@
                     <ProjectCardCompact :project="testProject"></ProjectCardCompact>
                     <ProjectCardCompact :project="testProject"></ProjectCardCompact>
                     <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
                 </div>
         </div>
     </div>
@@ -48,19 +36,44 @@
 
 <script lang="ts">
 import ProjectCardCompact from '@/components/ProjectCard/ProjectCardCompact.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import * as ProjectManager from '@/classes'
 
 export default defineComponent ({
-name: 'ProjectPanel',
-components: {
-    ProjectCardCompact
-},
-data() {
-    return {
-      testProject: new ProjectManager.Project('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
+    name: 'ProjectPanel',
+    components: {
+        ProjectCardCompact
+    },
+
+    setup() {
+        const testProject: ProjectManager.Project = 
+        reactive(new ProjectManager.Project
+                    ('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
+                )
+
+        testProject.addTask(new ProjectManager.Task('Погулять с собакой'))
+        testProject.addTask(new ProjectManager.Task('Выпить пива'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+
+        return {
+            testProject
+        }
     }
-  }
+
 })
 </script>
 
@@ -70,12 +83,11 @@ data() {
 .main-container {
   // Если есть проблемы с прокруткой проектов - нужно ограничить высоту контейнера, куда кладем этот компонент.
   font-size: 24px;
-  background-color: rgb(226, 255, 243);
-  height: 800px;
-  max-height: 800px;
-  width: 100%;
+  background-color: rgba($color: #fcfcfc, $alpha: 1.0);
   border-radius: 30px;
-  padding: 30px;
+  min-height: 88vh;
+  max-height: 88vh;
+  padding: 15px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -87,7 +99,7 @@ data() {
 
   .info {
     flex-grow: 0;
-    padding: 10px;
+    padding: 0 10px 10px;
     width: 100%;
     box-sizing: border-box;
 
@@ -95,16 +107,16 @@ data() {
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-between;
-        margin-bottom: 30px;
+        margin-bottom: 15px;
 
         &-projects {
             display: block;
-            font-size: 2em;
+            font-size: 1.3em;
         }
 
         &-date {
             display: block;
-            font-size: 1.6em;
+            font-size: 1.2em;
             margin: auto 0px;
         }
     }
@@ -114,8 +126,9 @@ data() {
 
         &__project-count {
             transition: 0.3s;
-            padding: 15px;
-            font-size: 1.6em;
+            padding: 5px;
+            margin-right: 10px;
+            font-size: 1em;
             display: flex;
             flex-direction: column;
             border-radius: 10px;

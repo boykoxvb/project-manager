@@ -22,7 +22,6 @@ export default defineComponent ({
     setup(props) {
 
         onMounted(() => {
-            console.log(props.button)
             document.getElementById('root-icon-base-element')?.style.setProperty("--main-color", props.color)
             document.getElementById('root-icon-base-element')?.style.setProperty("--width", String(props.width) + 'px')
         })

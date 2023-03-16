@@ -1,5 +1,5 @@
 <template>
-    <div class="full-container">
+    <div class="full-container" ref="projectContainer">
         <div class="project-container">
             <div class="deadline">
                 {{ deadline }}
@@ -28,7 +28,7 @@
   
 <script lang="ts">
 
-import { type PropType, defineComponent, toRefs } from 'vue'
+import { type PropType, onMounted, defineComponent, ref } from 'vue'
 import vbProgressBar from '@/components/atom-components/vb-progress-bar.vue'
 import * as ProjectManager from '@/classes'
 
@@ -38,16 +38,26 @@ export default defineComponent ({
         vbProgressBar
     },
     props: {
-        project: { type: Object as PropType<ProjectManager.Project>, required: true }
+        project: { type: Object as PropType<ProjectManager.Project>, required: true },
+        groupColor: { type: String, required: false }
     },
 
     setup(props) {
 
         const deadline: String = 
             `${props.project.deadline?.getDate()}.${props.project.deadline?.getMonth()}`
+        
+        const projectContainer = ref<HTMLElement | null>(null)
+
+        onMounted(() => {
+            if (props.groupColor) {
+                projectContainer.value?.style.setProperty("--group-color", props.groupColor)
+            }
+        })
 
         return {
-            deadline
+            deadline,
+            projectContainer
         }
     }
     
@@ -63,13 +73,17 @@ export default defineComponent ({
 
 .full-container {
     display: inline-block;
+    --group-color: #efefef; // Цвет группы по умолчанию
 
     .project-container {
     display: flex;
     flex-direction: column;
     padding: 7px 12px;
     transition: 0.3s;
-    background-color: rgb(240, 235, 196);
+    background-color: var(--group-color);
+    // #eeffbb - Lime
+    // #ffeebb - Orange
+    //
     border-radius: 10%;
     font: {
         family: "MS Sans Serif";

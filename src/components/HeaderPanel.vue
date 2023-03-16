@@ -39,7 +39,11 @@ export default defineComponent ({
 <style lang="scss" scoped>
 
 .main-container {
-  background-color: rgb(233, 245, 247);
+  background-color: #eaf0f4;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-content: center;
 
   .header {
     width: 100%;
@@ -51,10 +55,11 @@ export default defineComponent ({
       align-content: center;
 
       &-input {
-        margin: 7px;
         outline: none;
         padding: 5px 15px;
         border-radius: 40px;
+        background-color: rgba($color: #fcfcfc, $alpha: 1.0);
+        margin: 7px 0;
         
       }
 
@@ -95,7 +100,6 @@ export default defineComponent ({
           align-content: center;
           color: rgba(10,10,10, 0.7);
           font-weight: 600;
-          margin: 0 10px 0 0;
 
           &:hover {
             color: rgb(10,10,10);

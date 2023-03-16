@@ -48,7 +48,7 @@ export default class Project {
 }
 
 export enum ProjectState {
-    STARTED,
+    STARTED = 7,
     PAUSED,
     FINISHED,
 }

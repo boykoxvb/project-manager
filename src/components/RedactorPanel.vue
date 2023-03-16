@@ -9,23 +9,21 @@
             </div>
         </div>
         <div class="panel-row panel-row__tasks">
-            <div class="tasks-container">
-                <div 
-                class="task"
-                v-for="task in project.tasks"
-                :key="'task_id' + task.name"
-                >
-                    <TaskCard :task="task"></TaskCard>
-                </div>
+            <div 
+            class="task"
+            v-for="task in project.tasks"
+            :key="'task_id' + task.name"
+            >
+                <TaskCard 
+                :task="task"
+                @task_change="projectModified"
+                ></TaskCard>
             </div>
         </div>
-        <div class="footer__window">
-            <div class="button button__save">
-                Сохранить 
-            </div>
-            <div class="button button__cancel">
-                Отменить
-            </div>
+        
+        <div class="footer__window" :class="{'opacity-full': modified}">
+            <v-btn rounded="pill" color="success" size="large">Сохранить</v-btn>
+            <v-btn rounded="pill" color="error" size="large">Отменить</v-btn>
         </div>
 
     </div>
@@ -33,7 +31,7 @@
 
 <script lang="ts">
 import { TaskCard } from '@/components'
-import { defineComponent, reactive, type PropType } from 'vue'
+import { defineComponent, reactive, type PropType, ref } from 'vue'
 import * as ProjectManager from '@/classes'
 
 export default defineComponent ({
@@ -46,18 +44,26 @@ export default defineComponent ({
     },
     setup(props) {
 
+        const modified = ref(false)
 
         const testProject: ProjectManager.Project = 
             reactive(new ProjectManager.Project
                         ('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
                     )
+
+        const projectModified = () => {
+            modified.value = true
+            console.log('РАЮОТАЕТ')
+        }
         
         testProject.addTask(new ProjectManager.Task('Погулять с собакой'))
         testProject.addTask(new ProjectManager.Task('Выпить пива'))
         testProject.addTask(new ProjectManager.Task('Протереть стол'))
         
         return {
-            testProject
+            modified,
+            testProject,
+            projectModified,
         }
         
     }
@@ -68,13 +74,18 @@ export default defineComponent ({
 <style lang="scss" scoped>
 .redactor-panel {
     position: relative;
+    max-height: 88vh;
+    min-width: 380px;
     display: flex;
     height: 100%;
     padding: 20px;
     flex-direction: column;
-    background-color: rgba($color: #eefbdf, $alpha: 1.0);
+    background-color: rgba($color: #fcfcfc, $alpha: 1.0);
     box-sizing: border-box;
     border-radius: 30px;
+    font: {
+        family: "MS Sans Serif";
+    }
 
     .panel-row {
         display: block;
@@ -96,7 +107,6 @@ export default defineComponent ({
 
             input {
                 outline: none;
-                font-size: 1.2em;
                 font-family: Tahoma, Geneva, sans-serif;
                 font-weight: 600;
                 width: 100%;
@@ -107,7 +117,13 @@ export default defineComponent ({
         }
     }
 
+    .panel-row__tasks {
+        overflow-y: auto;
+    }
+
     .footer__window {
+        transition: 0.5s;
+        opacity: 0;
         display: flex;
         flex-wrap: wrap;
         width: 100%;
@@ -118,10 +134,9 @@ export default defineComponent ({
         bottom: 0px;
         left: 0px;
         box-sizing: border-box;
-        background-color: rgba($color: #8c8e89, $alpha: 1.0);
-        justify-content: center;
+        background-color: rgba($color: #b7b7b7, $alpha: 1);
+        justify-content: space-around;
         align-content: center;
-        gap: 40%;
 
         .button {
             width: auto;
@@ -138,6 +153,11 @@ export default defineComponent ({
             background-color: rgba($color: #8f0707, $alpha: 1.0)
         }
 
+    }
+
+    .opacity-full {
+        transition: 0.5s;
+        opacity: 1;
     }
 
 }
