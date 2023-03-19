@@ -2,7 +2,7 @@
     <div class="redactor-panel">
         <div class="panel-row panel-row__header">
             <div class="project__name">
-                <input type="text" :value="project.name" >
+                <input type="text" :value="project?.name" >
             </div>
             <div class="project__group">
                 (-)
@@ -11,17 +11,18 @@
         <div class="panel-row panel-row__tasks">
             <div 
             class="task"
-            v-for="task in project.tasks"
+            v-for="task in showedTasks"
             :key="'task_id' + task.name"
             >
                 <TaskCard 
                 :task="task"
-                @task_change="projectModified"
+                @task:finished="finishTask(task)"
+                @task:change="projectModified"
                 ></TaskCard>
             </div>
         </div>
         
-        <div class="footer__window" :class="{'opacity-full': modified}">
+        <div class="footer__window" :class="{'opacity-full': isModified}">
             <v-btn rounded="pill" color="success" size="large">Сохранить</v-btn>
             <v-btn rounded="pill" color="error" size="large">Отменить</v-btn>
         </div>
@@ -30,40 +31,41 @@
 </template>
 
 <script lang="ts">
-import { TaskCard } from '@/components'
-import { defineComponent, reactive, type PropType, ref } from 'vue'
+import { defineComponent, computed, ref, watch, PropType } from 'vue'
 import * as ProjectManager from '@/classes'
+import { useStore } from '@/store'
 
 export default defineComponent ({
     name: 'ProjectPanel',
-    components: {
-        TaskCard
-    },
+
     props: {
-        project: { type: Object as PropType<ProjectManager.Project>, required: true }
+        project: { type: Object as PropType<ProjectManager.Project>, required: true}
     },
+
     setup(props) {
 
-        const modified = ref(false)
+        const store = useStore()
 
-        const testProject: ProjectManager.Project = 
-            reactive(new ProjectManager.Project
-                        ('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
-                    )
+        const isModified = ref(false)
 
         const projectModified = () => {
-            modified.value = true
-            console.log('РАЮОТАЕТ')
+            isModified.value = true
         }
-        
-        testProject.addTask(new ProjectManager.Task('Погулять с собакой'))
-        testProject.addTask(new ProjectManager.Task('Выпить пива'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+
+        const finishTask = (task: ProjectManager.Task) => {
+            store.dispatch('Projects/finishTask', {project: props.project, task: task})
+        }
+
+        const showedTasks = computed(() => {
+            return props.project?.tasks.filter((t) => t.state != ProjectManager.TaskState.FINISHED)
+        })
         
         return {
-            modified,
-            testProject,
+
+            isModified,
             projectModified,
+            finishTask,
+            showedTasks,
         }
         
     }

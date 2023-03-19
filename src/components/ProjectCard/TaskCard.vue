@@ -29,7 +29,7 @@ export default defineComponent ({
     props: {
         task: Object as PropType<ProjectManager.Task>
     },
-    emits: ['task_finished', 'task_change'],
+    emits: ['task:finished', 'task:change'],
     setup(props, {emit}) {
 
         const checked = ref(props.task?.state === ProjectManager.TaskState.FINISHED)
@@ -39,13 +39,13 @@ export default defineComponent ({
 
             if (checked) {
                 setTimeout(() => {
-                    emit('task_finished')
-                }, 3000)
+                    emit('task:finished')
+                }, 2000)
             }
         }
 
         const onLabelChange = (e: any): void => {
-            emit('task_change', e.target.value)
+            emit('task:change', e.target.value)
         }
 
         return {

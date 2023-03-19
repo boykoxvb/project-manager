@@ -10,67 +10,121 @@
                 </div>
             </div>
             <div class="info-panel">
-                <div class="info-panel__project-count">
-                    <span>45</span> 
-                    <span class="project-state">In-progress</span>
+                <div class="state-filters">
+                    <div class="info-panel__project-count">
+                        <span>45</span> 
+                        <span class="project-state">In-progress</span>
+                    </div>
+                    <div class="info-panel__project-count">
+                        <span>16</span> 
+                        <span class="project-state">Incoming</span>
+                    </div>
+                    <div class="info-panel__project-count">
+                        <span>5</span> 
+                        <span class="project-state">Completed</span>
+                    </div>
+                </div>  
+                <div class="separator"></div>
+                <v-dialog
+                v-model="addProjectDialog"
+                width="auto"
+                >
+                    <template v-slot:activator="{ props }">
+                        <div class="add-project-group" v-bind="props" >
+                            <v-icon icon="mdi-plus" color="grey"></v-icon>
+                        </div>
+                    </template>
+
+                    <v-card>
+                        <v-card-title>Добавление проекта</v-card-title>
+                        <v-card-text>
+                            <v-form @submit.prevent>
+                                <v-text-field
+                                    v-model="projects[0].name"
+                                    label="Название проекта"
+                                >
+                                </v-text-field>
+                            </v-form>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn color="success" @click="addProjectDialog = false">Создать</v-btn>
+                            <v-btn color="error" @click="addProjectDialog = false">Отменить</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <div class="project-group__container">
+                    <group-item
+                    v-for="group, index in groups"
+                    :key="group.name + ' ' + index"
+                    :group="group"
+                    >
+                    </group-item>
                 </div>
-                <div class="info-panel__project-count">
-                    <span>16</span> 
-                    <span class="project-state">Incoming</span>
-                </div>
-                <div class="info-panel__project-count">
-                    <span>5</span> 
-                    <span class="project-state">Completed</span>
-                </div>
+                <!-- <v-icon icon="mdi-view-column-outline"></v-icon> -->
             </div>
         </div>
         <div class="projects">
-                <div class="projects-grid"> 
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                    <ProjectCardCompact :project="testProject"></ProjectCardCompact>
-                </div>
+            <div class="projects-grid"> 
+                <v-dialog
+                v-model="addProjectDialog"
+                width="auto"
+                >
+                    <template v-slot:activator="{ props }">
+                        <div class="add-project" v-bind="props" >
+                            <v-icon icon="mdi-plus" size="x-large" color="grey"></v-icon>
+                        </div>
+                    </template>
+
+                    <v-card>
+                        <v-card-title>Добавление проекта</v-card-title>
+                        <v-card-text>
+                            <v-form @submit.prevent>
+                                <v-text-field
+                                    v-model="projects[0].name"
+                                    label="Название проекта"
+                                >
+                                </v-text-field>
+                            </v-form>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn color="success" @click="addProjectDialog = false">Создать</v-btn>
+                            <v-btn color="error" @click="addProjectDialog = false">Отменить</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <ProjectCardCompact
+                v-for="project in projects"
+                @project:choosed="$emit('project:choosed', project)"
+                :key="project.uuid"
+                :project="project"
+                :choosed="project"
+                ></ProjectCardCompact>       
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import ProjectCardCompact from '@/components/ProjectCard/ProjectCardCompact.vue'
-import { defineComponent, reactive } from 'vue'
-import * as ProjectManager from '@/classes'
+import { defineComponent, reactive, ref } from 'vue'
+
+import { useStore } from '@/store'
 
 export default defineComponent ({
     name: 'ProjectPanel',
-    components: {
-        ProjectCardCompact
-    },
 
     setup() {
-        const testProject: ProjectManager.Project = 
-        reactive(new ProjectManager.Project
-                    ('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
-                )
 
-        testProject.addTask(new ProjectManager.Task('Погулять с собакой'))
-        testProject.addTask(new ProjectManager.Task('Выпить пива'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
-        testProject.addTask(new ProjectManager.Task('Протереть стол'))
+        const store = useStore()
+        store.dispatch('Projects/fetchGroups')
+
+        const addProjectDialog = ref(false)
+        const projects = reactive(store.getters['Projects/allProjects'])
+        const groups = reactive(store.getters['Projects/allGroups'])
 
         return {
-            testProject
+            projects,
+            addProjectDialog,
+            groups,
         }
     }
 
@@ -79,6 +133,22 @@ export default defineComponent ({
 
 
 <style lang="scss" scoped>
+
+@use '@/components/scss/group-colors.scss';
+
+.add-project {
+    border-radius: 10%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 7px 12px;
+    transition: 0.3s;
+    background-color: #efefef;
+}
+
+
 
 .main-container {
   // Если есть проблемы с прокруткой проектов - нужно ограничить высоту контейнера, куда кладем этот компонент.
@@ -124,26 +194,54 @@ export default defineComponent ({
     &-panel {
         display: flex;
 
-        &__project-count {
+        .state-filters {
+            display: flex;
+
+            .info-panel__project-count {
             transition: 0.3s;
             padding: 5px;
             margin-right: 10px;
-            font-size: 1em;
+            font-size: 0.9em;
             display: flex;
-            flex-direction: column;
             border-radius: 10px;
             cursor: pointer;
 
-            &:hover {
-                transition: 0.3s;
-                background-color: rgb(216, 216, 216);
-            }
+                &:hover {
+                    transition: 0.3s;
+                    background-color: rgb(216, 216, 216);
+                }
 
-            .project-state {
-                font-size: 0.5em;
-            }
+                .project-state {
+                    font-size: 0.5em;
+                }
 
             
+            }
+
+        }
+
+        .project-group__container {
+
+            display: flex;
+            gap: 10px;
+
+            .project-group__item {
+                padding: 5px 20px;
+                font-size: 0.6em;
+                font-weight: 500;
+                border-radius: 10px;
+            }
+
+        }
+
+
+
+        
+
+        .separator {
+            width: 1px;
+            height: 100%;
+            background-color: #3b3b3b;
         }
     }
 

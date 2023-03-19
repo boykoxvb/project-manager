@@ -1,9 +1,10 @@
 import { Task, TaskState, ProjectGroup } from '@/classes'
 
 export default class Project {
+    public uuid: string
     public deadline: Date | undefined
     public name: string
-    public group: ProjectGroup 
+    public group: ProjectGroup | undefined
     public tasks: Array<Task>
     public startDate: Date | undefined
     public description: string | undefined
@@ -23,13 +24,13 @@ export default class Project {
             return task.state == TaskState.FINISHED
         }).length
 
-        return 100 * (finishedTasks/(this.tasks.length))
+        return Math.round(100 * (finishedTasks/(this.tasks.length)))
 
     }
 
-    constructor(name: string, group: ProjectGroup, deadline?: Date, startDate?: Date, description?: string) {
+    constructor(uuid: string, name: string, deadline?: Date, startDate?: Date, description?: string) {
+        this.uuid = uuid
         this.name = name
-        this.group = group
         this.deadline = deadline
         this.tasks = []
         this.startDate = startDate

@@ -2,28 +2,22 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
-import store from './store'
+import { store, key } from './store'
 
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import vuetify from './plugins/vuetify'
+import '@mdi/font/css/materialdesignicons.css'
+import { ProjectCardCompact, ProjectsPanel, RedactorPanel, HeaderPanel, TaskCard, GroupItem } from '@/components'
 
-const vuetify = createVuetify({
-  components,
-  directives,
-  icons: {
-    defaultSet: 'mdi',
-    aliases,
-    sets: {
-      mdi,
-    }
-  },
-})
-
-createApp(App)
+const app = createApp(App)
     .use(vuetify)
-    .use(store)
+    .use(store, key)
     .use(router)
-    .mount('#app')
+
+app.component('ProjectCardCompact', ProjectCardCompact)
+app.component('ProjectsPanel', ProjectsPanel)
+app.component('RedactorPanel', RedactorPanel)
+app.component('HeaderPanel', HeaderPanel)
+app.component('TaskCard', TaskCard)
+app.component('GroupItem', GroupItem)
+
+app.mount('#app')

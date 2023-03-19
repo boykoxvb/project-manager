@@ -9,10 +9,12 @@
     </div>
     <div class="content">
       <div class="projects-panel">
-        <projects-panel></projects-panel>
+        <projects-panel
+        @project:choosed="chooseProject($event)"
+        ></projects-panel>
       </div>
       <div class="redactor-panel">
-        <redactor-panel :project="testProject"></redactor-panel>
+        <redactor-panel :project="choosedProject"></redactor-panel>
       </div>
     </div>
     
@@ -21,9 +23,10 @@
 
 <script lang="ts">
 
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, computed } from 'vue';
 import * as ProjectManager from '@/classes'
 import { vbProgressBar, HeaderPanel, ProjectCardCompact, ProjectsPanel, TaskCard, RedactorPanel } from '@/components'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'TestView',
@@ -36,32 +39,30 @@ export default defineComponent({
     RedactorPanel
   },
   setup(props) {
-        
+
+    const store = useStore()
+
+    const chooseProject = (project: ProjectManager.Project) => {
+      store.commit('chooseProject', project)
+    }
+
+    const choosedProject = computed(() => {
+      return store.state.choosedProject
+    })
+    
+    
     const testProject: ProjectManager.Project = 
         reactive(new ProjectManager.Project
-                    ('TestProject', new ProjectManager.ProjectGroup('ProjectTestGroup', '#000000'), new Date(), new Date(), 'Описание проекта')
+                    ('uuid', 'TestProject', new Date(), new Date(), 'Описание проекта')
                 )
 
-    testProject.addTask(new ProjectManager.Task('Погулять с собакой'))
-    testProject.addTask(new ProjectManager.Task('Выпить пива'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
-    testProject.addTask(new ProjectManager.Task('Протереть стол'))
+    testProject.addTask(new ProjectManager.Task('uuid', 'Погулять с собакой'))
+    testProject.addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
 
     return {
-        testProject
+        testProject,
+        chooseProject,
+        choosedProject
     }
 
   }
@@ -92,18 +93,18 @@ export default defineComponent({
     box-sizing: border-box;
     flex-grow: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     background-color: #eaf0f4;
     gap: 20px;
 
     .projects-panel {
       flex-grow: 1;
       grid-column-start: 1;
-      grid-column-end: 3;
+      grid-column-end: 4;
     }
 
     .redactor-panel {
-      grid-column-start: 3;
+      grid-column-start: 4;
     }
   }
 }
