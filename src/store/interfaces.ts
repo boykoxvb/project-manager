@@ -9,3 +9,11 @@ export interface IProjectsState {
     groups: Array<ProjectManager.ProjectGroup>
     
 }
+
+export interface IAuthState {
+
+    sessionId: string,
+    userId: string,
+    failAttempts: number,
+    
+}

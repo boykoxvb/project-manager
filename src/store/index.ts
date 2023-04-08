@@ -1,6 +1,7 @@
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 import Projects from './modules/Projects/Projects'
+import Auth from './modules/Auth/Auth'
 import { IRootState } from './interfaces'
 
 
@@ -25,7 +26,8 @@ export const store = createStore({
   },
 
   modules: {
-    Projects: Projects
+    Projects: Projects,
+    Auth: Auth,
   }
 
 })

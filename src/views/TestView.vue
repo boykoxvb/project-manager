@@ -7,16 +7,28 @@
     <div class="navbar">
       <header-panel></header-panel>
     </div>
-    <div class="content">
-      <div class="projects-panel">
-        <projects-panel
-        @project:choosed="chooseProject($event)"
-        ></projects-panel>
+    <div class="main">
+      <div class="navigation">
+        <!-- <v-icon icon="mdi-home-circle-outline" size="x-large"></v-icon> 
+        <v-icon icon="mdi-home-circle"></v-icon>  -->
+        <!-- <div class="navigation__element">
+          <v-btn icon="mdi-home" color="black"></v-btn>
+        </div> -->
+        
       </div>
-      <div class="redactor-panel">
-        <redactor-panel :project="choosedProject"></redactor-panel>
+      
+      <div class="content">
+        <div class="projects-panel">
+          <projects-panel
+          @project:choosed="chooseProject($event)"
+          ></projects-panel>
+        </div>
+        <div class="redactor-panel">
+          <redactor-panel :project="choosedProject"></redactor-panel>
+        </div>
       </div>
     </div>
+    
     
   </div>
 </template>
@@ -76,7 +88,6 @@ export default defineComponent({
   flex-direction: column;
   min-width: 100%;
   min-height: 100%;
-  background-color: #605e4e;
   box-sizing: border-box;
   overflow: hidden;
 
@@ -84,28 +95,48 @@ export default defineComponent({
     display: block;
     height: 6vh;
     box-sizing: border-box;
-    background-color: #008e39;
   }
 
-  .content {
-    height: 94vh;
-    padding: 20px;
-    box-sizing: border-box;
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+  .main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     background-color: #eaf0f4;
-    gap: 20px;
 
-    .projects-panel {
+    .navigation {
+      min-height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      &__element {
+        padding: 0 15px;
+      }
+    }
+
+    .content {
       flex-grow: 1;
-      grid-column-start: 1;
-      grid-column-end: 4;
+      height: 94vh;
+      box-sizing: border-box;
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 20px;
+
+      .projects-panel {
+        flex-grow: 1;
+        grid-column-start: 1;
+        grid-column-end: 4;
+      }
+
+      .redactor-panel {
+        grid-column-start: 4;
+      }
     }
 
-    .redactor-panel {
-      grid-column-start: 4;
-    }
   }
+
+  
 }
 </style>

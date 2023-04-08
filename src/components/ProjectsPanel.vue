@@ -6,16 +6,16 @@
                     Projects
                 </div>
                 <div class="info-header-date">
-                    <span>21 October</span> 
+                    <span>{{ new Date().getDate().toString() + ' ' + new Date().getMonth().toString()}}</span> 
                 </div>
             </div>
             <div class="info-panel">
                 <div class="state-filters">
-                    <div class="info-panel__project-count">
+                    <div class="info-panel__project-count border-black">
                         <span>45</span> 
                         <span class="project-state">In-progress</span>
                     </div>
-                    <div class="info-panel__project-count">
+                    <div class="info-panel__project-count border-black">
                         <span>16</span> 
                         <span class="project-state">Incoming</span>
                     </div>
@@ -135,6 +135,7 @@ export default defineComponent ({
 <style lang="scss" scoped>
 
 @use '@/components/scss/group-colors.scss';
+@use '@/components/scss/choosed.scss';
 
 .add-project {
     border-radius: 10%;
@@ -147,7 +148,6 @@ export default defineComponent ({
     transition: 0.3s;
     background-color: #efefef;
 }
-
 
 
 .main-container {
@@ -223,7 +223,6 @@ export default defineComponent ({
         .project-group__container {
 
             display: flex;
-            gap: 10px;
 
             .project-group__item {
                 padding: 5px 20px;

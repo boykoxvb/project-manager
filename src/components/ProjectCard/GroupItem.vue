@@ -2,8 +2,6 @@
     <div 
     class="container"
     :class="{[`color-${group.color}`]: hovered}"
-    @mouseenter="hovered = true"
-    @mouseleave="hovered = false"
     >
         <div 
         class="group-color"
@@ -50,7 +48,7 @@ export default defineComponent({
     align-items: center;
     font-size: 15px;
     border-radius: 10px;
-    padding: 5px 10px;
+    padding: 5px;
 
     .group-color {
         width: 30px;

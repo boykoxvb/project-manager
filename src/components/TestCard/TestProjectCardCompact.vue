@@ -2,25 +2,24 @@
     <div class="full-container" ref="projectContainer">
         <div 
         class="project-container" 
-        :class="{[`color-${project?.group?.color}`]: true, 'shadow-blue': choosedProject}"
-        @click="chooseProject()"
+        :class="{[`color-${groupcolor}`]: true}"
         >
             <div class="deadline">
-                {{ project.dateString(project.deadline) }} 
+                {{ ddate }}.{{ dmonth }}
             </div>
             <div class="project-labels">
                 <div class="project-name">
-                    {{ project.name }}
+                    {{ name }}
                 </div>
                 <div class="project-group">
-                    {{ project?.group?.name }}
+                    {{ groupname }}
                 </div>
             </div>
             <div class="progress">
                 <div class="progress-text">Progress</div>
-                <vb-progress-bar :progress="project.progress"></vb-progress-bar>
+                <vb-progress-bar :progress="progress"></vb-progress-bar>
                 <div class="progress-percent">
-                    {{project.progress}}%
+                    {{ progress }}%
                 </div>
             </div>
             <div class="other-data">
@@ -32,49 +31,40 @@
   
 <script lang="ts">
 
-import { type PropType, onMounted, defineComponent, ref, computed } from 'vue'
+import { type PropType, onMounted, defineComponent, toRefs, computed } from 'vue'
 import vbProgressBar from '@/components/atom-components/vb-progress-bar.vue'
-import * as ProjectManager from '@/classes'
+import TestProject from '@/components/TestCard/TestProject'
 import { useStore } from '@/store'
 
 export default defineComponent ({
-    name: 'ProjectCardCompact',
+    name: 'TestProjectCardCompact',
     components: {
         vbProgressBar
     },
     props: {
-        project: { type: Object as PropType<ProjectManager.Project>, required: true },
+        project: { type: Object as PropType<TestProject>, required: true },
     },
 
     setup(props) {
 
-        const store = useStore()
+        const { name, groupname, groupcolor, deadline } = toRefs(props.project)
 
-        // const deadline = computed(() => {
-        //     return  props.project.deadline ? `${props.project.deadline?.getDate()}.${props.project.deadline?.getMonth()}` : 'No Deadline'
-        // })
+        const ddate: string  = deadline.value.getDate() < 10 ? '0' + deadline.value?.getDate().toString() : deadline.value?.getDate().toString()
+        const dmonth: string  = deadline.value.getMonth() < 10 ? '0' + deadline.value?.getMonth().toString() : deadline.value?.getMonth().toString()
 
-        const chooseProject = () => {
-            store.commit('chooseProject', props.project)
-        }
+        const progress = Math.floor(Math.random() * 100)
 
-        const choosedProject = computed(() => {
-           return store.state.choosedProject == props.project
-        })
-        
-        const projectContainer = ref<HTMLElement | null>(null)
 
-        onMounted(() => {
-            if (props?.project?.group?.color) {
-                projectContainer.value?.style.setProperty("--group-color", props?.project?.group?.color)
-            }
-        })
 
         return {
-            
-            projectContainer,
-            chooseProject,
-            choosedProject
+
+            name,
+            groupname,
+            groupcolor,
+            ddate,
+            dmonth,
+            progress,
+
         }
     }
     
@@ -84,10 +74,19 @@ export default defineComponent ({
 <style lang="scss" scoped>
 
 @use '@/components/scss/group-colors.scss';
-@use '@/components/scss/choosed.scss';
+
+@font-face {
+	font-family: "Tilt Neon";
+	src: url("https://assets.codepen.io/467/TiltNeon.woff2") format("woff2");
+}
+
+.choosed-project {
+    -webkit-box-shadow: 0px 1px 10px 2px rgba(0, 144, 255, 0.5) !important;
+    -moz-box-shadow: 0px 1px 10px 2px rgba(0, 144, 255, 0.5) !important;
+    box-shadow: 0px 1px 10px 2px rgba(0, 144, 255, 0.5) !important; 
+}
 
 .full-container {
-    display: inline-block;
     --group-color: #efefef; // Цвет группы по умолчанию
 
     .project-container {
@@ -119,6 +118,7 @@ export default defineComponent ({
         .deadline {
             width: 100%;
             font-size: 0.9rem;
+            font-family: 'Tilt Neon';
             height: fit-content;
             color: rgba(34, 60, 80, 0.6);
         }

@@ -34,7 +34,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             var Group2 = new ProjectManager.ProjectGroup('uuid', 'Группа 2', 'lime')
             var Group3 = new ProjectManager.ProjectGroup('uuid', '3ая группа', 'default')
 
-            Group1.addProject(new ProjectManager.Project('uuid', 'My Project 1', undefined, new Date()))
+            Group1.addProject(new ProjectManager.Project('uuid', 'My Project 1', new Date(), new Date()))
             Group1.addProject(new ProjectManager.Project('uuid2', 'My Project 2', undefined, new Date()))
             Group2.addProject(new ProjectManager.Project('uuid2', 'My Project 3', undefined, new Date()))
             Group3.addProject(new ProjectManager.Project('uuid2', 'My Project 4', undefined, new Date()))

@@ -8,3 +8,7 @@ export { default as ProjectCardCompact } from '@/components/ProjectCard/ProjectC
 export { default as HeaderPanel } from '@/components/HeaderPanel.vue'
 export { default as ProjectsPanel } from '@/components/ProjectsPanel.vue'
 export { default as RedactorPanel } from '@/components/RedactorPanel.vue'
+
+
+
+export { default as TestProjectCardCompact } from '@/components/TestCard/TestProjectCardCompact.vue'

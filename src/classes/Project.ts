@@ -1,6 +1,7 @@
 import { Task, TaskState, ProjectGroup } from '@/classes'
+import { IDateString } from './interfaces/IDateString'
 
-export default class Project {
+export default class Project implements IDateString {
     public uuid: string
     public deadline: Date | undefined
     public name: string
@@ -38,6 +39,14 @@ export default class Project {
         this._state = ProjectState.STARTED
     }
 
+    public dateString(date: Date | undefined | null): string {
+        if (!date) { return 'Бессрочный' }
+        var d: string = date.getDate().toString()
+        var m: string = Months[date.getMonth()]
+        var y: string = date.getFullYear().toString()
+        return d + ' ' + m + ', ' + y
+    }
+
     public setState(state: ProjectState) {
         this._state = state
     }
@@ -52,4 +61,19 @@ export enum ProjectState {
     STARTED = 7,
     PAUSED,
     FINISHED,
+}
+
+enum Months {
+    'Января' = 1,
+    'Февраля',
+    'Марта',
+    'Апреля',
+    'Мая',
+    'Июня',
+    'Июля',
+    'Августа',
+    'Сентября',
+    'Октября',
+    'Ноября',
+    'Декабря'
 }

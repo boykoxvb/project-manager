@@ -59,7 +59,7 @@ export default defineComponent ({
         padding: 5px 15px;
         border-radius: 40px;
         background-color: rgba($color: #fcfcfc, $alpha: 1.0);
-        margin: 7px 0;
+        margin: 12px 0;
         
       }
 
