@@ -11,8 +11,9 @@
             </div>
             <div class="info-panel">
                 <div class="state-filters">
-                    <div class="info-panel__project-count border-black">
-                        <span>45</span> 
+                    <div
+                    class="info-panel__project-count border-black" :class="{}">
+                        <span>5</span> 
                         <span class="project-state">In-progress</span>
                     </div>
                     <div class="info-panel__project-count border-black">
@@ -25,89 +26,42 @@
                     </div>
                 </div>  
                 <div class="separator"></div>
-                <v-dialog
-                v-model="addProjectDialog"
-                width="auto"
-                >
-                    <template v-slot:activator="{ props }">
-                        <div class="add-project-group" v-bind="props" >
-                            <v-icon icon="mdi-plus" color="grey"></v-icon>
-                        </div>
-                    </template>
 
-                    <v-card>
-                        <v-card-title>Добавление проекта</v-card-title>
-                        <v-card-text>
-                            <v-form @submit.prevent>
-                                <v-text-field
-                                    v-model="projects[0].name"
-                                    label="Название проекта"
-                                >
-                                </v-text-field>
-                            </v-form>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn color="success" @click="addProjectDialog = false">Создать</v-btn>
-                            <v-btn color="error" @click="addProjectDialog = false">Отменить</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
                 <div class="project-group__container">
-                    <group-item
+                    <!-- <group-item
                     v-for="group, index in groups"
                     :key="group.name + ' ' + index"
                     :group="group"
                     >
-                    </group-item>
+                    </group-item> -->
                 </div>
                 <!-- <v-icon icon="mdi-view-column-outline"></v-icon> -->
             </div>
         </div>
         <div class="projects">
             <div class="projects-grid"> 
-                <v-dialog
-                v-model="addProjectDialog"
-                width="auto"
-                >
-                    <template v-slot:activator="{ props }">
-                        <div class="add-project" v-bind="props" >
-                            <v-icon icon="mdi-plus" size="x-large" color="grey"></v-icon>
-                        </div>
-                    </template>
 
-                    <v-card>
-                        <v-card-title>Добавление проекта</v-card-title>
-                        <v-card-text>
-                            <v-form @submit.prevent>
-                                <v-text-field
-                                    v-model="projects[0].name"
-                                    label="Название проекта"
-                                >
-                                </v-text-field>
-                            </v-form>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn color="success" @click="addProjectDialog = false">Создать</v-btn>
-                            <v-btn color="error" @click="addProjectDialog = false">Отменить</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-                <ProjectCardCompact
+                <CardCompact
                 v-for="project in projects"
                 @project:choosed="$emit('project:choosed', project)"
                 :key="project.uuid"
                 :project="project"
                 :choosed="project"
-                ></ProjectCardCompact>       
+                ></CardCompact>   
+
+                <div class="add-project" @click="addNewProject()">
+                    <v-icon icon="mdi-plus" size="x-large" color="grey"></v-icon>
+                </div>    
+
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-
+import { defineComponent, reactive, ref, computed } from 'vue'
 import { useStore } from '@/store'
+import * as ProjectManager from '@/classes'
 
 export default defineComponent ({
     name: 'ProjectPanel',
@@ -118,13 +72,23 @@ export default defineComponent ({
         store.dispatch('Projects/fetchGroups')
 
         const addProjectDialog = ref(false)
-        const projects = reactive(store.getters['Projects/allProjects'])
-        const groups = reactive(store.getters['Projects/allGroups'])
+
+        const groups = computed(() => store.getters['Projects/allGroups'])
+        const projects = computed(() => store.getters['Projects/allProjects'])
+
+
+        const addNewProject = () => {
+            store.dispatch('Projects/addNew')
+        }
+
+        
 
         return {
+            store,
+            groups,
             projects,
             addProjectDialog,
-            groups,
+            addNewProject,
         }
     }
 
@@ -135,7 +99,7 @@ export default defineComponent ({
 <style lang="scss" scoped>
 
 @use '@/components/scss/group-colors.scss';
-@use '@/components/scss/choosed.scss';
+@use '@/components/scss/highlighting.scss';
 
 .add-project {
     border-radius: 10%;

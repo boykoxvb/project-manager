@@ -36,7 +36,7 @@ import * as ProjectManager from '@/classes'
 import { useStore } from '@/store'
 
 export default defineComponent ({
-    name: 'ProjectPanel',
+    name: 'RedactorPanel',
 
     props: {
         project: { type: Object as PropType<ProjectManager.Project>, required: true}

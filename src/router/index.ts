@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import TestView from '../views/TestView.vue'
 import AuthVIew from '../views/AuthView.vue'
+import ComponentTest from '../views/ComponentTest.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,7 +13,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/auth',
     name: 'auth',
     component: AuthVIew
+  },
+  {
+    path: '/testing',
+    name: 'test',
+    component: ComponentTest
   }
+
 ]
 
 const router = createRouter({

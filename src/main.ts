@@ -6,14 +6,14 @@ import { store, key } from './store'
 
 import vuetify from './plugins/vuetify'
 import '@mdi/font/css/materialdesignicons.css'
-import { ProjectCardCompact, ProjectsPanel, RedactorPanel, HeaderPanel, TaskCard, GroupItem, TestProjectCardCompact } from '@/components'
+import {  CardCompact, ProjectsPanel, RedactorPanel, HeaderPanel, TaskCard, GroupItem, TestProjectCardCompact } from '@/components'
 
 const app = createApp(App)
     .use(vuetify)
     .use(store, key)
     .use(router)
 
-app.component('ProjectCardCompact', ProjectCardCompact)
+app.component('CardCompact', CardCompact)
 app.component('ProjectsPanel', ProjectsPanel)
 app.component('RedactorPanel', RedactorPanel)
 app.component('HeaderPanel', HeaderPanel)

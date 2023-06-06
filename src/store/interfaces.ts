@@ -1,19 +1,18 @@
-import * as ProjectManager from '@/classes'
+import * as PM from '@/classes'
 
 export interface IRootState {
     userId: string,
-    choosedProject: ProjectManager.Project,
 }
 
 export interface IProjectsState {
-    groups: Array<ProjectManager.ProjectGroup>
-    
+    projects: Array<PM.Project>
+    groups: Array<PM.ProjectGroup>
+    choosedProject: PM.Project | undefined | null
 }
 
-export interface IAuthState {
 
+export interface IAuthState {
     sessionId: string,
     userId: string,
     failAttempts: number,
-    
 }

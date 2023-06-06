@@ -37,7 +37,7 @@
 
 import { defineComponent, reactive, computed } from 'vue';
 import * as ProjectManager from '@/classes'
-import { vbProgressBar, HeaderPanel, ProjectCardCompact, ProjectsPanel, TaskCard, RedactorPanel } from '@/components'
+import { vbProgressBar, HeaderPanel, ProjectsPanel, TaskCard, RedactorPanel } from '@/components'
 import { useStore } from '@/store'
 
 export default defineComponent({
@@ -45,7 +45,6 @@ export default defineComponent({
   components: {
     vbProgressBar,
     HeaderPanel,
-    ProjectCardCompact,
     ProjectsPanel,
     TaskCard,
     RedactorPanel
@@ -55,12 +54,10 @@ export default defineComponent({
     const store = useStore()
 
     const chooseProject = (project: ProjectManager.Project) => {
-      store.commit('chooseProject', project)
+      store.commit('Projects/chooseProject', project)
     }
 
-    const choosedProject = computed(() => {
-      return store.state.choosedProject
-    })
+    const choosedProject = computed(() => store.getters['Projects/choosedProject'])
     
     
     const testProject: ProjectManager.Project = 
