@@ -134,8 +134,9 @@ export default defineComponent ({
   
 <style lang="scss" scoped>
 
-@use '@/components/scss/group-colors.scss';
-@use '@/components/scss/highlighting.scss';
+// @use '@/components/scss/group-colors.scss';
+// @use '@/components/scss/highlighting.scss';
+@use '@/components/scss/index.scss';
 
 .default-input {
     text-align: center;
@@ -147,6 +148,7 @@ export default defineComponent ({
     outline: none;
     
     &.editing:hover:not(:focus) {
+
         background-color:transparent;
         transition: 0.3s;
         box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
@@ -160,17 +162,12 @@ export default defineComponent ({
     }
 }
 
-.full-container-edit {
-    transition: 0.5s;
-    transform: rotateY(30deg);
-}
 
 .full-container {
     display: inline-block;
     --group-color: #efefef; // Цвет группы по умолчанию
 
     transition: 0.5s;
-    transform: rotateY(0deg);
 
 
     .project-container {
@@ -221,9 +218,6 @@ export default defineComponent ({
                 }
                 
                 &-delete {
-                    
-                    
-
                     
                     &:hover {
                         transition: 0.3s;
