@@ -215,17 +215,6 @@ export default defineComponent ({
                     flex-wrap: wrap;
                     align-items: center;
                     border-radius: 3px;
-                }
-                
-                &-delete {
-                    
-                    &:hover {
-                        transition: 0.3s;
-                        background-color: rgba(143, 150, 155, 0.39);
-                    }
-                }
-
-                &-edit {
 
                     &:hover {
                         transition: 0.3s;
