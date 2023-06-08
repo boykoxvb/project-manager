@@ -108,13 +108,11 @@ export default defineComponent ({
 
         const store = useStore()
 
-        // Объект, который хранит изменения проекта перед отправкой в стор
-        var projectBuffer: any = { uuid: props.project.uuid }
-
+        const projectContainer = ref<HTMLElement | null>(null)
         const groupNames = reactive(store.getters['Projects/allGroups'].map((group: ProjectManager.ProjectGroup) => group.name))
-        const isEditing = ref(false)
-        const choosedProject = computed(() => store.getters['Projects/choosedProject'] === props.project)
 
+        /* ВЫБОР АКТИВНОГО ПРОЕКТА */
+        const choosedProject = computed(() => store.getters['Projects/choosedProject'] === props.project)
 
         const chooseProject = () => {
             store.commit('Projects/chooseProject', props.project)
@@ -127,15 +125,18 @@ export default defineComponent ({
             }
         })
         
-        const projectContainer = ref<HTMLElement | null>(null)
 
+        /* УДАЛЕНИЕ ПРОЕКТА */
         const deleteProject = () => {
             store.dispatch('Projects/delete', {project: props.project})
         }
 
-        const deadlineChanged = (e: Event) => {
-            projectChanged({deadline: (e?.target as HTMLInputElement).value})
-        }
+
+        /* ВНЕСЕНИЕ ИЗМЕНЕНИЙ */
+        const isEditing = ref(false)
+
+        // Объект, который хранит изменения проекта перед отправкой в стор
+        var projectBuffer: any = { project: props.project }
 
         // Сохраняем какое-либо измененное поле в буфер
         const projectChanged = ({deadline, name, groupName}: ProjectManager.IProjectChangeset) => {
@@ -159,14 +160,13 @@ export default defineComponent ({
         const saveChanges = () => {
             isEditing.value = false
             store.dispatch('Projects/projectChanged', projectBuffer)
-            projectBuffer = { uuid: props.project.uuid }
+            projectBuffer = { project: props.project }
         }
 
         const cancelChanges = () => {
             isEditing.value = false
-            projectBuffer = { uuid: props.project.uuid }
+            projectBuffer = { project: props.project }
         }
-
 
 
         onMounted(() => {
@@ -182,7 +182,6 @@ export default defineComponent ({
             choosedProject,
             isEditing,
             deleteProject,
-            deadlineChanged,
             projectChanged,
             saveChanges,
             cancelChanges,

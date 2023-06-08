@@ -66,26 +66,21 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         addNew({commit}) {
-            // Отправляем запрос на сервер для добавления нового проекта
+            // Отправляем запрос на сервер для добавления нового проекта, в ответе должны получить новый uuid
             commit('addEmptyProject')
-        },
-
-        changeGroup({commit}, {project, groupName}) {
-            commit('changeProjectGroup', {project, groupName})
         },
 
         projectChanged({commit}, buffer) {
             
-            buffer.deadline ? commit('changeProjectDeadline', {uuid: buffer.uuid, deadline: buffer.deadline}) : ''
-            buffer.name ? commit('changeProjectName', {uuid: buffer.uuid, name: buffer.name}) : ''
-            buffer.groupName ? commit('changeProjectGroup', {uuid: buffer.uuid, groupName: buffer.groupName}) : ''
+            buffer.deadline ? commit('changeProjectDeadline', {project: buffer.project, deadline: buffer.deadline}) : ''
+            buffer.name ? commit('changeProjectName', {project: buffer.project, name: buffer.name}) : ''
+            buffer.groupName ? commit('changeProjectGroup', {project: buffer.project, groupName: buffer.groupName}) : ''
 
         },
 
         delete({commit}, {project}) {
             commit('deleteProject', {project})
-        }
-
+        },
         
     },
 
@@ -103,31 +98,25 @@ const Projects: Module<IProjectsState, IRootState> = {
             console.log(state.groups)
         },
 
-        changeProjectGroup(state, {uuid, groupName}) {
+        changeProjectGroup(state, {project, groupName}) {
             // Ищем группу по имени
             const targetGroup = state.groups.find((group: ProjectManager.ProjectGroup) => group.name === groupName)
             if (!targetGroup) throw new Error(`Группы с названием ${groupName} не существует во Vuex. Изменение группы проекта невозможно.`)
 
-            const project = state.projects.find((pr) => pr.uuid === uuid)
-            const oldGroup = project?.group
-
-            if (!project) throw new Error(`Проект с uuid: ${uuid} не найден. Изменение группы проекта невозможно.`)
-
-            oldGroup ? oldGroup.projects = oldGroup.projects.filter((pr: ProjectManager.Project) => pr !== project) : ''
-            
+            const oldGroup = project.group
             project.group = targetGroup
             targetGroup.projects.push(project)
+
+            if (!oldGroup) return
+            oldGroup.projects = oldGroup.projects.filter((pr: ProjectManager.Project) => pr !== project)
+            
         },
 
-        changeProjectDeadline(state, {uuid, deadline}) {
-            const project = state.projects.find((pr) => pr.uuid === uuid)
-            if (!project) throw new Error(`Проект с uuid: ${uuid} не найден. Изменение дедлайна проекта невозможно.`)
+        changeProjectDeadline(state, {project, deadline}) {
             project.deadline = deadline
         },
 
-        changeProjectName(state, {uuid, name}) {
-            const project = state.projects.find((pr) => pr.uuid === uuid)
-            if (!project) throw new Error(`Проект с uuid: ${uuid} не найден. Изменение названия проекта невозможно.`)
+        changeProjectName(state, {project, name}) {
             project.name = name
         },
 
