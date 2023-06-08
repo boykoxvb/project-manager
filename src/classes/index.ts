@@ -5,4 +5,7 @@ export { default as Task} from "./Task"
 export { TaskState } from './Task'
 export { ProjectState } from './Project'
 
+// Interfaces
+export { IProjectChangeset } from './interfaces/IProjectChangeset'
+
 

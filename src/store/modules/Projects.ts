@@ -74,6 +74,14 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('changeProjectGroup', {project, groupName})
         },
 
+        projectChanged({commit}, buffer) {
+            
+            buffer.deadline ? commit('changeProjectDeadline', {uuid: buffer.uuid, deadline: buffer.deadline}) : ''
+            buffer.name ? commit('changeProjectName', {uuid: buffer.uuid, name: buffer.name}) : ''
+            buffer.groupName ? commit('changeProjectGroup', {uuid: buffer.uuid, groupName: buffer.groupName}) : ''
+
+        },
+
         delete({commit}, {project}) {
             commit('deleteProject', {project})
         }
@@ -95,20 +103,34 @@ const Projects: Module<IProjectsState, IRootState> = {
             console.log(state.groups)
         },
 
-        changeProjectGroup(state, {project, groupName}) {
+        changeProjectGroup(state, {uuid, groupName}) {
             // Ищем группу по имени
             const targetGroup = state.groups.find((group: ProjectManager.ProjectGroup) => group.name === groupName)
-            if (!targetGroup) {
-                throw `Группы с названием ${groupName} не существует во Vuex`
-            }
-            const oldGroup = project.group
+            if (!targetGroup) throw new Error(`Группы с названием ${groupName} не существует во Vuex. Изменение группы проекта невозможно.`)
 
+            const project = state.projects.find((pr) => pr.uuid === uuid)
+            const oldGroup = project?.group
+
+            if (!project) throw new Error(`Проект с uuid: ${uuid} не найден. Изменение группы проекта невозможно.`)
+
+            oldGroup ? oldGroup.projects = oldGroup.projects.filter((pr: ProjectManager.Project) => pr !== project) : ''
+            
             project.group = targetGroup
-
-            oldGroup.projects = oldGroup.projects.filter((pr: ProjectManager.Project) => pr !== project)
-            targetGroup?.projects.push(project)
-
+            targetGroup.projects.push(project)
         },
+
+        changeProjectDeadline(state, {uuid, deadline}) {
+            const project = state.projects.find((pr) => pr.uuid === uuid)
+            if (!project) throw new Error(`Проект с uuid: ${uuid} не найден. Изменение дедлайна проекта невозможно.`)
+            project.deadline = deadline
+        },
+
+        changeProjectName(state, {uuid, name}) {
+            const project = state.projects.find((pr) => pr.uuid === uuid)
+            if (!project) throw new Error(`Проект с uuid: ${uuid} не найден. Изменение названия проекта невозможно.`)
+            project.name = name
+        },
+
 
         deleteProject(state, {project}) {
 

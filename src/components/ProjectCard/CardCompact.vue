@@ -10,6 +10,14 @@
                     <div v-if="!isEditing">
                         {{ project.dateString(project.deadline) }}
                     </div>
+                    <input 
+                    v-if="isEditing" 
+                    :value="project.deadline?.toISOString().slice(0, 10)"
+                    @input="projectChanged({deadline: $event})"
+                    class="date-input" 
+                    type="date" 
+                    :name="`${project.uuid}-deadline__input`" 
+                    >
                 </div>
                 <div class="tools">
 
@@ -30,14 +38,14 @@
                     <div class="tools-button tools-ok">
                         <v-icon 
                         v-if="isEditing"
-                        @click.stop="isEditing = !isEditing"
+                        @click.stop="saveChanges()"
                         icon="mdi-check-outline" 
                         size="small"></v-icon>
                     </div>
                     <div class="tools-button tools-close">
                         <v-icon 
                         v-if="isEditing"
-                        @click.stop="isEditing = !isEditing"
+                        @click.stop="cancelChanges()"
                         icon="mdi-close-outline" 
                         size="small"></v-icon>
                     </div>
@@ -47,12 +55,19 @@
 
             <div class="project-labels">
                 <div class="project-name">
-                    <input class="default-input" :class="{'editing': isEditing}" type="text" v-model="project.name" :readonly="!isEditing" placeholder="Название проекта">
+                    <input 
+                    class="default-input" 
+                    :class="{'editing': isEditing}" 
+                    type="text" 
+                    @input="projectChanged({name: $event})"
+                    :value="project.name"
+                    :readonly="!isEditing" 
+                    placeholder="Название проекта">
                 </div>
                 <div class="project-group">
                     <vb-choosable-input
                     :disabled="!isEditing"
-                    @select-changed="changeProjectGroup($event)"
+                    @select-changed="projectChanged({groupName: $event})"
                     :select="project?.group?.name"
                     :menu="groupNames">
                     </vb-choosable-input>
@@ -74,7 +89,7 @@
   
 <script lang="ts">
 
-import { type PropType, onMounted, defineComponent, ref, computed, reactive, getCurrentInstance } from 'vue'
+import { type PropType, onMounted, defineComponent, ref, computed, reactive, watch } from 'vue'
 import { vbProgressBar, vbChoosableInput } from '@/components'
 import * as ProjectManager from '@/classes'
 import { useStore } from '@/store'
@@ -93,6 +108,9 @@ export default defineComponent ({
 
         const store = useStore()
 
+        // Объект, который хранит изменения проекта перед отправкой в стор
+        var projectBuffer: any = { uuid: props.project.uuid }
+
         const groupNames = reactive(store.getters['Projects/allGroups'].map((group: ProjectManager.ProjectGroup) => group.name))
         const isEditing = ref(false)
         const choosedProject = computed(() => store.getters['Projects/choosedProject'] === props.project)
@@ -101,16 +119,55 @@ export default defineComponent ({
         const chooseProject = () => {
             store.commit('Projects/chooseProject', props.project)
         }
+
+        watch(choosedProject, () => {
+            if (choosedProject) {
+                cancelChanges()
+                isEditing.value = false
+            }
+        })
         
         const projectContainer = ref<HTMLElement | null>(null)
-
-        const changeProjectGroup = (e: Event) => {
-            store.dispatch('Projects/changeGroup', {project: props.project, groupName: e})
-        }
 
         const deleteProject = () => {
             store.dispatch('Projects/delete', {project: props.project})
         }
+
+        const deadlineChanged = (e: Event) => {
+            projectChanged({deadline: (e?.target as HTMLInputElement).value})
+        }
+
+        // Сохраняем какое-либо измененное поле в буфер
+        const projectChanged = ({deadline, name, groupName}: ProjectManager.IProjectChangeset) => {
+            try {
+                const deadlineValue =  typeof deadline == 'string' ? deadline : (deadline?.target as HTMLInputElement).value
+                deadlineValue ? projectBuffer.deadline = new Date(deadlineValue.toString()) : ''
+
+                const nameValue =  typeof name == 'string' ? name : (name?.target as HTMLInputElement).value
+                nameValue ? projectBuffer.name = nameValue : ''
+
+                const groupNameValue =  typeof groupName == 'string' ? groupName : (groupName?.target as HTMLInputElement).value
+                groupNameValue ? projectBuffer.groupName = groupNameValue : ''
+
+            } catch (e) {
+                console.error(`Не удалось сохранить изменения проекта в буфер обмена: ${e}`)
+            }
+
+        }
+
+        // Если юзер нажал сохранить - отправляем в стор
+        const saveChanges = () => {
+            isEditing.value = false
+            store.dispatch('Projects/projectChanged', projectBuffer)
+            projectBuffer = { uuid: props.project.uuid }
+        }
+
+        const cancelChanges = () => {
+            isEditing.value = false
+            projectBuffer = { uuid: props.project.uuid }
+        }
+
+
 
         onMounted(() => {
             if (props?.project?.group?.color) {
@@ -124,8 +181,11 @@ export default defineComponent ({
             chooseProject,
             choosedProject,
             isEditing,
-            changeProjectGroup,
             deleteProject,
+            deadlineChanged,
+            projectChanged,
+            saveChanges,
+            cancelChanges,
         }
     }
     
@@ -134,8 +194,6 @@ export default defineComponent ({
   
 <style lang="scss" scoped>
 
-// @use '@/components/scss/group-colors.scss';
-// @use '@/components/scss/highlighting.scss';
 @use '@/components/scss/index.scss';
 
 .default-input {
@@ -157,8 +215,34 @@ export default defineComponent ({
         
     }
 
+    &::shadow {
+        z-index: 100;
+    }
+
     &::placeholder {
         color: rgba(118, 137, 151, 0.712)
+    }
+}
+
+.date-input {
+    
+    font-size: 12px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        transition: 0.3s;
+        box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    }
+    
+    &::-webkit-calendar-picker-indicator{
+        padding: 0;
+        margin: 0;
     }
 }
 
@@ -171,6 +255,7 @@ export default defineComponent ({
 
 
     .project-container {
+
         cursor: pointer;
         display: flex;
         flex-direction: column;
