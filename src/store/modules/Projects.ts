@@ -70,8 +70,8 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('addEmptyProject')
         },
 
-        projectChanged({commit}, buffer) {
-            
+        async projectChanged({commit}, buffer) {
+            await new Promise(resolve => setTimeout(resolve, 1000))
             buffer.deadline ? commit('changeProjectDeadline', {project: buffer.project, deadline: buffer.deadline}) : ''
             buffer.name ? commit('changeProjectName', {project: buffer.project, name: buffer.name}) : ''
             buffer.groupName ? commit('changeProjectGroup', {project: buffer.project, groupName: buffer.groupName}) : ''

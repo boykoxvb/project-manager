@@ -53,6 +53,10 @@
                     
                 </div>
             </div>
+            <div class="loading">
+                <v-progress-linear v-show="isLoading" indeterminate></v-progress-linear>
+            </div>
+            
 
             <div class="project-labels">
                 <div class="project-name">
@@ -135,6 +139,7 @@ export default defineComponent ({
 
         /* ВНЕСЕНИЕ ИЗМЕНЕНИЙ */
         const isEditing = ref(false)
+        const isLoading = ref(false)
 
         // Объект, который хранит изменения проекта перед отправкой в стор
         var projectBuffer: any = { project: props.project }
@@ -157,10 +162,21 @@ export default defineComponent ({
 
         }
 
+        // watch(isEditing, () => {
+        //     console.log(isEditing.value)
+        // })
+
         // Если юзер нажал сохранить - отправляем в стор
-        const saveChanges = () => {
+        const saveChanges = async () => {
+            isLoading.value = true
+            // if (Object.keys(projectBuffer).length == 1) {
+            //     isLoading.value = false
+            //     isEditing.value = false
+            //     projectBuffer = { project: props.project }
+            // }
+            await store.dispatch('Projects/projectChanged', projectBuffer)
+            isLoading.value = false
             isEditing.value = false
-            store.dispatch('Projects/projectChanged', projectBuffer)
             projectBuffer = { project: props.project }
         }
 
@@ -204,6 +220,7 @@ export default defineComponent ({
             saveChanges,
             cancelChanges,
             deadlineIsExpired,
+            isLoading,
         }
     }
     
@@ -345,6 +362,10 @@ export default defineComponent ({
             }
         }
 
+        .loading {
+            height: 4px;
+        }
+
 
 
         .project-labels {
@@ -358,7 +379,7 @@ export default defineComponent ({
                 justify-content: center;
                 white-space: nowrap;
                 width: 100%;
-                margin-top: 15px;
+                margin-top: 10px;
                 margin-bottom: 5px;
             }
 
