@@ -293,7 +293,7 @@ export default defineComponent ({
 
         min-width: 200px;
 
-        border-radius: 10%;
+        border-radius: 20px;
         font: {
             family: "MS Sans Serif";
             size: 1rem;

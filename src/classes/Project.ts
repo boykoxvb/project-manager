@@ -1,5 +1,4 @@
-import { Task, TaskState, ProjectGroup } from '@/classes'
-import { IDateString } from './interfaces/IDateString'
+import { Task, TaskState, ProjectGroup, IDateString } from '@/classes'
 
 export default class Project implements IDateString {
     public uuid: string

@@ -28,12 +28,41 @@
                 <div class="separator"></div>
 
                 <div class="project-group__container">
-                    <!-- <group-item
+                    <group-item
                     v-for="group, index in groups"
                     :key="group.name + ' ' + index"
                     :group="group"
                     >
-                    </group-item> -->
+                    </group-item>
+                </div>
+
+                <div class="sorting">
+
+                    <div class="sorting-deadline" :class="{'border-black': sortState.deadline != null}">
+                        <v-icon 
+                        v-if="sortState.deadline === true || sortState.deadline === null"
+                        @click="setSortState('deadline', sortState.deadline === null ? true : false)"
+                        icon="mdi-sort-calendar-ascending" 
+                        ></v-icon>
+                        <v-icon 
+                        v-if="sortState.deadline === false"
+                        @click="setSortState('deadline', sortState.deadline === false ? null : false)"
+                        icon="mdi-sort-calendar-descending" 
+                        ></v-icon>
+                    </div>
+                    
+                    <div class="sorting-name" :class="{'border-black': sortState.name != null}">
+                        <v-icon 
+                        v-if="sortState.name === true || sortState.name === null"
+                        @click="setSortState('name', sortState.name === null ? true : false)"
+                        icon="mdi-sort-alphabetical-ascending" 
+                        ></v-icon>
+                        <v-icon 
+                        v-if="sortState.name === false"
+                        @click="setSortState('name', sortState.name === false ? null : false)"
+                        icon="mdi-sort-alphabetical-descending" 
+                        ></v-icon>
+                    </div>
                 </div>
                 <!-- <v-icon icon="mdi-view-column-outline"></v-icon> -->
             </div>
@@ -59,9 +88,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useStore } from '@/store'
-import * as ProjectManager from '@/classes'
 
 export default defineComponent ({
     name: 'ProjectPanel',
@@ -75,7 +103,12 @@ export default defineComponent ({
 
         const groups = computed(() => store.getters['Projects/allGroups'])
         const projects = computed(() => store.getters['Projects/allProjects'])
+        const sortState = computed(() => store.getters['Projects/sortState'])
 
+        const setSortState = (sort: string, asc: boolean | null) => {
+            store.dispatch('Projects/setSortState', {sort, asc})
+            console.log(sortState.value)
+        }
 
         const addNewProject = () => {
             store.dispatch('Projects/addNew')
@@ -89,6 +122,8 @@ export default defineComponent ({
             projects,
             addProjectDialog,
             addNewProject,
+            sortState,
+            setSortState,
         }
     }
 
@@ -178,10 +213,7 @@ export default defineComponent ({
                 .project-state {
                     font-size: 0.5em;
                 }
-
-            
             }
-
         }
 
         .project-group__container {
@@ -195,6 +227,12 @@ export default defineComponent ({
                 border-radius: 10px;
             }
 
+        }
+
+        .sorting {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
 
 

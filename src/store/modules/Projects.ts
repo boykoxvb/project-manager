@@ -10,6 +10,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             groups: [],
             projects: [],
             choosedProject: null,
+            sortState: ProjectManager.sortState,
         }
     },
 
@@ -20,12 +21,59 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         allProjects(state) {
-            return state.projects
+            // if (!state.sortState.getActive())
+            //     return state.projects
+            // else {
+            //     if (state.sortState.name) {
+            //         return state.projects.sort((a, b) => {
+            //             return a.name == b.name ? 0 : 
+            //                 a.name > b.name ? 1 : -1
+            //         })
+            //     }else if (state.sortState.deadline) {
+            //         return state.projects.sort((a, b) => {
+            //             if (a.deadline && b.deadline) {
+            //                 return a.deadline == b.deadline ? 0 : 
+            //                     a.deadline > b.deadline ? 1 : -1
+            //             }else if (!a.deadline) {
+            //                 return -1
+            //             }else{
+            //                 return -1
+            //             }
+            //         })
+            //     }
+            // }
+            if (!state.sortState.getActive()) {
+                return state.projects
+            } else {
+                console.log(state.sortState.name)
+                if (state.sortState.name != null) {
+                    return state.projects.slice().sort((a, b) => {
+                        return a.name == b.name ? 0 : 
+                            a.name > b.name ? (state.sortState.name ? 1 : -1) : (state.sortState.name ? -1 : 1)
+                    })
+                }else if (state.sortState.deadline != null) {
+                    return state.projects.slice().sort((a, b) => {
+                        if (a.deadline && b.deadline) {
+                            return state.sortState.deadline ? 
+                                a.deadline.getMilliseconds() - b.deadline.getMilliseconds() : 
+                                b.deadline.getMilliseconds() - a.deadline.getMilliseconds()
+                        }else if (!a.deadline) {
+                            return state.sortState.deadline ? 1 : -1
+                        }else{
+                            return 0
+                        }
+                    })
+                }
+            }
         },
 
         choosedProject(state) {
             return state.choosedProject
         },
+
+        sortState(state) {
+            return state.sortState
+        }
 
     },
 
@@ -82,6 +130,10 @@ const Projects: Module<IProjectsState, IRootState> = {
             await new Promise(resolve => setTimeout(resolve, 1000))
             commit('deleteProject', {project})
         },
+
+        setSortState({commit}, {sort, asc}) {
+            commit('setSortState', {sort, asc})
+        }
         
     },
 
@@ -144,6 +196,10 @@ const Projects: Module<IProjectsState, IRootState> = {
         chooseProject(state, project: ProjectManager.Project) {
             state.choosedProject = project
         },
+
+        setSortState(state, {sort, asc}) {
+            state.sortState.set(sort, asc)
+        }
     }
 }
 

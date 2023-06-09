@@ -13,6 +13,9 @@
             hide-details
             ></v-checkbox>
         </div>
+        <!-- <div class="task__deadline">
+            <input class="task__checkbox" type="checkbox" name="taskcheckbox">
+        </div> -->
     </div>
 </template>
 
