@@ -21,31 +21,10 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         allProjects(state) {
-            // if (!state.sortState.getActive())
-            //     return state.projects
-            // else {
-            //     if (state.sortState.name) {
-            //         return state.projects.sort((a, b) => {
-            //             return a.name == b.name ? 0 : 
-            //                 a.name > b.name ? 1 : -1
-            //         })
-            //     }else if (state.sortState.deadline) {
-            //         return state.projects.sort((a, b) => {
-            //             if (a.deadline && b.deadline) {
-            //                 return a.deadline == b.deadline ? 0 : 
-            //                     a.deadline > b.deadline ? 1 : -1
-            //             }else if (!a.deadline) {
-            //                 return -1
-            //             }else{
-            //                 return -1
-            //             }
-            //         })
-            //     }
-            // }
+
             if (!state.sortState.getActive()) {
                 return state.projects
             } else {
-                console.log(state.sortState.name)
                 if (state.sortState.name != null) {
                     return state.projects.slice().sort((a, b) => {
                         return a.name == b.name ? 0 : 
@@ -55,9 +34,11 @@ const Projects: Module<IProjectsState, IRootState> = {
                     return state.projects.slice().sort((a, b) => {
                         if (a.deadline && b.deadline) {
                             return state.sortState.deadline ? 
-                                a.deadline.getMilliseconds() - b.deadline.getMilliseconds() : 
-                                b.deadline.getMilliseconds() - a.deadline.getMilliseconds()
+                                a.deadline.getTime() - b.deadline.getTime() : 
+                                b.deadline.getTime() - a.deadline.getTime()
                         }else if (!a.deadline) {
+                            return state.sortState.deadline ? -1 : 1
+                        }else if (!b.deadline) {
                             return state.sortState.deadline ? 1 : -1
                         }else{
                             return 0
