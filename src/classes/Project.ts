@@ -42,7 +42,7 @@ export default class Project implements IDateString {
     public dateString(date: Date | undefined | null): string {
         if (!date) { return 'Бессрочный' }
         var d: string = date.getDate().toString()
-        var m: string = Months[date.getMonth()]
+        var m: string = Months[date.getMonth() + 1]
         var y: string = date.getFullYear().toString()
         return d + ' ' + m + ', ' + y
     }

@@ -7,8 +7,9 @@
         >
             <div class="header">
                 <div class="deadline">
-                    <div v-if="!isEditing">
+                    <div class="deadline-container" v-if="!isEditing">
                         {{ project.dateString(project.deadline) }}
+                        <div v-if="deadlineIsExpired" class="deadline-flag"></div>
                     </div>
                     <input 
                     v-if="isEditing" 
@@ -168,6 +169,23 @@ export default defineComponent ({
             projectBuffer = { project: props.project }
         }
 
+        /* Отслеживание дедлайна */
+        const currentDateTime = ref(new Date())
+        const deadlineIsExpired = ref(props.project.deadline ? props.project.deadline < currentDateTime.value : false)
+        const deadline = computed(() => props.project.deadline)
+
+        setInterval(() => {
+            currentDateTime.value = new Date()
+            if (!props.project.deadline) return
+            if (currentDateTime.value > props.project.deadline) {
+                deadlineIsExpired.value = true
+            }
+        }, 120000)
+
+        watch(deadline, () => {
+            deadlineIsExpired.value = deadline.value ? deadline.value < currentDateTime.value : false
+        })
+
 
         onMounted(() => {
             if (props?.project?.group?.color) {
@@ -185,6 +203,7 @@ export default defineComponent ({
             projectChanged,
             saveChanges,
             cancelChanges,
+            deadlineIsExpired,
         }
     }
     
@@ -282,10 +301,28 @@ export default defineComponent ({
             flex-wrap: nowrap;
 
             .deadline {
+
                 width: 100%;
                 font-size: 0.9rem;
                 height: fit-content;
                 color: rgba(34, 60, 80, 0.6);
+
+                &-container {
+                    display: flex;
+                    align-items: center;
+
+                    .deadline-flag {
+                        margin-left: 7px;
+                        height: 5px;
+                        width: 5px;
+                        background-color: rgb(240, 38, 23);
+                        border-radius: 50%;
+                        // -webkit-box-shadow: 0px 0px 5px 2px rgb(240, 37, 23);;
+                        // -moz-box-shadow: 0px 0px 5px 2px rgb(240, 37, 23);
+                        box-shadow: 0px 0px 4px 2px rgb(240, 37, 23);
+
+                    }
+                }
             }
 
             .tools {
