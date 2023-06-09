@@ -37,11 +37,12 @@ export default defineComponent ({
         const onCheck = (e: Event): void => {
             checked.value = !checked.value
 
-            if (checked) {
-                setTimeout(() => {
+            setTimeout(() => {
+                if (checked.value) {
                     emit('task:finished')
-                }, 2000)
-            }
+                }
+            }, 2000)
+
         }
 
         const onLabelChange = (e: any): void => {
