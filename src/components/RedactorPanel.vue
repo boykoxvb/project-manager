@@ -2,7 +2,7 @@
     <div class="redactor-panel">
         <div class="panel-row panel-row__header">
             <div class="project__name">
-                <input type="text" :value="project?.name" >
+                {{ project?.name }}
             </div>
             <div class="project__group">
                 (-)

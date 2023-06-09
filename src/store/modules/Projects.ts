@@ -78,7 +78,8 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         },
 
-        delete({commit}, {project}) {
+        async delete({commit}, {project}) {
+            await new Promise(resolve => setTimeout(resolve, 1000))
             commit('deleteProject', {project})
         },
         

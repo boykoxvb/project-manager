@@ -132,8 +132,8 @@ export default defineComponent ({
         
 
         /* УДАЛЕНИЕ ПРОЕКТА */
-        const deleteProject = () => {
-            store.dispatch('Projects/delete', {project: props.project})
+        const deleteProject = async () => {
+            await store.dispatch('Projects/delete', {project: props.project})
         }
 
 
@@ -162,9 +162,6 @@ export default defineComponent ({
 
         }
 
-        // watch(isEditing, () => {
-        //     console.log(isEditing.value)
-        // })
 
         // Если юзер нажал сохранить - отправляем в стор
         const saveChanges = async () => {
@@ -240,19 +237,16 @@ export default defineComponent ({
     display: block;
     outline: none;
     
-    &.editing:hover:not(:focus) {
+    // &.editing:hover:not(:focus) {
 
-        background-color:transparent;
-        transition: 0.3s;
-        box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-        -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-        -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    //     background-color:transparent;
+    //     transition: 0.3s;
+    //     box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    //     -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    //     -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
         
-    }
+    // }
 
-    &::shadow {
-        z-index: 100;
-    }
 
     &::placeholder {
         color: rgba(118, 137, 151, 0.712)
@@ -334,8 +328,8 @@ export default defineComponent ({
                         width: 5px;
                         background-color: rgb(240, 38, 23);
                         border-radius: 50%;
-                        // -webkit-box-shadow: 0px 0px 5px 2px rgb(240, 37, 23);;
-                        // -moz-box-shadow: 0px 0px 5px 2px rgb(240, 37, 23);
+                        -webkit-box-shadow: 0px 0px 4px 2px rgb(240, 37, 23);
+                        -moz-box-shadow: 0px 0px 4px 2px rgb(240, 37, 23);
                         box-shadow: 0px 0px 4px 2px rgb(240, 37, 23);
 
                     }
