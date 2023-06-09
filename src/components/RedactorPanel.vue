@@ -76,7 +76,8 @@ export default defineComponent ({
 <style lang="scss" scoped>
 .redactor-panel {
     position: relative;
-    max-height: 88vh;
+    min-height: 92vh;
+    max-height: 92vh;
     min-width: 380px;
     display: flex;
     height: 100%;

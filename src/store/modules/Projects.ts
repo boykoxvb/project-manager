@@ -48,7 +48,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             Group1.projects[1].addTask(new ProjectManager.Task('uuid', 'Убрать стол'))
 
             Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить ручку'))
-            Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Отъебать сучку'))
+            Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дела'))
 
             Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить сок'))
             Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Оказался носок'))

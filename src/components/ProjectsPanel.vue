@@ -119,8 +119,8 @@ export default defineComponent ({
   font-size: 24px;
   background-color: rgba($color: #fcfcfc, $alpha: 1.0);
   border-radius: 30px;
-  min-height: 88vh;
-  max-height: 88vh;
+  min-height: 92vh;
+  max-height: 92vh;
   padding: 15px;
   box-sizing: border-box;
   display: flex;
