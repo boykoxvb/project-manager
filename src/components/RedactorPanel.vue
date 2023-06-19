@@ -4,9 +4,9 @@
             <div class="project__name">
                 {{ project?.name }}
             </div>
-            <div class="project__group">
+            <!-- <div class="project__group">
                 (-)
-            </div>
+            </div> -->
         </div>
         <div class="panel-row panel-row__tasks">
             <div 
@@ -19,13 +19,18 @@
                 @task:finished="finishTask(task)"
                 @task:change="projectModified"
                 ></TaskCard>
+
+            </div>
+
+            <div @click="addTask" class="task-add__button">
+                <v-icon icon="mdi-plus"></v-icon>
             </div>
         </div>
         
-        <div class="footer__window" :class="{'opacity-full': isModified}">
+        <!-- <div class="footer__window" :class="{'opacity-full': isModified}">
             <v-btn rounded="pill" color="success" size="large">Сохранить</v-btn>
             <v-btn rounded="pill" color="error" size="large">Отменить</v-btn>
-        </div>
+        </div> -->
 
     </div>
 </template>
@@ -52,6 +57,10 @@ export default defineComponent ({
             isModified.value = true
         }
 
+        const addTask = () => {
+            store.dispatch('Projects/addTask', props.project)
+        }
+
         const finishTask = (task: ProjectManager.Task) => {
             store.dispatch('Projects/finishTask', {project: props.project, task: task})
         }
@@ -61,7 +70,7 @@ export default defineComponent ({
         })
         
         return {
-
+            addTask,
             isModified,
             projectModified,
             finishTask,
@@ -86,6 +95,8 @@ export default defineComponent ({
     background-color: rgba($color: #fcfcfc, $alpha: 1.0);
     box-sizing: border-box;
     border-radius: 30px;
+
+    
     font: {
         family: "MS Sans Serif";
     }
@@ -121,7 +132,9 @@ export default defineComponent ({
     }
 
     .panel-row__tasks {
-        overflow-y: auto;
+        overflow: visible;
+        overflow-y: auto !important;
+        
     }
 
     .footer__window {

@@ -99,6 +99,10 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('addEmptyProject')
         },
 
+        addTask({commit}, project: ProjectManager.Project) {
+            commit('addTask', project)
+        },
+
         async projectChanged({commit}, buffer) {
             await new Promise(resolve => setTimeout(resolve, 1000))
             buffer.deadline ? commit('changeProjectDeadline', {project: buffer.project, deadline: buffer.deadline}) : ''
@@ -111,6 +115,8 @@ const Projects: Module<IProjectsState, IRootState> = {
             await new Promise(resolve => setTimeout(resolve, 1000))
             commit('deleteProject', {project})
         },
+
+        
 
         setSortState({commit}, {sort, asc}) {
             commit('setSortState', {sort, asc})
@@ -180,6 +186,11 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         setSortState(state, {sort, asc}) {
             state.sortState.set(sort, asc)
+        },
+
+
+        addTask(state, project: ProjectManager.Project) {
+            project.addTask(new ProjectManager.Task('', ''))
         }
     }
 }

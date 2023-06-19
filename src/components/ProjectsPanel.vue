@@ -107,7 +107,6 @@ export default defineComponent ({
 
         const setSortState = (sort: string, asc: boolean | null) => {
             store.dispatch('Projects/setSortState', {sort, asc})
-            console.log(sortState.value)
         }
 
         const addNewProject = () => {

@@ -7,7 +7,7 @@
             <v-checkbox
             @change="onCheck($event)"
             default="off"
-            color="indigo"
+            color="success"
             density="comfortable"
             :ripple="false"
             hide-details
@@ -30,11 +30,13 @@ export default defineComponent ({
     setup(props, {emit}) {
 
         const checked = ref(props.task?.state === ProjectManager.TaskState.FINISHED)
+        const lastTimeout = ref()
 
         const onCheck = (e: Event): void => {
             checked.value = !checked.value
 
-            setTimeout(() => {
+            clearTimeout(lastTimeout.value)
+            lastTimeout.value = setTimeout(() => {
                 if (checked.value) {
                     emit('task:finished')
                 }
@@ -62,14 +64,29 @@ export default defineComponent ({
     transition: 3s;
     opacity: 0.2;
 }
+
 .task {
+    transition: 0.3s;
     width: 100%;
     display: flex;
     justify-items: center;
     align-items: center;
-    flex-wrap: wrap;
+
     min-width: 265px;
-    border-bottom: 2px solid rgba(#000000, 0.5);
+    border-radius: 10px;
+    background-color: #efefef;
+    padding: 0 5px 0 10px;
+    margin-bottom: 10px;
+
+    &:hover:not(.opacity) {
+        transition: 0.3s;
+        box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    }
+
+
+    // border-bottom: 2px solid rgba(#000000, 0.5);
     // opacity: 30%; Этим свойством будет задаваться выцветание
 
     &__name {
@@ -90,10 +107,10 @@ export default defineComponent ({
             cursor: pointer;
             width: 100%;
 
-            &:hover, &:focus {
-                color: #3f51b5;
-                border-color: #3f51b5;
-            }
+            // &:hover, &:focus {
+            //     color: #3f51b5;
+            //     border-color: #3f51b5;
+            // }
         }
 
 
