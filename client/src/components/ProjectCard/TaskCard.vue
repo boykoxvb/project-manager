@@ -66,23 +66,26 @@ export default defineComponent ({
 }
 
 .task {
+    
+    box-sizing: border-box;
     transition: 0.3s;
     width: 100%;
     display: flex;
     justify-items: center;
     align-items: center;
-
-    min-width: 265px;
     border-radius: 10px;
     background-color: #efefef;
     padding: 0 5px 0 10px;
     margin-bottom: 10px;
+    border: rgba(34, 60, 80, 0) 2px solid;
+
 
     &:hover:not(.opacity) {
         transition: 0.3s;
-        box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-        -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-        -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        // border: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        border: rgba(34, 60, 80, 0.2) 2px solid;
+        // -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        // -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
     }
 
 

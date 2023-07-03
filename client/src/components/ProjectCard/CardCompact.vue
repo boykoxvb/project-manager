@@ -280,7 +280,7 @@ export default defineComponent ({
         flex-direction: column;
         padding: 7px 12px;
         transition: 0.3s;
-
+        height: 172px;
         min-width: 200px;
 
         border-radius: 20px;

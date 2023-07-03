@@ -1,44 +1,6 @@
 <template>
     <div class="container">
-        
-        <div class="background">
-            <!-- <div class="background-row">
-                <div class="background-row__repeatable">
-                    <div class="project-card">
-                        <test-project-card-compact :project="p1"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p2"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p1"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p2"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p1"></test-project-card-compact>
-                    </div>
-                </div>
-                <div class="background-row__repeatable">
-                    <div class="project-card">
-                        <test-project-card-compact :project="p1"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p2"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p1"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p2"></test-project-card-compact>
-                    </div>
-                    <div class="project-card">
-                        <test-project-card-compact :project="p1"></test-project-card-compact>
-                    </div>
-                </div>
-            </div> -->
-        </div> 
+    
         <div class="form">
             <div class="form__header">
                 Авторизация
@@ -79,9 +41,7 @@
 <script lang="ts">
   
   import { defineComponent, ref } from 'vue';
-  import * as ProjectManager from '@/classes'
   import { useStore } from '@/store'
-  import TestProject from '@/components/TestCard/TestProject'
 import router from '@/router';
   
   export default defineComponent({
@@ -169,17 +129,19 @@ import router from '@/router';
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;
+    background-image: url('../assets/auth_background.jpg');
 
     .form {
         padding: 20px;
         width: 450px;
         border-radius: 30px;
-        background-color: #e4e4e4b6;
+        background-color: #e4e4e43d;
         display: flex;
         flex-direction: column;
+        border: 1px solid rgba(73, 69, 69, 0.795);
 
         &__header {
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: center;
             padding: 20px;

@@ -23,7 +23,7 @@
             </div>
 
             <div @click="addTask" class="task-add__button">
-                <v-icon icon="mdi-plus"></v-icon>
+                <v-icon icon="mdi-plus" size="x-large"></v-icon>
             </div>
         </div>
         
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch, PropType } from 'vue'
+import { defineComponent, computed, ref, PropType, reactive } from 'vue'
 import * as ProjectManager from '@/classes'
 import { useStore } from '@/store'
 
@@ -57,7 +57,10 @@ export default defineComponent ({
             isModified.value = true
         }
 
+        const isEmptyTaskExists = computed(() => props.project.tasks.find((task) => task.name == ''))
+
         const addTask = () => {
+            if (isEmptyTaskExists.value) return
             store.dispatch('Projects/addTask', props.project)
         }
 
@@ -84,13 +87,13 @@ export default defineComponent ({
 
 <style lang="scss" scoped>
 .redactor-panel {
+    padding: 20px;
     position: relative;
     min-height: 92vh;
     max-height: 92vh;
     min-width: 380px;
     display: flex;
     height: 100%;
-    padding: 20px;
     flex-direction: column;
     background-color: rgba($color: #fcfcfc, $alpha: 1.0);
     box-sizing: border-box;
@@ -132,9 +135,35 @@ export default defineComponent ({
     }
 
     .panel-row__tasks {
-        overflow: visible;
+        overflow-x: hidden;
         overflow-y: auto !important;
-        
+
+        .task-add__button {
+    
+            box-sizing: border-box;
+            transition: 0.3s;
+            width: 100%;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background-color: #efefef;
+            padding: 0 5px 0 10px;
+            margin-bottom: 10px;
+            border: rgba(34, 60, 80, 0) 2px solid;
+            min-height: 3rem;
+
+
+
+            &:hover:not(.opacity) {
+                transition: 0.3s;
+                // border: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+                border: rgba(34, 60, 80, 0.2) 2px solid;
+                // -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+                // -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+            }
+        }
     }
 
     .footer__window {

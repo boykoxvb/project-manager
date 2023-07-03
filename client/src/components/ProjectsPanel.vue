@@ -145,6 +145,7 @@ export default defineComponent ({
     padding: 7px 12px;
     transition: 0.3s;
     background-color: #efefef;
+    height: 172px;
 }
 
 
