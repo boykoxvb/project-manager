@@ -16,4 +16,8 @@ export default class ApiError extends Error {
     static BadRequrest(message, errors?: Array<any>) {
         return new ApiError(400, message, errors)
     }
+
+    static BadUser(message, errors?: Array<any>) {
+        return new ApiError(404, message, errors)
+    }
 }

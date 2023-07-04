@@ -51,7 +51,7 @@ class UserService {
 
     async login(email: string, password: string) {
         const user = await userRep.findOne({where: {email: email}})
-        if (!user) throw ApiError.BadRequrest(`Пользователь с email ${email} не был найден`)
+        if (!user) throw ApiError.BadUser(`Пользователь с email ${email} не был найден`)
         const isPassEquals = await bcrypt.compare(password, user.password)
         if (!isPassEquals) throw ApiError.BadRequrest(`Неверный пароль`)
 

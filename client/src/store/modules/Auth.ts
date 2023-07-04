@@ -1,6 +1,7 @@
 import * as ProjectManager from '@/classes'
 import { Module } from 'vuex'
 import { IRootState, IAuthState } from '@/store/interfaces'
+import AuthService from '@/services/auth-service'
 
 
 const Projects: Module<IAuthState, IRootState> = {
@@ -19,24 +20,19 @@ const Projects: Module<IAuthState, IRootState> = {
     },
 
     actions: {
-        attemptAuth({commit}, {login, password}) {
-            // Отправляем запрос на сервер, поулчаем ответ
-            // Пока всегда отдаем пользователя и считаем аут успешным 
-            // fetch бла бла бла
-            //commit('resolveAuth', {sessionId: 'SessionId', userId: 'UserId'})
-            commit('rejectAuth')
-            return { code: 1, message: 'Неверный пользователь или пароль' }
-        }
+
+        async login({commit}, {email, password}) {
+            await AuthService.login(email, password)
+                .then(response => {
+                })
+        },
     },
 
     mutations: {
-        resolveAuth(state, {sessionId, userId}) {
-            state.sessionId = sessionId
-            state.userId = userId
-        },
 
-        rejectAuth(state) {
-            state.failAttempts += 1
+
+        setTokens() {
+
         }
     }
 }

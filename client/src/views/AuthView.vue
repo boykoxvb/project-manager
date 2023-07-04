@@ -7,8 +7,8 @@
             </div>
             <div class="form__login">
                 <v-text-field
-                    v-model="login"
-                    label="Логин"
+                    v-model="email"
+                    label="e-mail"
                     required
                 ></v-text-field>
             </div>
@@ -23,7 +23,7 @@
             <v-btn
             :loading="false"
             append-icon="mdi-login"
-            @click="attemptAuth(login, password)"
+            @click="attemptAuth(email, password)"
             >
                 Войти
             </v-btn>
@@ -40,8 +40,8 @@
   
 <script lang="ts">
   
-  import { defineComponent, ref } from 'vue';
-  import { useStore } from '@/store'
+import { defineComponent, ref } from 'vue';
+import { useStore } from '@/store/index'
 import router from '@/router';
   
   export default defineComponent({
@@ -51,16 +51,16 @@ import router from '@/router';
   
       const store = useStore()
 
-      const login = ref('')
+      const email = ref('')
       const password = ref('')
 
-      const attemptAuth = (login: string, password: string) => { 
-        store.dispatch('Auth/attemptAuth', {login, password})
-            .then((error) => {
-                console.log(error.code + ' ' + error.message)
-            })
-
-        router.push('/')
+      const attemptAuth = async (email: string, password: string) => { 
+        await store.dispatch('User/login', {email, password})
+        if (store.getters['User/isAutorized']) {
+            router.push('/')
+        }
+        console.log(store.getters['User/isAutorized'])
+        // router.push('/')
       }
 
         //   const p1 = new TestProject('Изучить Vuetify', 'Программирование', 'sky', new Date())
@@ -68,7 +68,7 @@ import router from '@/router';
   
   
       return {
-        login,
+        email,
         password,
         attemptAuth,
       }
