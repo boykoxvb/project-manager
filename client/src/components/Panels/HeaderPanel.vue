@@ -22,7 +22,7 @@
   
 <script lang="ts">
 
-import vbiIconButtonBase from './atom-components/vbi-icon-button-base.vue'
+import vbiIconButtonBase from '../atom-components/vbi-icon-button-base.vue'
 
 import { defineComponent } from 'vue'
 
@@ -90,7 +90,7 @@ export default defineComponent ({
           border-radius: 50%;
           width: 32px;
           height: 32px;
-          background-image: url("../assets/portrait.jpg");
+          background-image: url("@/assets/portrait.jpg");
           background-size: contain;
         }
 

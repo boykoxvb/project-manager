@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import TestView from '../views/TestView.vue'
-import AuthVIew from '../views/AuthView.vue'
-import ComponentTest from '../views/ComponentTest.vue'
+import TestView from '@/views/MainView.vue'
+import AuthVIew from '@/views/AuthView.vue'
+import ComponentTest from '@/views/ComponentTest.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {

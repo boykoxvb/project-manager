@@ -15,10 +15,4 @@ export default class AuthService {
     static async refresh(): Promise<void> {
         return $api.get('/refresh')
     }
-
-
-    static async refreshAccessToken() {
-        $api.get
-    }
-
 }

@@ -4,6 +4,7 @@ import { IRootState, IUserState } from '@/store/interfaces'
 import cookie from 'js-cookie'
 import AuthService from '@/services/auth-service'
 import IUserDto from '@/classes/interfaces/IUserDto'
+import { AxiosError } from 'axios'
 
 
 const User: Module<IUserState, IRootState> = {
@@ -31,28 +32,54 @@ const User: Module<IUserState, IRootState> = {
         },
 
         isAutorized(state): boolean {
-            return Boolean(state.id || state.email)
+            return Boolean(state.id && state.email)
         }
-
     },
 
     actions: {
 
         async login({commit}, {email, password}) {
-            await AuthService.login(email, password)
-                .then( res => {
-                    commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
-                    commit('setUser', {user: res.data.user})
-                })
-                .catch( e => {
-                    console.log(e.response.data.message)
-                    commit('setUser', {})
-                })
-                .finally()
+            // await AuthService.login(email, password)
+            //     .then( res => {
+            //         commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
+            //         commit('setUser', {user: res.data.user})
+            //     })
+            //     .catch( e => {
+            //         if (e instanceof AxiosError) {
+            //             console.log('Ошибка обращения к серверу: превышен таймаут ожидания')
+            //         }else{
+            //             console.log(e?.response?.data?.message)
+            //         }
+            //         commit('setUser', {})
+            //     })
+
+            try {
+                const res = await AuthService.login(email, password)
+                commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
+                commit('setUser', {user: res.data.user})
+                return { success: true, message: 'Авторизация пройдена'}
+            }catch (e: any) {
+                commit('setUser', {})
+                console.error(e)
+                if (e.response) {
+                    return { success: false, message: `Ошибка авторизации: ${e.response?.data.message}`}
+                } else {
+                    return { success: false, message: `Ошибка авторизации: ${e.message}`}
+                }
+            }
+                // .then( res => {
+                //     commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
+                //     commit('setUser', {user: res.data.user})
+                // })
+                // .catch( e => {
+                //     if (e instanceof AxiosError) {
+                //         console.log('Ошибка обращения к серверу: превышен таймаут ожидания')
+                //     }else{
+                //         console.log(e?.response?.data?.message)
+                //     }
+                //     commit('setUser', {})
+                // })
         },
-
-
-        
     },
 
     mutations: {

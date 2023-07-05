@@ -4,7 +4,8 @@ import { store } from "@/store";
 
 const $api = axios.create({
     withCredentials: true,
-    baseURL: 'http://localhost:5000/api'
+    baseURL: 'http://localhost:5000/api',
+    timeout: 3000,
 })
 
 $api.interceptors.request.use((config): any => {

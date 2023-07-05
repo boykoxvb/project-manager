@@ -7,10 +7,9 @@ export { default as GroupItem } from '@/components/ProjectCard/GroupItem.vue'
 
 export { default as CardCompact } from '@/components/ProjectCard/CardCompact.vue'
 
-export { default as HeaderPanel } from '@/components/HeaderPanel.vue'
-export { default as ProjectsPanel } from '@/components/ProjectsPanel.vue'
-export { default as RedactorPanel } from '@/components/RedactorPanel.vue'
+export { default as HeaderPanel } from '@/components/Panels/HeaderPanel.vue'
+export { default as ProjectsPanel } from '@/components/Panels/ProjectsPanel.vue'
+export { default as RedactorPanel } from '@/components/Panels/RedactorPanel.vue'
 
 
 
-export { default as TestProjectCardCompact } from '@/components/TestCard/TestProjectCardCompact.vue'
