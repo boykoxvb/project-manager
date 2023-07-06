@@ -39,19 +39,6 @@ const User: Module<IUserState, IRootState> = {
     actions: {
 
         async login({commit}, {email, password}) {
-            // await AuthService.login(email, password)
-            //     .then( res => {
-            //         commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
-            //         commit('setUser', {user: res.data.user})
-            //     })
-            //     .catch( e => {
-            //         if (e instanceof AxiosError) {
-            //             console.log('Ошибка обращения к серверу: превышен таймаут ожидания')
-            //         }else{
-            //             console.log(e?.response?.data?.message)
-            //         }
-            //         commit('setUser', {})
-            //     })
 
             try {
                 const res = await AuthService.login(email, password)
@@ -67,18 +54,21 @@ const User: Module<IUserState, IRootState> = {
                     return { success: false, message: `Ошибка авторизации: ${e.message}`}
                 }
             }
-                // .then( res => {
-                //     commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
-                //     commit('setUser', {user: res.data.user})
-                // })
-                // .catch( e => {
-                //     if (e instanceof AxiosError) {
-                //         console.log('Ошибка обращения к серверу: превышен таймаут ожидания')
-                //     }else{
-                //         console.log(e?.response?.data?.message)
-                //     }
-                //     commit('setUser', {})
-                // })
+        },
+
+        async registrate({commit}, {name, login, email, password}) {
+
+            try {
+                const res = await AuthService.registrate(name, login, email, password)
+                return { success: true, message: 'Регистрация пройдена'}
+            } catch (e: any) {
+                console.error(e)
+                if (e.response) {
+                    return { success: false, message: `Ошибка регистрации: ${e.response?.data.message}`}
+                } else {
+                    return { success: false, message: `Ошибка регистрации: ${e.message}`}
+                }
+            }
         },
     },
 

@@ -3,57 +3,90 @@
     
         <div class="form">
             <div class="form__header">
-                Авторизация
+                Регистрация
             </div>
-            <div class="form__login">
+            <div class="form__name form__item">
                 <v-text-field
-                    type="email"
+                    autocomplete="off"
+                    variant="outlined"
+                    clearable 
+                    v-model="name"
+                    label="Имя"
+                    required
+                    :rules="nameRules"
+                />
+            </div>
+            <div class="form__login form__item">
+                <v-text-field
+                    autocomplete="off"
+                    variant="outlined"
+                    clearable 
+                    v-model="login"
+                    label="Логин"
+                    required
+                    :rules="loginRules"
+                />
+            </div>
+            <div class="form__email form__item">
+                <v-text-field
+                    autocomplete="off"
                     variant="outlined"
                     clearable 
                     v-model="email"
                     label="E-mail"
                     required
-                ></v-text-field>
+                    :rules="emailRules"
+                />
             </div>
-            <div class="form__password">
+            <div class="form__password form__item">
                 <v-text-field
+                    autocomplete="off"
                     type="password"
                     variant="outlined"
                     clearable 
                     v-model="password"
                     label="Пароль"
                     required
-                ></v-text-field>
+                    :rules="passwordRules"
+                />
+            </div>
+            <div class="form__password form__item">
+                <v-text-field
+                    autocomplete="off"
+                    type="password"
+                    variant="outlined"
+                    clearable 
+                    v-model="password2"
+                    label="Повторите пароль"
+                    required
+                    :rules="passwordRules"
+                />
             </div>
 
             <v-btn
+            class="rounded-xl"
+            size="large"
             variant="outlined"
-            :loading="authLoading"
-            @click="attemptAuth(email, password)"
+            :loading="regLoading"
+            @click="attemptReg"
+            :disabled="!isFormValid"
             >
-                Войти
+                Зарегистрироваться
             </v-btn>
-            <div class="form__registration">
-                <v-chip 
-                variant="outlined"  
-                link
-                append-icon="mdi-account-plus-outline">
-                    Регистрация
-                </v-chip>
-            </div>
+
         </div>
 
         <v-snackbar
         color="white"
-        v-model="authError.status"
+        v-model="regError.status"
         >
-            {{ authError.message }}
+            {{ regError.message }}
 
             <template v-slot:actions>
                 <v-btn
                 color="pink"
                 variant="outlined"
-                @click="authError.status = false"
+                @click="regError.status = false"
                 >
                 Close
                 </v-btn>
@@ -69,51 +102,47 @@
   
 <script lang="ts">
   
-import { defineComponent, reactive, ref } from 'vue';
-import { useStore } from '@/store/index'
+import { computed, defineComponent } from 'vue';
 import router from '@/router';
+import useFormRules from '@/components/User/modules/useFormRules'
+import useRegistrationForm from '@/components/User/modules/useRegistrationForm'
   
   export default defineComponent({
     name: 'AuthView',
 
     setup() {
   
-      const store = useStore()
 
-      const email = ref('')
-      const password = ref('')
+      const { nameRules, loginRules, emailRules, passwordRules } = useFormRules()
+      const { name, login, email, password, password2, regLoading, regError, attemptReg } = useRegistrationForm()
 
-      const authLoading = ref(false)
-      const authError = reactive({
-        status: false, 
-        message: ''
+      const isFormValid = computed((): boolean => {
+        return Boolean(name && login && password && password2 && email)
       })
-
-
-      const attemptAuth = async (email: string, password: string) => { 
-        authLoading.value = true
-        const authResult = await store.dispatch('User/login', {email, password})
-        authLoading.value = false
-        if (store.getters['User/isAutorized'] && authResult.success) {
-            router.push('/')
-        } else {
-            // Тут выкатываем баннер с ошибкой
-            authError.status = true
-            console.log(authResult)
-            authError.message = authResult.response ? authResult.response.data.message : authResult.message
-        }
-      }
 
         //   const p1 = new TestProject('Изучить Vuetify', 'Программирование', 'sky', new Date())
         //   const p2 = new TestProject('Поменять жизнь', 'Домашнее', 'pink', new Date())
   
   
       return {
+        nameRules,
+        loginRules,
+        emailRules,
+        passwordRules,
+
+        name,
+        login,
         email,
         password,
-        attemptAuth,
-        authLoading,
-        authError
+        password2,
+        regLoading,
+        regError,
+
+        isFormValid,
+
+        attemptReg,
+
+
       }
   
     }
@@ -159,4 +188,12 @@ import router from '@/router';
 
 
 </style>
+
+function useRegistrationForm(): { name: any; login: any; email: any; password: any; password2: any; regLoading: any; regError: any; attemptReg: any; } {
+  throw new Error('Function not implemented.');
+}
+
+function useRegistrationForm(): { name: any; login: any; email: any; password: any; password2: any; regLoading: any; regError: any; attemptReg: any; } {
+  throw new Error('Function not implemented.');
+}
   
