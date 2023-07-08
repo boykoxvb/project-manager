@@ -35,6 +35,7 @@
             </v-btn>
             <div class="form__registration">
                 <v-chip 
+                @click="goToRegistration"
                 variant="outlined"  
                 link
                 append-icon="mdi-account-plus-outline">
@@ -107,6 +108,10 @@ import cookie from 'js-cookie'
         }
       }
 
+      const goToRegistration = async () => {
+        router.push('/registration')
+      }
+
 
       return {
         email,
@@ -114,7 +119,7 @@ import cookie from 'js-cookie'
         attemptAuth,
         authLoading,
         authError,
-        
+        goToRegistration,
       }
   
     }

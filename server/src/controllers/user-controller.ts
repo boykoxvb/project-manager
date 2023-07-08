@@ -62,14 +62,6 @@ class UserController {
         }
     }
 
-    // async getUsers(req, res, next) {
-    //     try {
-    //         res.status(200).json([123, 256])
-    //     } catch (e) {
-    //         next(e)
-    //     }
-    // }
-
 }
 
 export default new UserController()
