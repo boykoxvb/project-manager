@@ -3,6 +3,8 @@ import TestView from '@/views/MainView.vue'
 import AuthVIew from '@/views/AuthView.vue'
 import ComponentTest from '@/views/ComponentTest.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
+import { store, useStore } from '@/store'
+import AuthService from '@/services/auth-service'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,6 +35,26 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+
+router.beforeEach(async (to, from, next) => {
+  // Тут проверяем нужна ли проверка авторизации
+  if (to.name) {
+    if (['auth', 'registration'].includes(to.name.toString())) {
+      next()
+      return
+    }
+  }
+
+  const res = await store.dispatch('User/checkAuth')
+  if (!res.success) {
+    next({name: 'auth'})
+    return
+  }else{
+    next()
+    return
+  }
 })
 
 export default router

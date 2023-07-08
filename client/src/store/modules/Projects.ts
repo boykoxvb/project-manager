@@ -135,7 +135,6 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         setTaskState(state, { task, taskState }) {
             task.setState(taskState)
-            console.log(state.groups)
         },
 
         changeProjectGroup(state, {project, groupName}) {

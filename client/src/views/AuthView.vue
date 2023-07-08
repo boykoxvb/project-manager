@@ -43,6 +43,7 @@
             </div>
         </div>
 
+
         <v-snackbar
         color="white"
         v-model="authError.status"
@@ -72,6 +73,8 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { useStore } from '@/store/index'
 import router from '@/router';
+import cookie from 'js-cookie'
+
   
   export default defineComponent({
     name: 'AuthView',
@@ -94,7 +97,7 @@ import router from '@/router';
         authLoading.value = true
         const authResult = await store.dispatch('User/login', {email, password})
         authLoading.value = false
-        if (store.getters['User/isAutorized'] && authResult.success) {
+        if (authResult.success) {
             router.push('/')
         } else {
             // Тут выкатываем баннер с ошибкой
@@ -104,16 +107,14 @@ import router from '@/router';
         }
       }
 
-        //   const p1 = new TestProject('Изучить Vuetify', 'Программирование', 'sky', new Date())
-        //   const p2 = new TestProject('Поменять жизнь', 'Домашнее', 'pink', new Date())
-  
-  
+
       return {
         email,
         password,
         attemptAuth,
         authLoading,
-        authError
+        authError,
+        
       }
   
     }

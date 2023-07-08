@@ -29,7 +29,7 @@ class UserService {
 
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
-        await tokenService.saveToken(user, tokens.refreshToken)
+        await tokenService.saveToken(user, tokens.refresh_token)
 
         // await userRep.delete({id: user.id})
 
@@ -58,7 +58,7 @@ class UserService {
         const userDto = new UserDto(user)
         
         const tokens = tokenService.generateTokens({...userDto})
-        await tokenService.saveToken(user, tokens.refreshToken)
+        await tokenService.saveToken(user, tokens.refresh_token)
         return {
             ...tokens,
             user: userDto
@@ -80,7 +80,7 @@ class UserService {
         const user = await userRep.findOne({where: {id: userData.id}})
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
-        await tokenService.saveToken(user, tokens.refreshToken)
+        await tokenService.saveToken(user, tokens.refresh_token)
         return {
             ...tokens,
             user: userDto

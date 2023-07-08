@@ -4,7 +4,8 @@ import { IRootState, IUserState } from '@/store/interfaces'
 import cookie from 'js-cookie'
 import AuthService from '@/services/auth-service'
 import IUserDto from '@/classes/interfaces/IUserDto'
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
+import { BASE_URL } from '@/services/axios'
 
 
 const User: Module<IUserState, IRootState> = {
@@ -14,6 +15,7 @@ const User: Module<IUserState, IRootState> = {
             id: '',
             email: '',
             is_activated: false,
+            access_token: '',
         }
     },
 
@@ -23,17 +25,9 @@ const User: Module<IUserState, IRootState> = {
             return state.id
         },
 
-        accessToken() {
-            return cookie.get('access_token')
+        accessToken(state) {
+            return state.access_token
         },
-
-        refreshToken() {
-            return cookie.get('refresh_token')
-        },
-
-        isAutorized(state): boolean {
-            return Boolean(state.id && state.email)
-        }
     },
 
     actions: {
@@ -42,7 +36,7 @@ const User: Module<IUserState, IRootState> = {
 
             try {
                 const res = await AuthService.login(email, password)
-                commit('setTokens', {access_token: res.data.access_token, refresh_token: res.data.refresh_token})
+                commit('setAccessToken', res.data.access_token)
                 commit('setUser', {user: res.data.user})
                 return { success: true, message: 'Авторизация пройдена'}
             }catch (e: any) {
@@ -70,6 +64,17 @@ const User: Module<IUserState, IRootState> = {
                 }
             }
         },
+
+        async checkAuth({commit}) {
+            try {
+                const res = await AuthService.refresh()
+                commit('setAccessToken', res.data.access_token)
+                return { success: true, message: 'Пользователь авторизован'} 
+            } catch (e: any) {
+                console.error(e)
+                return { success: false, message: 'Пользователь не авторизован'} 
+            }
+        }
     },
 
     mutations: {
@@ -87,9 +92,8 @@ const User: Module<IUserState, IRootState> = {
 
         },
       
-        setTokens( _ , {access_token, refresh_token}) {
-            cookie.set('access_token', access_token)
-            cookie.set('refresh_token', refresh_token)
+        setAccessToken( state , access_token) {
+            state.access_token = access_token
         }
     }
 }

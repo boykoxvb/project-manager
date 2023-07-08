@@ -8,21 +8,21 @@ const tokenRep = AppDataSource.getRepository(Token)
 class TokenService {
     
     generateTokens(payload: any) {
-        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: '15m'})
-        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {expiresIn: '30d'})
+        const access_token = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: '15m'})
+        const refresh_token = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {expiresIn: '30d'})
         return {
-            accessToken,
-            refreshToken
+            access_token,
+            refresh_token
         }
     }
 
-    async saveToken(user: User, refreshToken: string): Promise<Token> {
+    async saveToken(user: User, refresh_token: string): Promise<Token> {
         const tokenData = await tokenRep.findOne({relations: {user:true}, where: {user: {id: user.id}}})
         if (tokenData) {
-            tokenData.refresh_token = refreshToken
+            tokenData.refresh_token = refresh_token
             return await tokenRep.save(tokenData)
         }
-        const token = new Token(refreshToken, user)
+        const token = new Token(refresh_token, user)
         await tokenRep.save(token)
         return token
     }

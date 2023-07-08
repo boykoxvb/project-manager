@@ -22,6 +22,7 @@ export interface IUserState {
     id: string | null,
     is_activated: boolean | null,
     email: string | null,
+    access_token: string | null | undefined,
     // access_token: string,
     // refresh_token: string,
 }

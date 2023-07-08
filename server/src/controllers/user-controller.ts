@@ -12,7 +12,7 @@ class UserController {
             }
             const {login, name, email, password} = req.body
             const userData = await userService.registration(login, name, email, password)
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('refresh_token', userData.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             return res.send(userData)
         } catch (e) {
             next(e)
@@ -23,7 +23,7 @@ class UserController {
         try {
             const {email, password} = req.body
             const userData = await userService.login(email, password)
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('refresh_token', userData.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             return res.send(userData)
         } catch (e) {
             next(e)
@@ -32,9 +32,9 @@ class UserController {
 
     async logout(req, res, next) {
         try {
-            const {refreshToken} = req.cookies
-            const token = await userService.logout(refreshToken)
-            res.clearCookie('refreshToken')
+            const {refresh_token} = req.cookies
+            const token = await userService.logout(refresh_token)
+            res.clearCookie('refresh_token')
             return res.json(token)
         } catch (e) {
             next(e)
@@ -53,22 +53,22 @@ class UserController {
 
     async refresh(req, res, next) {
         try {
-            const {refreshToken} = req.cookies
-            const userData = await userService.refresh(refreshToken)
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            const {refresh_token} = req.cookies
+            const userData = await userService.refresh(refresh_token)
+            res.cookie('refresh_token', userData.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             return res.send(userData)
         } catch (e) {
             next(e)
         }
     }
 
-    async getUsers(req, res, next) {
-        try {
-            res.status(200).json([123, 256])
-        } catch (e) {
-            next(e)
-        }
-    }
+    // async getUsers(req, res, next) {
+    //     try {
+    //         res.status(200).json([123, 256])
+    //     } catch (e) {
+    //         next(e)
+    //     }
+    // }
 
 }
 

@@ -20,7 +20,6 @@ export default function useFormRules() {
 
     const attemptReg = async () => { 
         if (password.value != password2.value) {
-            console.log(password.value, password2.value)
             regError.status = true,
             regError.message = 'Пароли не совпадают'
             return

@@ -1,5 +1,5 @@
-import $api from './axios'
-import {AxiosResponse} from 'axios'
+import $api, { BASE_URL } from './axios'
+import axios, {AxiosResponse} from 'axios'
 import IAuthResponse from '@/classes/interfaces/IAuthResponse'
 
 export default class AuthService {
@@ -16,7 +16,7 @@ export default class AuthService {
         return $api.post('/logout')
     }
 
-    static async refresh(): Promise<void> {
-        return $api.get('/refresh')
+    static async refresh(): Promise<AxiosResponse<IAuthResponse>> {
+        return axios.get(`${BASE_URL}/refresh`, { withCredentials: true })
     }
 }
