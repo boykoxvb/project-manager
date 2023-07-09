@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 import AppDataSource from "../orm"
 import { User } from "../orm/entity"
-import { Token } from "../orm/entity/Token"
+import { Token } from "../orm/entity/Auth/Token"
 
 const tokenRep = AppDataSource.getRepository(Token)
 

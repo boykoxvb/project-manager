@@ -18,7 +18,8 @@ $api.interceptors.response.use((config): any => {
     return config 
     }, async (error) => {
         const originalRequest = error.config
-        if (error.response.status == 401) {
+        if (error.response.status == 401 && !originalRequest._isRetry && error.config) {
+            originalRequest._isRetry = true
             try {
                 const res = await store.dispatch('User/chechAuth')
                 return $api.request(originalRequest)
@@ -26,6 +27,7 @@ $api.interceptors.response.use((config): any => {
                 console.log('Не авторизован')
             }
         }
+        throw error
 
     }
 )

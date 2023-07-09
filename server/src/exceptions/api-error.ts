@@ -13,11 +13,11 @@ export default class ApiError extends Error {
         return new ApiError(401, 'Пользователь не авторизован')
     }
 
-    static BadRequrest(message, errors?: Array<any>) {
+    static BadRequrest(message: string, errors?: Array<any>) {
         return new ApiError(400, message, errors)
     }
 
-    static BadUser(message, errors?: Array<any>) {
+    static BadUser(message: string, errors?: Array<Error>) {
         return new ApiError(404, message, errors)
     }
 }

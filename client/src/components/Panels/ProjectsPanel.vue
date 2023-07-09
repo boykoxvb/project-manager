@@ -9,36 +9,29 @@
                     <span>{{ new Date().getDate().toString() + ' ' + new Date().getMonth().toString()}}</span> 
                 </div>
             </div>
+            <div class="project__groups">
+                <project-groups/>
+            </div>
+
             <div class="info-panel">
                 <div class="state-filters">
                     <div
                     class="info-panel__project-count border-black" :class="{}">
                         <span>5</span> 
-                        <span class="project-state">In-progress</span>
+                        <span class="project-state">В процессе</span>
                     </div>
-                    <div class="info-panel__project-count border-black">
+                    <!-- <div class="info-panel__project-count border-black">
                         <span>16</span> 
                         <span class="project-state">Incoming</span>
-                    </div>
+                    </div> -->
                     <div class="info-panel__project-count">
                         <span>5</span> 
-                        <span class="project-state">Completed</span>
+                        <span class="project-state">Готовые</span>
                     </div>
                 </div>  
-                <div class="separator"></div>
-
-                <div class="project-group__container">
-                    <group-item
-                    v-for="group, index in groups"
-                    :key="group.name + ' ' + index"
-                    :group="group"
-                    >
-                    </group-item>
-                </div>
-
                 <div class="sorting">
 
-                    <div class="sorting-deadline" :class="{'border-black': sortState.deadline != null}">
+                    <div class="sorting-deadline" :class="{'border-black': sortState.deadline != null, 'border-white': sortState.deadline == null}">
                         <v-icon 
                         v-if="sortState.deadline === true || sortState.deadline === null"
                         @click="setSortState('deadline', sortState.deadline === null ? true : false)"
@@ -51,7 +44,7 @@
                         ></v-icon>
                     </div>
                     
-                    <div class="sorting-name" :class="{'border-black': sortState.name != null}">
+                    <div class="sorting-name" :class="{'border-black': sortState.name != null, 'border-white': sortState.name == null}">
                         <v-icon 
                         v-if="sortState.name === true || sortState.name === null"
                         @click="setSortState('name', sortState.name === null ? true : false)"
@@ -64,9 +57,11 @@
                         ></v-icon>
                     </div>
                 </div>
-                <!-- <v-icon icon="mdi-view-column-outline"></v-icon> -->
             </div>
         </div>
+        <v-divider></v-divider>
+
+
         <div class="projects">
             <div class="projects-grid"> 
 
@@ -90,6 +85,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { useStore } from '@/store'
+import { filterState } from '@/classes'
 
 export default defineComponent ({
     name: 'ProjectPanel',
@@ -102,8 +98,9 @@ export default defineComponent ({
         const addProjectDialog = ref(false)
 
         const groups = computed(() => store.getters['Projects/allGroups'])
-        const projects = computed(() => store.getters['Projects/allProjects'])
+        const projects = computed(() => store.getters['Projects/filteredProjects'])
         const sortState = computed(() => store.getters['Projects/sortState'])
+
 
         const setSortState = (sort: string, asc: boolean | null) => {
             store.dispatch('Projects/setSortState', {sort, asc})
@@ -172,6 +169,8 @@ export default defineComponent ({
     width: 100%;
     box-sizing: border-box;
 
+    
+
     &-header {
         display: flex;
         flex-wrap: nowrap;
@@ -189,12 +188,20 @@ export default defineComponent ({
             margin: auto 0px;
         }
     }
+    
+    .project__groups {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+
 
     &-panel {
         display: flex;
 
         .state-filters {
             display: flex;
+            width: 100%;
 
             .info-panel__project-count {
             transition: 0.3s;
@@ -233,6 +240,15 @@ export default defineComponent ({
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-self: end;
+
+            &-deadline {
+                border-radius: 8px;
+            }
+            
+            &-name {
+                border-radius: 8px;
+            }
         }
 
 

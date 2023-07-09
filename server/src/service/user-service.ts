@@ -1,4 +1,4 @@
-import {User} from '../orm/entity/User'
+import {User} from '../orm/entity/Auth/User'
 import AppDataSource from '../orm'
 import mailService from './mail-service'
 import { v4 } from 'uuid'

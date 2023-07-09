@@ -1,11 +1,7 @@
 import * as ProjectManager from '@/classes'
 import { Module } from 'vuex'
 import { IRootState, IUserState } from '@/store/interfaces'
-import cookie from 'js-cookie'
 import AuthService from '@/services/auth-service'
-import IUserDto from '@/classes/interfaces/IUserDto'
-import axios, { AxiosError } from 'axios'
-import { BASE_URL } from '@/services/axios'
 
 
 const User: Module<IUserState, IRootState> = {
@@ -39,7 +35,7 @@ const User: Module<IUserState, IRootState> = {
                 commit('setAccessToken', res.data.access_token)
                 commit('setUser', {user: res.data.user})
                 return { success: true, message: 'Авторизация пройдена'}
-            }catch (e: any) {
+            } catch (e: any) {
                 commit('setUser', {})
                 console.error(e)
                 if (e.response) {

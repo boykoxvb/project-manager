@@ -45,6 +45,7 @@ export default defineComponent ({
 
         watch(props, () => {
             isMenuShown.value = false
+            selected.value = props.select
         })
 
         onUnmounted(() => {

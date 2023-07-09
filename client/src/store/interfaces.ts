@@ -9,6 +9,7 @@ export interface IProjectsState {
     groups: Array<PM.ProjectGroup>
     choosedProject: PM.Project | undefined | null
     sortState: any
+    filterState: any
 }
 
 

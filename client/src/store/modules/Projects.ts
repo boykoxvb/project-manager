@@ -11,6 +11,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             projects: [],
             choosedProject: null,
             sortState: ProjectManager.sortState,
+            filterState: ProjectManager.filterState,
         }
     },
 
@@ -48,12 +49,36 @@ const Projects: Module<IProjectsState, IRootState> = {
             }
         },
 
+        filteredProjects(state, getters) {
+            var filteredByName = []
+            var filteredByGroup = []
+            var filteredByState = []
+
+            filteredByName = state.filterState.nameSearch 
+                ? getters.allProjects.filter((project: ProjectManager.Project) => project.name.includes(state.filterState.nameSearch))
+                : getters.allProjects
+
+            filteredByGroup = state.filterState.groupFilter 
+                ? filteredByName.filter((project: ProjectManager.Project) => project.group == state.filterState.groupFilter )
+                : filteredByName
+
+            filteredByState = state.filterState.stateFilter
+                ? filteredByGroup.filter((project: ProjectManager.Project) => project.state == state.filterState.stateFilter)
+                : filteredByGroup
+
+            return filteredByState
+        },
+
         choosedProject(state) {
             return state.choosedProject
         },
 
         sortState(state) {
             return state.sortState
+        },
+
+        availableGroupColors(state) {
+            return ['default','lime','orange','ocean','sky','pink','red']
         }
 
     },
@@ -104,7 +129,7 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         async projectChanged({commit}, buffer) {
-            await new Promise(resolve => setTimeout(resolve, 1000))
+            await new Promise(resolve => setTimeout(resolve, 1000)) // Имитация сервера
             buffer.deadline ? commit('changeProjectDeadline', {project: buffer.project, deadline: buffer.deadline}) : ''
             buffer.name ? commit('changeProjectName', {project: buffer.project, name: buffer.name}) : ''
             buffer.groupName ? commit('changeProjectGroup', {project: buffer.project, groupName: buffer.groupName}) : ''
@@ -116,10 +141,13 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('deleteProject', {project})
         },
 
-        
-
         setSortState({commit}, {sort, asc}) {
             commit('setSortState', {sort, asc})
+        },
+
+        editGroup({commit}, {group, name, color}) {
+            // Делаем запрос на сервер на изменение группы проектов
+            commit('editGroup', {group, name, color})
         }
         
     },
@@ -127,6 +155,21 @@ const Projects: Module<IProjectsState, IRootState> = {
     mutations: {
         setGroups(state, groups): void {
             state.groups = groups
+        },
+
+        editGroup(state, {group, name, color}) {
+            const targetGroup = state.groups.find((gr) => {return gr == group})
+            console.log(group, state.groups)
+            if (!targetGroup) {
+                console.error('Vuex: Группа проектов для изменения не найдена')
+                return
+            }
+            if (name) {
+                targetGroup.name = name
+            }
+            if (color) {
+                targetGroup.color = color
+            }
         },
 
         setProjects(state, projects): void {
@@ -187,9 +230,14 @@ const Projects: Module<IProjectsState, IRootState> = {
             state.sortState.set(sort, asc)
         },
 
-
         addTask(state, project: ProjectManager.Project) {
             project.addTask(new ProjectManager.Task('', ''))
+        },
+
+        setFilterState(state, {name, group, states}) {
+            state.filterState.nameSearch = name
+            state.filterState.groupFilter = group
+            state.filterState.stateFilter = states
         }
     }
 }

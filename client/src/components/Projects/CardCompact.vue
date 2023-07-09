@@ -114,7 +114,7 @@ export default defineComponent ({
         const store = useStore()
 
         const projectContainer = ref<HTMLElement | null>(null)
-        const groupNames = reactive(store.getters['Projects/allGroups'].map((group: ProjectManager.ProjectGroup) => group.name))
+        const groupNames = computed(() => store.getters['Projects/allGroups'].map((group: ProjectManager.ProjectGroup) => group.name))
 
         /* ВЫБОР АКТИВНОГО ПРОЕКТА */
         const choosedProject = computed(() => store.getters['Projects/choosedProject'] === props.project)
@@ -166,11 +166,7 @@ export default defineComponent ({
         // Если юзер нажал сохранить - отправляем в стор
         const saveChanges = async () => {
             isLoading.value = true
-            // if (Object.keys(projectBuffer).length == 1) {
-            //     isLoading.value = false
-            //     isEditing.value = false
-            //     projectBuffer = { project: props.project }
-            // }
+
             await store.dispatch('Projects/projectChanged', projectBuffer)
             isLoading.value = false
             isEditing.value = false

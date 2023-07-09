@@ -2,10 +2,11 @@ export { default as vbProgressBar } from '@/components/atom-components/vb-progre
 export { default as vbiIconButtonBase } from '@/components/atom-components/vbi-icon-button-base.vue'
 export { default as vbChoosableInput } from '@/components/atom-components/vb-choosable-input.vue'
 
-export { default as TaskCard } from '@/components/ProjectCard/TaskCard.vue'
-export { default as GroupItem } from '@/components/ProjectCard/GroupItem.vue'
+export { default as TaskCard } from '@/components/Projects/TaskCard.vue'
+export { default as GroupItem } from '@/components/Projects/GroupItem.vue'
 
-export { default as CardCompact } from '@/components/ProjectCard/CardCompact.vue'
+export { default as CardCompact } from '@/components/Projects/CardCompact.vue'
+export { default as ProjectGroups } from '@/components/Projects/ProjectGroups.vue'
 
 export { default as HeaderPanel } from '@/components/Panels/HeaderPanel.vue'
 export { default as ProjectsPanel } from '@/components/Panels/ProjectsPanel.vue'

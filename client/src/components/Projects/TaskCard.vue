@@ -110,10 +110,6 @@ export default defineComponent ({
             cursor: pointer;
             width: 100%;
 
-            // &:hover, &:focus {
-            //     color: #3f51b5;
-            //     border-color: #3f51b5;
-            // }
         }
 
 
