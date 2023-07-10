@@ -126,7 +126,7 @@ export default defineComponent ({
 .project-group__addedit {
     display: flex;
     flex-wrap: nowrap;
-    height: 40px;
+    height: 50px;
     width: 100%;
     border-radius: 10px;
 
@@ -136,6 +136,8 @@ export default defineComponent ({
         flex-grow: 1;
 
         .group__color {
+            display: flex;
+            align-items: center;
             margin-left: 5px;
             cursor: pointer;
         }
@@ -158,6 +160,9 @@ export default defineComponent ({
         display: flex;
         justify-self: end;
         margin: 0 10px;
+        
+        display: flex;
+        align-items: center;
 
         &-color {
             margin-left: 10px;
