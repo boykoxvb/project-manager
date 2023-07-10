@@ -54,6 +54,10 @@ export default class Project implements IDateString {
         this.tasks.push(task)
     }
 
+    public setGroup(group: ProjectGroup) {
+        this.group = group
+    }
+
 }
 
 export enum ProjectState {

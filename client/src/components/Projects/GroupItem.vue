@@ -1,7 +1,7 @@
 <template>
     <div 
     class="container"
-    :class="{[`color-${group.color}`]: choosed, 'border-black': choosed}"
+    :class="{[`color-${group.color}`]: choosed, 'shadow-blue-mini': choosed}"
     @click="chooseGroup"
     >
         <div 
@@ -88,6 +88,13 @@ export default defineComponent({
 @use '@/components/scss/group-colors.scss';
 @use '@/components/scss/highlighting.scss';
 
+.shadow-blue-mini {
+    transition: 0.3s;
+    -webkit-box-shadow: 0px 1px 7px 2px rgba(0, 144, 255, 0.5);
+    -moz-box-shadow: 0px 1px 7px 2px rgba(0, 144, 255, 0.5);
+    box-shadow: 0px 1px 7px 2px rgba(0, 144, 255, 0.5); 
+}
+
 .container {
     cursor: pointer;
     display: flex;
@@ -98,11 +105,22 @@ export default defineComponent({
     font-size: 15px;
     border-radius: 10px;
     padding: 5px;
+    margin: 5px;
 
     .group-color {
         width: 30px;
         height: 30px;
         border-radius: 50%;
+        transition: 0.3s;
+
+        &:hover {
+            transition: 0.3s;
+            -webkit-box-shadow: 0px 1px 7px 2px rgba(34, 60, 80, 0.2);
+            -moz-box-shadow: 0px 1px 7px 2px rgba(34, 60, 80, 0.2);
+            box-shadow: 0px 1px 7px 2px rgba(34, 60, 80, 0.2); 
+        }
+
+        
     }
 
     .group__expanded {

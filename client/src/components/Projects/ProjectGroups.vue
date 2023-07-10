@@ -6,6 +6,7 @@
         class="group-items">
 
           <group-item
+          class="group-item"
           v-for="group, index in groups"
           :key="group.name + ' ' + index"
           :group="group"
@@ -14,7 +15,7 @@
           @edit="openEditGroup(group)"
           />
           <div 
-          class="group-add"
+          class="group-item group-add"
           @click="openAddGroup"
           >
             <v-icon icon="mdi-plus" size="xs">
@@ -128,6 +129,8 @@ export default defineComponent ({
         flex-wrap: nowrap;
         overflow: auto;
         align-items: center;
+        align-content: center;
+        justify-content: center;
 
         .group-add {
           width: 30px;

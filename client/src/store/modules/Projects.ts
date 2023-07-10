@@ -54,26 +54,21 @@ const Projects: Module<IProjectsState, IRootState> = {
             var filteredByGroup = []
             var filteredByState = []
 
-            console.log(state.filterState)
 
             filteredByName = state.filterState.nameSearch 
                 ? getters.allProjects.filter((project: ProjectManager.Project) => project.name.includes(state.filterState.nameSearch))
                 : getters.allProjects
 
-            console.log(filteredByName)
 
             filteredByGroup = state.filterState.groupFilter 
                 ? filteredByName.filter((project: ProjectManager.Project) => project.group == state.filterState.groupFilter )
                 : filteredByName
 
-            console.log(filteredByGroup)
 
             filteredByState = state.filterState.stateFilter
                 ? filteredByGroup.filter((project: ProjectManager.Project) => project.state == state.filterState.stateFilter)
                 : filteredByGroup
             
-            console.log(filteredByState)
-
             return filteredByState
         },
 
@@ -83,6 +78,10 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         sortState(state) {
             return state.sortState
+        },
+
+        filterState(state) {
+            return state.filterState
         },
 
         availableGroupColors(state) {
@@ -127,7 +126,11 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('setTaskState', { task: task, taskState: ProjectManager.TaskState.FINISHED})
         },
 
-        addNew({commit}) {
+        async addNew({commit}, group?) {
+            if (group) {
+                commit('addProjectInGroup', {group})
+                console.log('Попали куда надо')
+            }
             // Отправляем запрос на сервер для добавления нового проекта, в ответе должны получить новый uuid
             commit('addEmptyProject')
         },
@@ -149,13 +152,18 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('deleteProject', {project})
         },
 
-        setSortState({commit}, {sort, asc}) {
-            commit('setSortState', {sort, asc})
-        },
+        // setSortState({commit}, {sort, asc}) {
+        //     commit('setSortState', {sort, asc})
+        // },
 
-        editGroup({commit}, {group, name, color}) {
+        async editGroup({commit}, {group, name, color}) {
             // Делаем запрос на сервер на изменение группы проектов
             commit('editGroup', {group, name, color})
+        },
+
+        async addGroup({commit}, {name, color}) {
+            // Делаем запрос на сервер на добавление группы проектов
+            commit('addGroup', {name, color})
         }
         
     },
@@ -178,6 +186,10 @@ const Projects: Module<IProjectsState, IRootState> = {
             if (color) {
                 targetGroup.color = color
             }
+        },
+
+        addGroup(state, {uuid, name, color}) {
+            state.groups.push(new ProjectManager.ProjectGroup('uuidOfNewGroup', name, color))
         },
 
         setProjects(state, projects): void {
@@ -222,12 +234,20 @@ const Projects: Module<IProjectsState, IRootState> = {
         addEmptyProject(state) {
             // Пушим новый проект в массив проектов, в группы не добавляем. 
             // Проектом эта сущность становится после первого сохранения
+
             if (!state.projects.find((proj) => proj.name == '' || proj.group == null /* || proj.uuid == '' */)) {
                 const newProject = new ProjectManager.Project('', '')
                 state.projects.push(newProject)
                 state.choosedProject = newProject
             }
-            
+        },
+
+        addProjectInGroup(state, {group}) {
+            const newProject = new ProjectManager.Project('', '')
+            console.log(group)
+            group.addProject(newProject)
+            state.projects.push(newProject)
+            return
         },
 
         chooseProject(state, project: ProjectManager.Project) {

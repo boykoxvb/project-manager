@@ -21,6 +21,10 @@ const User: Module<IUserState, IRootState> = {
             return state.id
         },
 
+        email(state) {
+            return state.email
+        },
+
         accessToken(state) {
             return state.access_token
         },

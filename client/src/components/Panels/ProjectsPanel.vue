@@ -3,34 +3,14 @@
         <div class="info">
             <div class="info-header">
                 <div class="info-header-projects">
-                    Projects
+                    Проекты 
+                    <vb-transition name="fade">
+                        <span class="group" v-if="choosedGroup?.name">
+                            {{ ' / ' + choosedGroup.name }}
+                        </span>
+                    </vb-transition>
                 </div>
-                <div class="info-header-date">
-                    <span>{{ new Date().getDate().toString() + ' ' + new Date().getMonth().toString()}}</span> 
-                </div>
-            </div>
-            <div class="project__groups">
-                <project-groups/>
-            </div>
-
-            <div class="info-panel">
-                <div class="state-filters">
-                    <div
-                    class="info-panel__project-count border-black" :class="{}">
-                        <span>5</span> 
-                        <span class="project-state">В процессе</span>
-                    </div>
-                    <!-- <div class="info-panel__project-count border-black">
-                        <span>16</span> 
-                        <span class="project-state">Incoming</span>
-                    </div> -->
-                    <div class="info-panel__project-count">
-                        <span>5</span> 
-                        <span class="project-state">Готовые</span>
-                    </div>
-                </div>  
                 <div class="sorting">
-
                     <div class="sorting-deadline" :class="{'border-black': sortState.deadline != null, 'border-white': sortState.deadline == null}">
                         <v-icon 
                         v-if="sortState.deadline === true || sortState.deadline === null"
@@ -43,7 +23,7 @@
                         icon="mdi-sort-calendar-descending" 
                         ></v-icon>
                     </div>
-                    
+
                     <div class="sorting-name" :class="{'border-black': sortState.name != null, 'border-white': sortState.name == null}">
                         <v-icon 
                         v-if="sortState.name === true || sortState.name === null"
@@ -57,9 +37,34 @@
                         ></v-icon>
                     </div>
                 </div>
+                <!-- <div class="info-header-date">
+                    <span>{{ new Date().getDate().toString() + ' ' + new Date().getMonth().toString()}}</span> 
+                </div> -->
+            </div>
+
+            <div class="project__groups">
+                <project-groups/>
+            </div>
+
+            <div class="info-panel">
+                <!-- <div class="state-filters">
+                    <div
+                    class="info-panel__project-count border-black" :class="{}">
+                        <span>{{ projectsInProgressNumber }}</span> 
+                        <span class="project-state">В процессе</span>
+                    </div>
+                    <div class="info-panel__project-count border-black">
+                        <span>16</span> 
+                        <span class="project-state">Incoming</span>
+                    </div>
+                    <div class="info-panel__project-count">
+                        <span> {{ projectsFinishedNumber }}</span> 
+                        <span class="project-state">Готовые</span>
+                    </div>
+                </div>   -->
+                
             </div>
         </div>
-        <v-divider></v-divider>
 
 
         <div class="projects">
@@ -86,27 +91,40 @@
 import { defineComponent, ref, computed } from 'vue'
 import { useStore } from '@/store'
 import { filterState } from '@/classes'
+import { vbTransition } from '@/components'
+import * as PM from '@/classes'
 
 export default defineComponent ({
     name: 'ProjectPanel',
+    components: {
+        vbTransition
+    },
 
     setup() {
 
         const store = useStore()
         store.dispatch('Projects/fetchGroups')
 
+
         const addProjectDialog = ref(false)
+        const choosedGroup = computed(() => store.getters['Projects/filterState'].groupFilter)
 
         const groups = computed(() => store.getters['Projects/allGroups'])
         const projects = computed(() => store.getters['Projects/filteredProjects'])
         const sortState = computed(() => store.getters['Projects/sortState'])
 
+        const projectsInProgressNumber = computed(() => store.getters['Projects/allProjects'].filter((project: PM.Project) => project.state === PM.ProjectState.STARTED).length)
+        const projectsFinishedNumber = computed(() => store.getters['Projects/allProjects'].filter((project: PM.Project) => project.state === PM.ProjectState.FINISHED).length)
+
 
         const setSortState = (sort: string, asc: boolean | null) => {
-            store.dispatch('Projects/setSortState', {sort, asc})
+            store.commit('Projects/setSortState', {sort, asc})
         }
 
-        const addNewProject = () => {
+        const addNewProject = async () => {
+            if (choosedGroup.value) {
+                await store.dispatch('Projects/addNew', choosedGroup.value)
+            }
             store.dispatch('Projects/addNew')
         }
 
@@ -120,6 +138,10 @@ export default defineComponent ({
             addNewProject,
             sortState,
             setSortState,
+            choosedGroup,
+
+            projectsInProgressNumber,
+            projectsFinishedNumber,
         }
     }
 
@@ -177,9 +199,29 @@ export default defineComponent ({
         justify-content: space-between;
         margin-bottom: 15px;
 
+        .sorting {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-self: end;
+
+            &-deadline {
+                border-radius: 8px;
+            }
+            
+            &-name {
+                border-radius: 8px;
+            }
+        }
+
         &-projects {
-            display: block;
             font-size: 1.3em;
+            text-overflow: ellipsis;
+
+            .group {
+                display: inline;
+                white-space: nowrap;
+            }
         }
 
         &-date {
@@ -191,7 +233,7 @@ export default defineComponent ({
     
     .project__groups {
         width: 100%;
-        margin-bottom: 10px;
+        margin: 10px 0;
     }
 
 
@@ -235,25 +277,6 @@ export default defineComponent ({
             }
 
         }
-
-        .sorting {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-self: end;
-
-            &-deadline {
-                border-radius: 8px;
-            }
-            
-            &-name {
-                border-radius: 8px;
-            }
-        }
-
-
-
-        
 
         .separator {
             width: 1px;

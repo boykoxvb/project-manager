@@ -81,6 +81,7 @@ export default defineComponent ({
         const changes = reactive({
             color: props?.group?.color,
             name: props?.group?.name,
+            uuid: props?.group?.uuid,
         })
 
         const hasChanges = computed((): boolean => {

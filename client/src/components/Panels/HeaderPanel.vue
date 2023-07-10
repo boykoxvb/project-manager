@@ -2,7 +2,7 @@
     <div class="main-container">
       <div class="header">
         <div class="search">
-          <input type="text" class="search-input" placeholder="Search">
+          <input type="text" :value="searchTerm" @input="searchChange" class="search-input" placeholder="Search">
         </div>
         <div class="instruments">
           <div class="bell-icon">
@@ -13,7 +13,7 @@
           </div>
           <div class="user">
             <div class="user-photo"></div>
-            <div class="user-name">Boykovkv</div>
+            <div class="user-name">{{username}}</div>
           </div>
         </div>
       </div>
@@ -24,12 +24,31 @@
 
 import vbiIconButtonBase from '../atom-components/vbi-icon-button-base.vue'
 
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
+import { useStore } from '@/store'
 
 export default defineComponent ({
   name: 'HeaderPanel',
   components: {
     vbiIconButtonBase
+  },
+
+  setup(props) {
+    const store = useStore()
+    const username = computed(() => store.getters['User/email'])
+    
+    const searchTerm = computed(() => store.getters['Projects/filterState'].nameSearch)
+
+    const searchChange = (event: Event) => {
+      store.commit('Projects/setFilterState', {name: (event?.target as HTMLInputElement).value})
+    }
+
+
+    return {
+      username,
+      searchTerm,
+      searchChange,
+    }
   }
   
 })
