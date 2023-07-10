@@ -54,17 +54,25 @@ const Projects: Module<IProjectsState, IRootState> = {
             var filteredByGroup = []
             var filteredByState = []
 
+            console.log(state.filterState)
+
             filteredByName = state.filterState.nameSearch 
                 ? getters.allProjects.filter((project: ProjectManager.Project) => project.name.includes(state.filterState.nameSearch))
                 : getters.allProjects
+
+            console.log(filteredByName)
 
             filteredByGroup = state.filterState.groupFilter 
                 ? filteredByName.filter((project: ProjectManager.Project) => project.group == state.filterState.groupFilter )
                 : filteredByName
 
+            console.log(filteredByGroup)
+
             filteredByState = state.filterState.stateFilter
                 ? filteredByGroup.filter((project: ProjectManager.Project) => project.state == state.filterState.stateFilter)
                 : filteredByGroup
+            
+            console.log(filteredByState)
 
             return filteredByState
         },
@@ -235,9 +243,23 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         setFilterState(state, {name, group, states}) {
-            state.filterState.nameSearch = name
-            state.filterState.groupFilter = group
-            state.filterState.stateFilter = states
+            if (name != null) {
+                state.filterState.nameSearch = name
+            }
+            if (group) {
+                state.filterState.groupFilter = group
+            }
+            if (states) {
+                state.filterState.stateFilter = states
+            }
+        },
+
+        unsetGroupFilter(state) {
+            state.filterState.groupFilter = null
+        },
+
+        unsetStateFilter(state) {
+            state.filterState.stateFilter = null
         }
     }
 }

@@ -4,14 +4,23 @@
         <div 
         v-if="!editingGroup"
         class="group-items">
-        <group-item
-        v-for="group, index in groups"
-        :key="group.name + ' ' + index"
-        :group="group"
-        :choosed="choosedGroup == group"
-        @choosed="chooseGroup(group)"
-        @edit="openEditGroup(group)"
-        />
+
+          <group-item
+          v-for="group, index in groups"
+          :key="group.name + ' ' + index"
+          :group="group"
+          :choosed="choosedGroup == group"
+          @choosed="chooseGroup(group)"
+          @edit="openEditGroup(group)"
+          />
+          <div 
+          class="group-add"
+          @click="openAddGroup"
+          >
+            <v-icon icon="mdi-plus" size="xs">
+
+            </v-icon>
+          </div>
         </div>
         <project-group-add-edit
         v-else
@@ -25,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, reactive, Ref } from 'vue'
+import { defineComponent, ref, computed, Ref } from 'vue'
 import { useStore } from '@/store'
 import * as PM from '@/classes'
 import ProjectGroupAddEdit from './ProjectGroupAddEdit.vue'
@@ -51,8 +60,13 @@ export default defineComponent ({
         const editingGroup: Ref<PM.ProjectGroup | null> = ref(null)
 
         const chooseGroup = (group: PM.ProjectGroup) => {
-            if (choosedGroup.value != group) choosedGroup.value = group
-            else choosedGroup.value = null
+            if (choosedGroup.value != group) {
+              choosedGroup.value = group
+              store.commit('Projects/setFilterState', {group: group})
+            } else  {
+              choosedGroup.value = null
+              store.commit('Projects/unsetGroupFilter')
+            }
         }
 
         const openEditGroup = (group: PM.ProjectGroup) => {
@@ -63,8 +77,16 @@ export default defineComponent ({
             editingGroup.value = null
         }
 
+        const openAddGroup = () => {
+          editingGroup.value = new PM.ProjectGroup('', '', 'default')
+        }
+
         const addEditGroup = (payload: any) => {
-            store.dispatch('Projects/editGroup', {group: editingGroup.value, name: payload.name, color: payload.color})
+            if (payload.uuid) {
+              store.dispatch('Projects/editGroup', {group: editingGroup.value, name: payload.name, color: payload.color})
+            } else {
+              store.dispatch('Projects/addGroup', {name: payload.name, color: payload.color})
+            }
             editingGroup.value = null
         }
 
@@ -82,6 +104,7 @@ export default defineComponent ({
             availableGroupColors,
             cancelChanges,
             addEditGroup,
+            openAddGroup,
         }
     }
 
@@ -104,6 +127,23 @@ export default defineComponent ({
         display: flex;
         flex-wrap: nowrap;
         overflow: auto;
+        align-items: center;
+
+        .group-add {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color:#6E7475;
+          cursor: pointer;
+
+          &:hover {
+            color: #383b3b;
+            background-color: #efefef;
+          }
+        }
     }
 }
 

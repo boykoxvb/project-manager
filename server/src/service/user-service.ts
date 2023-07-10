@@ -5,6 +5,7 @@ import { v4 } from 'uuid'
 import tokenService from './token-service'
 import UserDto from '../dto/user-dto'
 import ApiError from '../exceptions/api-error'
+import IUserData from '../dto/interfaces/IUserData'
 
 const bcrypt = require('bcrypt')
 
@@ -17,7 +18,7 @@ class UserService {
         name: string, 
         email: string, 
         password: string
-        ) {
+        ): Promise<IUserData> {
         const loginCandidate = await userRep.findOne({where: {login: login}})
         if (loginCandidate) throw ApiError.BadRequrest(`Пользователь с логином ${login} уже существует`)
         const emailCandidate = await userRep.findOne({where: {email: email}})
@@ -41,15 +42,14 @@ class UserService {
         }
     }
 
-    async activate(activation_link: string) {
+    async activate(activation_link: string): Promise<void> {
         const user = await userRep.findOne({where: {activation_link: activation_link}})
         if (!user) throw ApiError.BadRequrest('Нерабочая ссылка активации')
         user.is_activated = true
         await userRep.save(user)
-        console.log('ACTIVATING USER')
     }
 
-    async login(email: string, password: string) {
+    async login(email: string, password: string): Promise<IUserData> {
         const user = await userRep.findOne({where: {email: email}})
         if (!user) throw ApiError.BadUser(`Пользователь с email ${email} не был найден`)
         const isPassEquals = await bcrypt.compare(password, user.password)
@@ -70,7 +70,7 @@ class UserService {
         return token
     }
 
-    async refresh(refresh_token: string) {
+    async refresh(refresh_token: string): Promise<IUserData> {
         const userData = tokenService.validateRefreshToken(refresh_token)
         const tokenFromDB = await tokenService.findRefreshToken(refresh_token)
         if (!userData || !tokenFromDB) {

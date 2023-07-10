@@ -1,3 +1,4 @@
+import IUserData from "../dto/interfaces/IUserData";
 import ApiError from "../exceptions/api-error";
 import tokenService from "../service/token-service";
 
@@ -12,7 +13,7 @@ export default function (req, res, next) {
         const userData = tokenService.validateAccessToken(access_token)
         if (!userData) return next(ApiError.UnauthorizedError())
 
-        req.user = userData
+        req.userData = userData
         next()
     } catch (e) {
         return next(ApiError.UnauthorizedError())

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+import IUserData from "../dto/interfaces/IUserData"
 import AppDataSource from "../orm"
 import { User } from "../orm/entity"
 import { Token } from "../orm/entity/Auth/Token"
@@ -37,7 +38,7 @@ class TokenService {
         return tokenData
     }
 
-    validateAccessToken(token: string) {
+    validateAccessToken(token: string): IUserData {
         try {
             const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
             return userData
@@ -46,7 +47,7 @@ class TokenService {
         }
     }
 
-    validateRefreshToken(token: string) {
+    validateRefreshToken(token: string): IUserData {
         try {
             const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
             return userData
