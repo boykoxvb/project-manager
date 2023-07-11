@@ -13,6 +13,7 @@ const userRep = AppDataSource.getRepository(User)
 
 class UserService {
 
+    // Регистрация, авторизация, активация
     async registration(
         login: string, 
         name: string, 
@@ -31,9 +32,6 @@ class UserService {
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
         await tokenService.saveToken(user, tokens.refresh_token)
-
-        // await userRep.delete({id: user.id})
-
         await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activation_link}`)
 
         return {
@@ -77,7 +75,7 @@ class UserService {
             throw ApiError.UnauthorizedError()
         }
 
-        const user = await userRep.findOne({where: {id: userData.id}})
+        const user = await userRep.findOne({where: {id: userData.user.id}})
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
         await tokenService.saveToken(user, tokens.refresh_token)
@@ -86,6 +84,15 @@ class UserService {
             user: userDto
         }
     }
+
+    // Commons
+    async getUserById(user_id: string) {
+        const user = await userRep.findOne({where: {id: user_id}}) 
+        if (!user) throw ApiError.BadUser(`Пользователь с id ${user_id} не найден`)
+        return user
+    }
+
+    
 
 }
 

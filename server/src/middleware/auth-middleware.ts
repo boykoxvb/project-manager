@@ -12,7 +12,7 @@ export default function (req, res, next) {
 
         const userData = tokenService.validateAccessToken(access_token)
         if (!userData) return next(ApiError.UnauthorizedError())
-
+        
         req.userData = userData
         next()
     } catch (e) {

@@ -5,6 +5,7 @@ import {} from 'cors'
 import { authRouter } from './src/router/auth-router'
 require('dotenv').config()
 import errorMiddleware from './src/middleware/error-middleware'
+import { projectsRouter } from './src/router/projects-router'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -15,6 +16,7 @@ app.use(cors({
     credentials: true,
 }))
 app.use(cookieParser())
+app.use('/projects', projectsRouter)
 app.use('/api', authRouter)
 app.use(errorMiddleware)
 

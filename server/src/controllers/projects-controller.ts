@@ -8,37 +8,64 @@ class ProjectsController {
     // Группы
     async allGroups(req, res, next) {
         try {
-            const user_id = req.userData.user.id
+            const user_id = req.userData.id
             const groups = await projectsService.getProjectGroups(user_id)
-
-
+            console.log(groups)
+            return res.send(groups)
         } catch (e) {
+            next(e)
+        }
+    }
 
+    async addGroup(req, res, next) {
+        try {
+            const user_id = req.userData.id
+            const { name, color } = req.body
+            const newGroup = await projectsService.addGroup(user_id, { name, color })
+            return res.send(newGroup.id)
+        } catch (e) {
+            next(e)
         }
     }
 
     async changeGroup(req, res, next) {
         try {
-            const user_id = req.userData.user.id
-
+            const user_id = req.userData.id
+            const group_id = req.params.id 
+            const { name, color } = req.body
+            const updatedGroup = await projectsService.changeGroup(user_id, group_id, {name, color})
+            return res.send(updatedGroup)
         } catch (e) {
-
+            next(e)
         }
     }
 
     async deleteGroup(req, res, next) {
         try {
-            const user_id = req.userData.user.id
-
+            const user_id = req.userData.id
+            const group_id = req.params.id 
+            await projectsService.deleteGroup(user_id, group_id)
+            return res.send({success: true})
         } catch (e) {
-
+            next(e)
         }
     }
 
     // Projects
+    async addProject(req, res, next) {
+        try {
+            // const user_id = req.userData.id
+            // const { name, color } = req.body
+            // // const newGroup = await projectsService.addProject()
+            // // return res.send(newGroup.id) 
+        } catch (e) {
+            next(e)
+        }
+    }
+    
     async changeProject(req, res, next) {
         try {
-            const user_id = req.userData.user.id
+            const user_id = req.userData.id
 
         } catch (e) {
 
@@ -47,7 +74,7 @@ class ProjectsController {
 
     async deleteProject(req, res, next) {
         try {
-            const user_id = req.userData.user.id
+            const user_id = req.userData.id
 
         } catch (e) {
 

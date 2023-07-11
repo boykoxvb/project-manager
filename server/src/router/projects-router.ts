@@ -15,10 +15,13 @@ import projectsController from "../controllers/projects-controller"
 
 
 projectsRouter.get('/groups/all', authMiddleware, projectsController.allGroups)
-projectsRouter.post('/groups/:id', authMiddleware, projectsController.addGroup)
-projectsRouter.update('/groups/:id', authMiddleware, projectsController.changeGroup)
+projectsRouter.post('/groups', authMiddleware, projectsController.addGroup)
+projectsRouter.put('/groups/:id', authMiddleware, projectsController.changeGroup)
 projectsRouter.delete('/groups/:id', authMiddleware, projectsController.deleteGroup)
 
+projectsRouter.post('/', authMiddleware, projectsController.addProject)
+projectsRouter.put('/:id', authMiddleware, projectsController.changeProject)
+projectsRouter.delete('/:id', authMiddleware, projectsController.deleteProject)
 
 
 export { projectsRouter }

@@ -1,7 +1,9 @@
-import { Project, ProjectGroup, Task } from '../orm/entity/index'
+import { Project, ProjectGroup, Task, User } from '../orm/entity/index'
 import AppDataSource from '../orm'
 import { v4 } from 'uuid'
 import ApiError from '../exceptions/api-error'
+import userService from './user-service'
+import { group } from 'console'
 
 const bcrypt = require('bcrypt')
 
@@ -13,7 +15,41 @@ const tasksRep = AppDataSource.getRepository(Task)
 class ProjectsService {
 
     async getProjectGroups(user_id: string) {
-        const projectGroups = await projectGroupsRep.find({relations: {user:true}, where: {user: {id: user_id}}})
+        const projectGroups = await projectGroupsRep.find({
+                relations: { user: true }, 
+                where: {user: {id: user_id}}
+            })
+        console.log(projectGroups)
+        return projectGroups
+    }
+
+    async addGroup(user_id: string, {name, color}) {
+        const user = await userService.getUserById(user_id)
+        const newGroup = new ProjectGroup(name, user, color)
+        await projectGroupsRep.save(newGroup)
+        return newGroup
+    }
+
+    async changeGroup(user_id: string, group_id, { name, color }) {
+        const group = await this.getGroup(group_id, user_id)
+        if (name) group.name = name
+        if (color) group.color = color
+        return await projectGroupsRep.save(group)
+    }
+
+    async deleteGroup(user_id: string, group_id: string) {
+        // Ищем группу по Id и юзеру в целях безопасности
+        const res = await projectGroupsRep.delete({id: group_id, user: {id: user_id}})
+        if (res.affected == 0) {
+            throw ApiError.NotFound(`Группа проектов с id ${group_id} не найдена`)
+        }
+    }
+
+    async getGroup(group_id: string, user_id: string) {
+        const user = await userService.getUserById(user_id) 
+        const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user.id}}})
+        if (!group) throw ApiError.NotFound(`Группа проектов с id ${group_id} не найдена`)
+        return group
     }
 
     // async registration(

@@ -20,4 +20,8 @@ export default class ApiError extends Error {
     static BadUser(message: string, errors?: Array<Error>) {
         return new ApiError(404, message, errors)
     }
+
+    static NotFound(message: string, errors?: Array<Error>) {
+        return new ApiError(404, message, errors)
+    }
 }

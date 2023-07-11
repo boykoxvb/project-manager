@@ -129,7 +129,7 @@ const Projects: Module<IProjectsState, IRootState> = {
         async addNew({commit}, group?) {
             if (group) {
                 commit('addProjectInGroup', {group})
-                console.log('Попали куда надо')
+                return
             }
             // Отправляем запрос на сервер для добавления нового проекта, в ответе должны получить новый uuid
             commit('addEmptyProject')
@@ -151,10 +151,6 @@ const Projects: Module<IProjectsState, IRootState> = {
             await new Promise(resolve => setTimeout(resolve, 1000))
             commit('deleteProject', {project})
         },
-
-        // setSortState({commit}, {sort, asc}) {
-        //     commit('setSortState', {sort, asc})
-        // },
 
         async editGroup({commit}, {group, name, color}) {
             // Делаем запрос на сервер на изменение группы проектов

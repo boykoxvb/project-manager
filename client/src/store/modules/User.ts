@@ -74,6 +74,17 @@ const User: Module<IUserState, IRootState> = {
                 console.error(e)
                 return { success: false, message: 'Пользователь не авторизован'} 
             }
+        },
+
+        async logout({commit}) {
+            try {
+                await AuthService.logout()
+                commit('setUser')
+                return { success: true, message: `Успешный логаут`}
+            } catch (e: any) {
+                console.error(e)
+                return { success: false, message: `Ошибка логаута ${e.message}`}
+            }
         }
     },
 
