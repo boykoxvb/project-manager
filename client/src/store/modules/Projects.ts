@@ -126,6 +126,11 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('setTaskState', { task: task, taskState: ProjectManager.TaskState.FINISHED})
         },
 
+        async taskModified({commit}, {task, name}) {
+            // Отправляем запрос
+            commit('modifyTask', {task, name})
+        },
+
         async addNew({commit}, group?) {
             if (group) {
                 commit('addProjectInGroup', {group})
@@ -196,6 +201,10 @@ const Projects: Module<IProjectsState, IRootState> = {
             task.setState(taskState)
         },
 
+        modifyTask(state, {task, name}) {
+            task.name = name
+        },
+
         changeProjectGroup(state, {project, groupName}) {
             // Ищем группу по имени
             const targetGroup = state.groups.find((group: ProjectManager.ProjectGroup) => group.name === groupName)
@@ -248,6 +257,10 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         chooseProject(state, project: ProjectManager.Project) {
             state.choosedProject = project
+        },
+
+        closeProject(state) {
+            state.choosedProject = null
         },
 
         setSortState(state, {sort, asc}) {

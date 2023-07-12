@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" @keydown.enter="attemptAuth(email, password)">
     
         <div class="form">
             <div class="form__header">

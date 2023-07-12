@@ -4,9 +4,11 @@
             <div class="project__name">
                 {{ project?.name }}
             </div>
-            <!-- <div class="project__group">
-                (-)
-            </div> -->
+            <v-icon
+            @click="closeProject"   
+            class="close__btn" 
+            icon="mdi-close"
+            />
         </div>
         <div class="panel-row panel-row__tasks">
             <div 
@@ -17,7 +19,7 @@
                 <TaskCard 
                 :task="task"
                 @task:finished="finishTask(task)"
-                @task:change="projectModified"
+                @task:change="taskModified(task, $event)"
                 ></TaskCard>
 
             </div>
@@ -36,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, PropType, reactive } from 'vue'
+import { defineComponent, computed, PropType, ref } from 'vue'
 import * as ProjectManager from '@/classes'
 import { useStore } from '@/store'
 
@@ -50,11 +52,13 @@ export default defineComponent ({
     setup(props) {
 
         const store = useStore()
+        const taskModifiedTimeout = ref()
 
-        const isModified = ref(false)
-
-        const projectModified = () => {
-            isModified.value = true
+        const taskModified = (task: ProjectManager.Task, name: string) => {
+            clearTimeout(taskModifiedTimeout.value)
+            taskModifiedTimeout.value = setTimeout(() => {
+                store.dispatch('Projects/taskModified', {task: task, name: name})
+            }, 2000)
         }
 
         const isEmptyTaskExists = computed(() => props.project.tasks.find((task) => task.name == ''))
@@ -71,13 +75,17 @@ export default defineComponent ({
         const showedTasks = computed(() => {
             return props.project?.tasks.filter((t) => t.state != ProjectManager.TaskState.FINISHED)
         })
+
+        const closeProject = () => {
+            store.commit('Projects/closeProject')
+        }
         
         return {
             addTask,
-            isModified,
-            projectModified,
+            taskModified,
             finishTask,
             showedTasks,
+            closeProject,
         }
         
     }
@@ -121,17 +129,19 @@ export default defineComponent ({
 
         .project__name {
             flex-grow: 1;
+            display: flex;
+        }
 
-            input {
-                outline: none;
-                font-family: Tahoma, Geneva, sans-serif;
-                font-weight: 600;
-                width: 100%;
-                border: none;
-                box-sizing: border-box;
-                background-color: inherit;
+        
+        .close__btn {
+            cursor: pointer;     
+            border-radius: 50%;
+            transition: 0.3s;
+            &:hover {
+                background-color: #B8C0C2;
             }
         }
+
     }
 
     .panel-row__tasks {

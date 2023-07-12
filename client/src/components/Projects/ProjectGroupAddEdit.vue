@@ -85,7 +85,7 @@ export default defineComponent ({
         })
 
         const hasChanges = computed((): boolean => {
-            return !!(changes.color != props?.group?.color || changes.name != props?.group?.name)
+            return (!!(changes.color != props?.group?.color || changes.name != props?.group?.name) && (!!changes.name))
         })
 
         const cancelChanges = () => {

@@ -23,7 +23,7 @@
           @project:choosed="chooseProject($event)"
           ></projects-panel>
         </div>
-        <div class="redactor-panel">
+        <div v-if="choosedProject" class="redactor-panel">
           <redactor-panel :project="choosedProject"></redactor-panel>
         </div>
       </div>

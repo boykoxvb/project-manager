@@ -122,15 +122,15 @@ export default defineComponent ({
 
     display: flex;
     flex-wrap: nowrap;
-    overflow: auto;
+    // overflow: auto;
 
     .group-items {
         display: flex;
-        flex-wrap: nowrap;
-        overflow: auto;
+        flex-wrap: wrap;
+        // overflow: auto;
         align-items: center;
         align-content: center;
-        justify-content: center;
+        // justify-content: center;
 
         .group-add {
           width: 30px;

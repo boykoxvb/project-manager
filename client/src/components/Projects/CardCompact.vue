@@ -2,8 +2,9 @@
     <div class="full-container" ref="projectContainer">
         <div 
         class="project-container" 
-        :class="{[`color-${project?.group?.color}`]: true, 'shadow-blue': choosedProject }"
+        :class="{[`color-${project?.group?.color}`]: true, 'shadow-blue': choosedProject}"
         @click="chooseProject()"
+        @keypress.enter="test"
         >
             <div class="header">
                 <div class="deadline">
@@ -141,6 +142,9 @@ export default defineComponent ({
         const isEditing = ref(false)
         const isLoading = ref(false)
 
+
+
+
         // Объект, который хранит изменения проекта перед отправкой в стор
         var projectBuffer: any = { project: props.project }
 
@@ -202,6 +206,10 @@ export default defineComponent ({
             }
         })
 
+        const test = () => {
+            console.log('сработало')
+        }
+
         return {
             groupNames,
             projectContainer,
@@ -214,6 +222,7 @@ export default defineComponent ({
             cancelChanges,
             deadlineIsExpired,
             isLoading,
+            test
         }
     }
     

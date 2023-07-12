@@ -3,12 +3,15 @@
         <div class="info">
             <div class="info-header">
                 <div class="info-header-projects">
-                    Проекты 
-                    <vb-transition name="fade">
+                     
+                    <!-- <vb-transition name="fade"> -->
                         <span class="group" v-if="choosedGroup?.name">
-                            {{ ' / ' + choosedGroup.name }}
+                            {{ 'Проекты / ' + choosedGroup.name }}
                         </span>
-                    </vb-transition>
+                        <span v-else>
+                            Проекты
+                        </span>
+                    <!-- </vb-transition> -->
                 </div>
                 <div class="sorting">
                     <div class="sorting-deadline" :class="{'border-black': sortState.deadline != null, 'border-white': sortState.deadline == null}">
@@ -187,7 +190,7 @@ export default defineComponent ({
 
   .info {
     flex-grow: 0;
-    padding: 0 10px 10px;
+    padding: 0 10px;
     width: 100%;
     box-sizing: border-box;
 
@@ -197,7 +200,7 @@ export default defineComponent ({
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-between;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
 
         .sorting {
             display: flex;
@@ -215,7 +218,7 @@ export default defineComponent ({
         }
 
         &-projects {
-            font-size: 1.3em;
+            font-size: 1em;
             text-overflow: ellipsis;
 
             .group {

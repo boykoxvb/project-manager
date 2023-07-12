@@ -40,12 +40,12 @@ export default defineComponent ({
                 if (checked.value) {
                     emit('task:finished')
                 }
-            }, 2000)
+            }, 3000)
 
         }
 
         const onLabelChange = (e: any): void => {
-            emit('task:change', e.target.value)
+            emit('task:change', e.target.value )
         }
 
         return {
