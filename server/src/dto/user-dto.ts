@@ -1,9 +1,9 @@
 import { User } from "../orm/entity"
 
 class UserDto {
-    public email
-    public id
-    public isActivated
+    public email: string | undefined
+    public id: string | undefined
+    public isActivated: boolean | undefined
 
     public constructor(user: User) {
         this.email = user.email

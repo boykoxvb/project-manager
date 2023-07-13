@@ -2,6 +2,7 @@ import userService from "../service/user-service"
 import { validationResult } from "express-validator/src/validation-result"
 import ApiError from "../exceptions/api-error"
 import projectsService from "../service/projects-service"
+import ProjectGroupDto from "../dto/project-groups-dto"
 
 class ProjectsController {
 
@@ -51,13 +52,27 @@ class ProjectsController {
         }
     }
 
+    async test(req, res, next) {
+        try {
+            const gr = req.body
+            const groupDto = new ProjectGroupDto(gr)
+            console.log(groupDto)
+            // await projectsService.deleteGroup(user_id, group_id)
+            // return res.send({success: true})
+            return res.send(groupDto)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+
     // Projects
     async addProject(req, res, next) {
         try {
-            // const user_id = req.userData.id
-            // const { name, color } = req.body
-            // // const newGroup = await projectsService.addProject()
-            // // return res.send(newGroup.id) 
+            const user_id = req.userData.id
+            const { name, group_id, deadline } = req.body
+            const newProject = await projectsService.addProject(user_id, {name, group_id, deadline})
+            return res.send(newProject.id)
         } catch (e) {
             next(e)
         }
@@ -66,6 +81,11 @@ class ProjectsController {
     async changeProject(req, res, next) {
         try {
             const user_id = req.userData.id
+            // Как правильно типизировать передаваемый JSON??
+            // project: ProjectDto
+            const { project } = req.body
+            // const updatedProject = await projectsService.changeProject(user_id, uuid, {name, group_id, deadline})
+
 
         } catch (e) {
 

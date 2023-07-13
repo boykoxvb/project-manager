@@ -1,11 +1,11 @@
 import { Project, ProjectGroup, Task, User } from '../orm/entity/index'
+import ProjectDto, { ProjectState } from '../dto/project-dto'
 import AppDataSource from '../orm'
 import { v4 } from 'uuid'
 import ApiError from '../exceptions/api-error'
 import userService from './user-service'
 import { group } from 'console'
-
-const bcrypt = require('bcrypt')
+import ProjectGroupDto from '../dto/project-groups-dto'
 
 const projectsRep = AppDataSource.getRepository(Project)
 const projectGroupsRep = AppDataSource.getRepository(ProjectGroup)
@@ -14,13 +14,26 @@ const tasksRep = AppDataSource.getRepository(Task)
 
 class ProjectsService {
 
+    // Группы
     async getProjectGroups(user_id: string) {
         const projectGroups = await projectGroupsRep.find({
                 relations: { user: true }, 
                 where: {user: {id: user_id}}
             })
-        console.log(projectGroups)
-        return projectGroups
+        const projectGroupsDto: Array<ProjectGroupDto> = []
+        projectGroups.forEach(async (gr) => {
+            const projects = await projectsRep.find({
+                relations: {project_group: true, user: true},
+                where: {
+                    project_group: {id: gr.id},
+                    user: {id: user_id}
+                }
+            })
+            const projectsDtoArray = projects.map((pr) => new ProjectDto(pr))
+            console.log(projectsDtoArray)
+            projectGroupsDto.push(new ProjectGroupDto({...gr, projects: projectsDtoArray}))
+        })
+        return projectGroupsDto
     }
 
     async addGroup(user_id: string, {name, color}) {
@@ -46,11 +59,42 @@ class ProjectsService {
     }
 
     async getGroup(group_id: string, user_id: string) {
-        const user = await userService.getUserById(user_id) 
-        const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user.id}}})
+        const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user_id}}})
         if (!group) throw ApiError.NotFound(`Группа проектов с id ${group_id} не найдена`)
         return group
     }
+
+
+    // Проекты
+    async addProject(user_id: string, {name, group_id, deadline}) {
+        const user = await userService.getUserById(user_id) 
+        const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user.id}}})
+        const newProject = new Project(name, user, group, ProjectState.STARTED, deadline)
+        await projectsRep.save(newProject)
+        return newProject
+    }
+
+    async changeProject(user_id: string, project_id: string, {name, group_id, deadline}) {
+        const project = await this.getProject(user_id, project_id)
+        if (name) project.name = name
+        if (group_id) project.project_group = await this.getGroup(group_id, user_id)
+        if (deadline) project.deadline = deadline
+        return await projectsRep.save(project)
+    }
+
+    async getProject(user_id: string, project_id: string,) {
+        const project = await projectsRep.findOne({ relations: {user: true}, where: {id: project_id, user: {id: user_id}}})
+        if (!project) throw ApiError.NotFound(`Проект с id ${project_id} не найден`)
+        return project
+    } 
+
+    // async addProject(user_id: string, {name, group_id, deadline}) {
+    //     const user = await userService.getUserById(user_id) 
+    //     const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user.id}}})
+    //     const newProject = new Project(name, user, group, deadline, ProjectState.STARTED)
+    //     await projectsRep.save(newProject)
+    //     return newProject
+    // }
 
     // async registration(
     //     login: string, 

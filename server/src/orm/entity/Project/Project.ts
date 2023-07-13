@@ -22,10 +22,10 @@ export class Project {
     project_group: ProjectGroup
 
     @Column()
-    deadline: Date
-
-    @Column()
     state: number
+
+    @Column({nullable: true}) 
+    deadline: Date
 
     @CreateDateColumn()
     create_date: Date
@@ -37,14 +37,14 @@ export class Project {
         name: string,
         user: User,
         project_group: ProjectGroup,
-        deadline: Date,
         state: number,
+        deadline: Date | null,
     ) {
         this.name = name
         this.user = user
         this.project_group = project_group
-        this.deadline = deadline
         this.state = state
+        this.deadline = deadline
     }
 
 }

@@ -17,7 +17,7 @@ app.use(cors({
 }))
 app.use(cookieParser())
 app.use('/projects', projectsRouter)
-app.use('/api', authRouter)
+app.use('/auth', authRouter)
 app.use(errorMiddleware)
 
 const start = async() => {
