@@ -50,7 +50,6 @@ export default defineComponent ({
 
  
         const store = useStore()
-        // store.dispatch('Projects/fetchGroups')
 
         const availableGroupColors = computed(() => store.getters['Projects/availableGroupColors'])
 

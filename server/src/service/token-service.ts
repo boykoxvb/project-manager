@@ -47,7 +47,7 @@ class TokenService {
         }
     }
 
-    validateRefreshToken(token: string): IUserData {
+    validateRefreshToken(token: string): any {
         try {
             const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
             return userData

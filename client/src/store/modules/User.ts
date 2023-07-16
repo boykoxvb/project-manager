@@ -69,6 +69,7 @@ const User: Module<IUserState, IRootState> = {
             try {
                 const res = await AuthService.refresh()
                 commit('setAccessToken', res.data.access_token)
+                commit('setUser', {user: res.data.user})
                 return { success: true, message: 'Пользователь авторизован'} 
             } catch (e: any) {
                 console.error(e)

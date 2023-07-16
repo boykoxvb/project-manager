@@ -10,7 +10,7 @@ const $api = axios.create({
 })
 
 $api.interceptors.request.use((config): any => {
-    config.headers.Authorization = `Bearer ${store.getters['User/access_token']}`
+    config.headers.Authorization = `Bearer ${store.getters['User/accessToken']}`
     return config
 })
 
@@ -21,7 +21,7 @@ $api.interceptors.response.use((config): any => {
         if (error.response.status == 401 && !originalRequest._isRetry && error.config) {
             originalRequest._isRetry = true
             try {
-                const res = await store.dispatch('User/chechAuth')
+                const res = await store.dispatch('User/checkAuth')
                 return $api.request(originalRequest)
             } catch (e) {
                 console.error('Ошибка обновления токена: пользователь не авторизован')

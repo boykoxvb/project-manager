@@ -1,6 +1,7 @@
 import * as ProjectManager from '@/classes'
 import { Module } from 'vuex'
 import { IRootState, IProjectsState } from '@/store/interfaces'
+import ProjectsService from '@/services/projects-service'
 
 
 const Projects: Module<IProjectsState, IRootState> = {
@@ -91,34 +92,43 @@ const Projects: Module<IProjectsState, IRootState> = {
     },
 
     actions: {
-        fetchGroups({commit}) {
+        async fetchGroups({commit}) {
             //Получаем данные с сервера 
-            var Group1 = new ProjectManager.ProjectGroup('uuid','Группа проектов №1', 'sky')
-            var Group2 = new ProjectManager.ProjectGroup('uuid', 'Группа 2', 'lime')
-            var Group3 = new ProjectManager.ProjectGroup('uuid', '3ая группа', 'default')
+            // var Group1 = new ProjectManager.ProjectGroup('uuid','Группа проектов №1', 'sky')
+            // var Group2 = new ProjectManager.ProjectGroup('uuid', 'Группа 2', 'lime')
+            // var Group3 = new ProjectManager.ProjectGroup('uuid', '3ая группа', 'default')
 
-            Group1.addProject(new ProjectManager.Project('uuidu82384823492934', 'My Project 1', new Date(), new Date()))
-            Group1.addProject(new ProjectManager.Project('uuidu13i41o25pp4o23', 'My Project 2', undefined, new Date()))
-            Group2.addProject(new ProjectManager.Project('uuidi28592935020350', 'My Project 3', undefined, new Date()))
-            Group3.addProject(new ProjectManager.Project('uuid238592305290350', 'My Project 4', undefined, new Date()))
-            Group3.addProject(new ProjectManager.Project('uuid9238469240522i3', 'My Project 5', undefined, new Date()))
+            // Group1.addProject(new ProjectManager.Project('uuidu82384823492934', 'My Project 1', new Date(), new Date()))
+            // Group1.addProject(new ProjectManager.Project('uuidu13i41o25pp4o23', 'My Project 2', undefined, new Date()))
+            // Group2.addProject(new ProjectManager.Project('uuidi28592935020350', 'My Project 3', undefined, new Date()))
+            // Group3.addProject(new ProjectManager.Project('uuid238592305290350', 'My Project 4', undefined, new Date()))
+            // Group3.addProject(new ProjectManager.Project('uuid9238469240522i3', 'My Project 5', undefined, new Date()))
 
-            Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Погулять с собакий'))
-            Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
-            Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дз'))
-            Group1.projects[1].addTask(new ProjectManager.Task('uuid', 'Убрать стол'))
+            // Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Погулять с собакий'))
+            // Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
+            // Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дз'))
+            // Group1.projects[1].addTask(new ProjectManager.Task('uuid', 'Убрать стол'))
 
-            Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить ручку'))
-            Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дела'))
+            // Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить ручку'))
+            // Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дела'))
 
-            Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить сок'))
-            Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Оказался носок'))
+            // Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить сок'))
+            // Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Оказался носок'))
 
 
-            var projectGroups = [Group1, Group2, Group3]
+            // var projectGroups = [Group1, Group2, Group3]
 
-            commit('setGroups', projectGroups)
-            commit('setProjects', [].concat(...projectGroups.map((group: any) => group.projects)))
+            const groupsDto = (await ProjectsService.getAllGroups()).data
+            const  projectGroups: Array<ProjectManager.ProjectGroup> = []
+            // groupsDto.forEach((dto) => {
+            //     const group = new ProjectManager.ProjectGroup(dto.uuid, dto.name, dto.color)
+            //     dto.projects.forEach(() => {
+
+            //     })
+            // })
+
+            // commit('setGroups', projectGroups)
+            // commit('setProjects', [].concat(...projectGroups.map((group: any) => group.projects)))
         },
 
         finishTask({commit}, {project, task}) {

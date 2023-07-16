@@ -6,6 +6,7 @@ import ApiError from '../exceptions/api-error'
 import userService from './user-service'
 import { group } from 'console'
 import ProjectGroupDto from '../dto/project-groups-dto'
+import TaskDto from '../dto/task-dto'
 
 const projectsRep = AppDataSource.getRepository(Project)
 const projectGroupsRep = AppDataSource.getRepository(ProjectGroup)
@@ -20,19 +21,29 @@ class ProjectsService {
                 relations: { user: true }, 
                 where: {user: {id: user_id}}
             })
+
         const projectGroupsDto: Array<ProjectGroupDto> = []
-        projectGroups.forEach(async (gr) => {
-            const projects = await projectsRep.find({
-                relations: {project_group: true, user: true},
-                where: {
-                    project_group: {id: gr.id},
-                    user: {id: user_id}
-                }
+        const promise = projectGroups.map(async (gr) => {
+                const projects = await projectsRep.find({
+                    relations: {project_group: true, user: true},
+                    where: {
+                        project_group: {id: gr.id},
+                        user: {id: user_id}
+                    }
+                })
+                const projectsDtoArray: Array<ProjectDto> = []
+                await Promise.all(projects.map(async (pr) => {
+                    const tasksDtoArray = await tasksRep.find({
+                        relations: {project: true},
+                        where: {
+                            project: {id: pr.id}
+                        }
+                    }).then((t) => t.map((task) => new TaskDto(task)))
+                    projectsDtoArray.push(new ProjectDto(pr, tasksDtoArray))
+                }))
+                projectGroupsDto.push(new ProjectGroupDto(gr, projectsDtoArray))
             })
-            const projectsDtoArray = projects.map((pr) => new ProjectDto(pr))
-            console.log(projectsDtoArray)
-            projectGroupsDto.push(new ProjectGroupDto({...gr, projects: projectsDtoArray}))
-        })
+            await Promise.all(promise)
         return projectGroupsDto
     }
 

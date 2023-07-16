@@ -11,7 +11,6 @@ class ProjectsController {
         try {
             const user_id = req.userData.id
             const groups = await projectsService.getProjectGroups(user_id)
-            console.log(groups)
             return res.send(groups)
         } catch (e) {
             next(e)

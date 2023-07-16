@@ -25,7 +25,7 @@ export const store = createStore({
   modules: {
     Projects: Projects,
     Auth: Auth,
-    User,
+    User: User,
   }
 
 })

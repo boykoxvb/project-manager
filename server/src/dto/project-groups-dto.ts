@@ -1,3 +1,4 @@
+import { ProjectGroup } from "../orm/entity"
 import ProjectDto from "./project-dto"
 
 export default class ProjectGroupDto {
@@ -6,10 +7,10 @@ export default class ProjectGroupDto {
     public color: string | undefined
     public projects: Array<ProjectDto> | undefined
 
-    public constructor(groupDto: any) {
-        this.uuid = groupDto?.uuid
-        this.name = groupDto?.name
-        this.color = groupDto?.color
-        this.projects = groupDto?.projects
+    public constructor(group: ProjectGroup, projects?: Array<ProjectDto>) {
+        this.uuid = group?.id
+        this.name = group?.name
+        this.color = group?.color
+        this.projects = projects
     }
 }

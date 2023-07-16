@@ -75,7 +75,6 @@ export default defineComponent ({
     setup(props, {emit}) {
 
         const store = useStore()
-        // store.dispatch('Projects/fetchGroups')
 
         const availableGroupColors = computed(() => store.getters['Projects/availableGroupColors'])
         const changes = reactive({
