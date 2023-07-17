@@ -119,16 +119,10 @@ const Projects: Module<IProjectsState, IRootState> = {
             // var projectGroups = [Group1, Group2, Group3]
 
             const groupsDto = (await ProjectsService.getAllGroups()).data
-            const  projectGroups: Array<ProjectManager.ProjectGroup> = []
-            // groupsDto.forEach((dto) => {
-            //     const group = new ProjectManager.ProjectGroup(dto.uuid, dto.name, dto.color)
-            //     dto.projects.forEach(() => {
+            const projectGroups = groupsDto.map((dto) => new ProjectManager.ProjectGroup(undefined, undefined, undefined, dto))
 
-            //     })
-            // })
-
-            // commit('setGroups', projectGroups)
-            // commit('setProjects', [].concat(...projectGroups.map((group: any) => group.projects)))
+            commit('setGroups', projectGroups)
+            commit('setProjects', [].concat(...projectGroups.map((group: any) => group.projects)))
         },
 
         finishTask({commit}, {project, task}) {

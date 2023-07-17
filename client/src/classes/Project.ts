@@ -1,4 +1,5 @@
 import { Task, TaskState, ProjectGroup, IDateString } from '@/classes'
+import ProjectDto from '@/services/dto/project-dto'
 
 export default class Project implements IDateString {
     public uuid: string
@@ -6,8 +7,6 @@ export default class Project implements IDateString {
     public name: string
     public group: ProjectGroup | undefined
     public tasks: Array<Task>
-    public startDate: Date | undefined
-    public description: string | undefined
     public _state: ProjectState
 
     get state(): ProjectState {
@@ -28,14 +27,20 @@ export default class Project implements IDateString {
 
     }
 
-    constructor(uuid: string, name: string, deadline?: Date, startDate?: Date, description?: string) {
-        this.uuid = uuid
-        this.name = name
-        this.deadline = deadline
-        this.tasks = []
-        this.startDate = startDate
-        this.description = description
-        this._state = ProjectState.STARTED
+    constructor(uuid?: string, name?: string, deadline?: Date, dto?: ProjectDto) {
+        if (dto) {
+            this.uuid = dto.uuid ?? ""
+            this.name = dto.name ?? ""
+            this.deadline = dto.deadline ?? new Date()
+            this.tasks = dto.tasks ? dto.tasks.map((task) => new Task(undefined, undefined, task)) : []
+            this._state = dto.state ?? ProjectState.STARTED
+        }else if (uuid && name && deadline) {
+            this.uuid = uuid
+            this.name = name
+            this.deadline = deadline
+            this.tasks = []
+            this._state = ProjectState.STARTED
+        }
     }
 
     public dateString(date: Date | undefined | null): string {

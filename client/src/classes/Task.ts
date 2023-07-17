@@ -1,23 +1,29 @@
+import TaskDto from "@/services/dto/task-dto"
+
 export default class Task {
 
     public uuid: string
 
     public name: string
-    public deadline: Date | undefined
     
+    public _state: TaskState
+
     get state(): TaskState {
         return this._state
     }
 
-    //! какого-то хрена приватные поля не экспортируются из-за чего вылетает ошибка несовместимости типов поэтому пока просто именуем поля с _ 
-    public _state: TaskState
     
 
-    public constructor(uuid: string, name: string, deadline?: Date) {
-        this.uuid = uuid
-        this.name = name
-        this.deadline = deadline
-        this._state = TaskState.CREATED
+    public constructor(uuid?: string, name?: string, dto?: TaskDto) {
+        if (dto) {
+            this.uuid = dto.uuid ?? ""
+            this.name = dto.name ?? ""
+            this._state = TaskState.STARTED
+        } else if (uuid && name) {
+            this.uuid = uuid
+            this.name = name
+            this._state = TaskState.STARTED
+        }
     }
 
     public setState(state: TaskState){
@@ -27,9 +33,7 @@ export default class Task {
 }
 
 export enum TaskState {
-    CREATED = 2,
-    STARTED,
-    PAUSED,
+    STARTED = 2,
     FINISHED
 }
 

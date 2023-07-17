@@ -60,16 +60,15 @@ export default defineComponent({
     const choosedProject = computed(() => store.getters['Projects/choosedProject'])
     
     
-    const testProject: ProjectManager.Project = 
-        reactive(new ProjectManager.Project
-                    ('uuid', 'TestProject', new Date(), new Date(), 'Описание проекта')
-                )
+    // const testProject: ProjectManager.Project = 
+    //     reactive(new ProjectManager.Project
+    //                 ('uuid', 'TestProject', new Date(), new Date(), 'Описание проекта')
+    //             )
 
-    testProject.addTask(new ProjectManager.Task('uuid', 'Погулять с собакой'))
-    testProject.addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
+    // testProject.addTask(new ProjectManager.Task('uuid', 'Погулять с собакой'))
+    // testProject.addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
 
     return {
-        testProject,
         chooseProject,
         choosedProject
     }
