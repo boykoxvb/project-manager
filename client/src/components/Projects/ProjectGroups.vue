@@ -18,10 +18,9 @@
           class="group-item group-add"
           @click="openAddGroup"
           >
-            <v-icon icon="mdi-plus" size="xs">
-
-            </v-icon>
+            <v-icon icon="mdi-plus" size="xs"/>
           </div>
+
         </div>
         <project-group-add-edit
         v-else
@@ -52,7 +51,6 @@ export default defineComponent ({
         const store = useStore()
 
         const availableGroupColors = computed(() => store.getters['Projects/availableGroupColors'])
-
         const addProjectDialog = ref(false)
 
         const groups = computed(() => store.getters['Projects/allGroups'])
@@ -121,6 +119,7 @@ export default defineComponent ({
 
     display: flex;
     flex-wrap: nowrap;
+    height: 50px;
     // overflow: auto;
 
     .group-items {

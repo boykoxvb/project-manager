@@ -1,19 +1,25 @@
+import { Project } from "@/classes"
 import TaskDto from "./task-dto"
 
 export default class ProjectDto {
-    public uuid: string | null | undefined
-    public name: string | null | undefined
-    public group_id: string | null | undefined
-    public deadline: Date | null | undefined
-    public state: ProjectState | null | undefined
-    public tasks: Array<TaskDto> | null | undefined
+    public uuid: string | undefined
+    public name: string
+    public group_id: string
+    public deadline: Date | undefined
+    public state: ProjectState
+    public tasks: Array<TaskDto> | undefined
 
-    public constructor(uuid: string | null, name: string | null, group_id: string | null, deadline: Date | null, state: ProjectState | null) {
+    public constructor(uuid: string | undefined, name: string, group_id: string, deadline: Date | undefined, state: ProjectState, tasks?: Array<TaskDto>) {
         this.uuid = uuid
         this.name = name
         this.group_id = group_id
         this.deadline = deadline
         this.state = state
+        this.tasks = tasks
+    }
+
+    public static convertFromObject(project: Project) {
+        return new ProjectDto(project.uuid, project.name, project.group.uuid, project.deadline, project.state, project.tasks.map((task) => TaskDto.convertFromObject(task)))
     }
 }
 

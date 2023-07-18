@@ -5,7 +5,7 @@ export default class Project implements IDateString {
     public uuid: string
     public deadline: Date | undefined
     public name: string
-    public group: ProjectGroup | undefined
+    public group: ProjectGroup
     public tasks: Array<Task>
     public _state: ProjectState
 
@@ -34,12 +34,14 @@ export default class Project implements IDateString {
             this.deadline = dto.deadline ?? new Date()
             this.tasks = dto.tasks ? dto.tasks.map((task) => new Task(undefined, undefined, task)) : []
             this._state = dto.state ?? ProjectState.STARTED
-        }else if (uuid && name && deadline) {
+        }else if (uuid && name) {
             this.uuid = uuid
             this.name = name
             this.deadline = deadline
             this.tasks = []
             this._state = ProjectState.STARTED
+        }else {
+            throw 'UUID или NAME у проекта не прошли проверку'
         }
     }
 

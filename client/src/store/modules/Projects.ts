@@ -1,4 +1,5 @@
-import * as ProjectManager from '@/classes'
+import { ProjectGroup, Project, Task, sortState, filterState, TaskState} from '@/classes'
+import { ProjectGroupDto, ProjectDto, TaskDto } from '@/services/dto'
 import { Module } from 'vuex'
 import { IRootState, IProjectsState } from '@/store/interfaces'
 import ProjectsService from '@/services/projects-service'
@@ -11,8 +12,8 @@ const Projects: Module<IProjectsState, IRootState> = {
             groups: [],
             projects: [],
             choosedProject: null,
-            sortState: ProjectManager.sortState,
-            filterState: ProjectManager.filterState,
+            sortState: sortState,
+            filterState: filterState,
         }
     },
 
@@ -57,17 +58,17 @@ const Projects: Module<IProjectsState, IRootState> = {
 
 
             filteredByName = state.filterState.nameSearch 
-                ? getters.allProjects.filter((project: ProjectManager.Project) => project.name.includes(state.filterState.nameSearch))
+                ? getters.allProjects.filter((project: Project) => project.name.includes(state.filterState.nameSearch))
                 : getters.allProjects
 
 
             filteredByGroup = state.filterState.groupFilter 
-                ? filteredByName.filter((project: ProjectManager.Project) => project.group == state.filterState.groupFilter )
+                ? filteredByName.filter((project: Project) => project.group == state.filterState.groupFilter )
                 : filteredByName
 
 
             filteredByState = state.filterState.stateFilter
-                ? filteredByGroup.filter((project: ProjectManager.Project) => project.state == state.filterState.stateFilter)
+                ? filteredByGroup.filter((project: Project) => project.state == state.filterState.stateFilter)
                 : filteredByGroup
             
             return filteredByState
@@ -94,32 +95,40 @@ const Projects: Module<IProjectsState, IRootState> = {
     actions: {
         async fetchGroups({commit}) {
             //Получаем данные с сервера 
-            // var Group1 = new ProjectManager.ProjectGroup('uuid','Группа проектов №1', 'sky')
-            // var Group2 = new ProjectManager.ProjectGroup('uuid', 'Группа 2', 'lime')
-            // var Group3 = new ProjectManager.ProjectGroup('uuid', '3ая группа', 'default')
+            // var Group1 = new ProjectGroup('uuid','Группа проектов №1', 'sky')
+            // var Group2 = new ProjectGroup('uuid', 'Группа 2', 'lime')
+            // var Group3 = new ProjectGroup('uuid', '3ая группа', 'default')
 
-            // Group1.addProject(new ProjectManager.Project('uuidu82384823492934', 'My Project 1', new Date(), new Date()))
-            // Group1.addProject(new ProjectManager.Project('uuidu13i41o25pp4o23', 'My Project 2', undefined, new Date()))
-            // Group2.addProject(new ProjectManager.Project('uuidi28592935020350', 'My Project 3', undefined, new Date()))
-            // Group3.addProject(new ProjectManager.Project('uuid238592305290350', 'My Project 4', undefined, new Date()))
-            // Group3.addProject(new ProjectManager.Project('uuid9238469240522i3', 'My Project 5', undefined, new Date()))
+            // Group1.addProject(new Project('uuidu82384823492934', 'My Project 1', new Date(), new Date()))
+            // Group1.addProject(new Project('uuidu13i41o25pp4o23', 'My Project 2', undefined, new Date()))
+            // Group2.addProject(new Project('uuidi28592935020350', 'My Project 3', undefined, new Date()))
+            // Group3.addProject(new Project('uuid238592305290350', 'My Project 4', undefined, new Date()))
+            // Group3.addProject(new Project('uuid9238469240522i3', 'My Project 5', undefined, new Date()))
 
-            // Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Погулять с собакий'))
-            // Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
-            // Group1.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дз'))
-            // Group1.projects[1].addTask(new ProjectManager.Task('uuid', 'Убрать стол'))
+            // Group1.projects[0].addTask(new Task('uuid', 'Погулять с собакий'))
+            // Group1.projects[0].addTask(new Task('uuid', 'Выпить пива'))
+            // Group1.projects[0].addTask(new Task('uuid', 'Сделать дз'))
+            // Group1.projects[1].addTask(new Task('uuid', 'Убрать стол'))
 
-            // Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить ручку'))
-            // Group2.projects[0].addTask(new ProjectManager.Task('uuid', 'Сделать дела'))
+            // Group2.projects[0].addTask(new Task('uuid', 'Купить ручку'))
+            // Group2.projects[0].addTask(new Task('uuid', 'Сделать дела'))
 
-            // Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Купить сок'))
-            // Group3.projects[0].addTask(new ProjectManager.Task('uuid', 'Оказался носок'))
+            // Group3.projects[0].addTask(new Task('uuid', 'Купить сок'))
+            // Group3.projects[0].addTask(new Task('uuid', 'Оказался носок'))
 
 
             // var projectGroups = [Group1, Group2, Group3]
 
+            let Group1 = new ProjectGroup('uuid','Группа проектов №1', 'sky')
+            Group1.addProject(new Project('uuidu82384823492934', 'My Project 1', new Date()))
+            Group1.addProject(new Project('uuidu13i41o25pp4o23', 'My Project 2'))
+            Group1.projects[0].addTask(new Task('uuid', 'Погулять с собакий'))
+            Group1.projects[0].addTask(new Task('uuid', 'Выпить пива'))
+            Group1.projects[0].addTask(new Task('uuid', 'Сделать дз'))
+            console.log(new ProjectGroupDto(Group1))
+
             const groupsDto = (await ProjectsService.getAllGroups()).data
-            const projectGroups = groupsDto.map((dto) => new ProjectManager.ProjectGroup(undefined, undefined, undefined, dto))
+            const projectGroups = groupsDto.map((dto) => new ProjectGroup(undefined, undefined, undefined, dto))
 
             commit('setGroups', projectGroups)
             commit('setProjects', [].concat(...projectGroups.map((group: any) => group.projects)))
@@ -127,7 +136,7 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         finishTask({commit}, {project, task}) {
             // Отправляем на сервер запрос с завершением этого таска 
-            commit('setTaskState', { task: task, taskState: ProjectManager.TaskState.FINISHED})
+            commit('setTaskState', { task: task, taskState: TaskState.FINISHED})
         },
 
         async taskModified({commit}, {task, name}) {
@@ -144,7 +153,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('addEmptyProject')
         },
 
-        addTask({commit}, project: ProjectManager.Project) {
+        addTask({commit}, project: Project) {
             commit('addTask', project)
         },
 
@@ -163,6 +172,7 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         async editGroup({commit}, {group, name, color}) {
             // Делаем запрос на сервер на изменение группы проектов
+
             commit('editGroup', {group, name, color})
         },
 
@@ -194,7 +204,7 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         addGroup(state, {uuid, name, color}) {
-            state.groups.push(new ProjectManager.ProjectGroup('uuidOfNewGroup', name, color))
+            state.groups.push(new ProjectGroup('uuidOfNewGroup', name, color))
         },
 
         setProjects(state, projects): void {
@@ -211,7 +221,7 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         changeProjectGroup(state, {project, groupName}) {
             // Ищем группу по имени
-            const targetGroup = state.groups.find((group: ProjectManager.ProjectGroup) => group.name === groupName)
+            const targetGroup = state.groups.find((group: ProjectGroup) => group.name === groupName)
             if (!targetGroup) throw new Error(`Группы с названием ${groupName} не существует во Vuex. Изменение группы проекта невозможно.`)
 
             const oldGroup = project.group
@@ -219,7 +229,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             targetGroup.projects.push(project)
 
             if (!oldGroup) return
-            oldGroup.projects = oldGroup.projects.filter((pr: ProjectManager.Project) => pr !== project)
+            oldGroup.projects = oldGroup.projects.filter((pr: Project) => pr !== project)
             
         },
 
@@ -234,10 +244,10 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         deleteProject(state, {project}) {
 
-            state.projects = state.projects.filter((pr: ProjectManager.Project) => pr !== project)
+            state.projects = state.projects.filter((pr: Project) => pr !== project)
 
             // const group = state.groups.find((gr) => gr === project.group)
-            // group.projects = group.projects.filter((pr: ProjectManager.Project) => pr !== project)
+            // group.projects = group.projects.filter((pr: Project) => pr !== project)
         },
 
         addEmptyProject(state) {
@@ -245,21 +255,21 @@ const Projects: Module<IProjectsState, IRootState> = {
             // Проектом эта сущность становится после первого сохранения
 
             if (!state.projects.find((proj) => proj.name == '' || proj.group == null /* || proj.uuid == '' */)) {
-                const newProject = new ProjectManager.Project('', '')
+                const newProject = new Project('', '')
                 state.projects.push(newProject)
                 state.choosedProject = newProject
             }
         },
 
         addProjectInGroup(state, {group}) {
-            const newProject = new ProjectManager.Project('', '')
+            const newProject = new Project('', '')
             console.log(group)
             group.addProject(newProject)
             state.projects.push(newProject)
             return
         },
 
-        chooseProject(state, project: ProjectManager.Project) {
+        chooseProject(state, project: Project) {
             state.choosedProject = project
         },
 
@@ -271,8 +281,8 @@ const Projects: Module<IProjectsState, IRootState> = {
             state.sortState.set(sort, asc)
         },
 
-        addTask(state, project: ProjectManager.Project) {
-            project.addTask(new ProjectManager.Task('', ''))
+        addTask(state, project: Project) {
+            project.addTask(new Task('', ''))
         },
 
         setFilterState(state, {name, group, states}) {
