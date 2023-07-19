@@ -11,7 +11,7 @@ export default class ProjectGroupDto {
         this.uuid = group.uuid
         this.name = group.name
         this.color = group.color
-        this.projects = group.projects.map((pr) => ProjectDto.convertFromObject(pr))
+        this.projects = group.projects ? group.projects.map((pr) => ProjectDto.convertFromObject(pr)) : undefined
     }
 }
 

@@ -2,6 +2,7 @@ import $api from './axios'
 import {Axios, AxiosResponse} from 'axios'
 import IAuthResponse from '@/classes/interfaces/IAuthResponse'
 import ProjectGroupDto from './dto/project-group-dto'
+import ResultDto from './dto/result-dto'
 
 const PROJ_PATH = '/projects'
 
@@ -11,8 +12,16 @@ export default class ProjectsService {
         return $api.get(`${PROJ_PATH}/groups/all`)
     }
 
-    static async addProjectGroup(): Promise<AxiosResponse<IAuthResponse>> {
-        return $api.post(`${PROJ_PATH}/groups`, {})
+    static async addProjectGroup(projectGroup: ProjectGroupDto): Promise<AxiosResponse<string>> {
+        return $api.post(`${PROJ_PATH}/groups`, {projectGroup})
+    }
+
+    static async changeProjectGroup(group_id: string, changes: ProjectGroupDto): Promise<AxiosResponse<ProjectGroupDto>> {
+        return $api.put(`${PROJ_PATH}/groups/${group_id}`, {changes})
+    }
+
+    static async deleteProjectGroup(group_id: string): Promise<AxiosResponse<ResultDto>> {
+        return $api.delete(`${PROJ_PATH}/groups/${group_id}`)
     }
 
 

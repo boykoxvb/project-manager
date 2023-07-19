@@ -119,13 +119,12 @@ const Projects: Module<IProjectsState, IRootState> = {
 
             // var projectGroups = [Group1, Group2, Group3]
 
-            let Group1 = new ProjectGroup('uuid','Группа проектов №1', 'sky')
-            Group1.addProject(new Project('uuidu82384823492934', 'My Project 1', new Date()))
-            Group1.addProject(new Project('uuidu13i41o25pp4o23', 'My Project 2'))
-            Group1.projects[0].addTask(new Task('uuid', 'Погулять с собакий'))
-            Group1.projects[0].addTask(new Task('uuid', 'Выпить пива'))
-            Group1.projects[0].addTask(new Task('uuid', 'Сделать дз'))
-            console.log(new ProjectGroupDto(Group1))
+            // let Group1 = new ProjectGroup('uuid','Группа проектов №1', 'sky')
+            // Group1.addProject(new Project('uuidu82384823492934', 'My Project 1', new Date()))
+            // Group1.addProject(new Project('uuidu13i41o25pp4o23', 'My Project 2'))
+            // Group1.projects[0].addTask(new Task('uuid', 'Погулять с собакий'))
+            // Group1.projects[0].addTask(new Task('uuid', 'Выпить пива'))
+            // Group1.projects[0].addTask(new Task('uuid', 'Сделать дз'))
 
             const groupsDto = (await ProjectsService.getAllGroups()).data
             const projectGroups = groupsDto.map((dto) => new ProjectGroup(undefined, undefined, undefined, dto))
@@ -170,15 +169,48 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('deleteProject', {project})
         },
 
-        async editGroup({commit}, {group, name, color}) {
-            // Делаем запрос на сервер на изменение группы проектов
-
-            commit('editGroup', {group, name, color})
+        async editGroup({commit}, {group, changes}) {
+            try {
+                const res = await ProjectsService.changeProjectGroup(group.uuid, new ProjectGroupDto(changes))
+                const {name, color} = res.data
+                commit('editGroup', {group, name, color})
+                return {success: true, message: `Группа проектов ${name} успешно изменена.`}
+            }catch(e: any) {
+                console.log(e)
+                // if (e.response) {
+                //     return { success: false, message: `Ошибка добавления группы проектов: ${e.response?.data.message}`}
+                // } else {
+                //     return { success: false, message: `Ошибка авторизации: ${e.message}`}
+                // }
+            }
         },
 
         async addGroup({commit}, {name, color}) {
             // Делаем запрос на сервер на добавление группы проектов
-            commit('addGroup', {name, color})
+            try {
+                const res = await ProjectsService.addProjectGroup({uuid: undefined, name: name, color: color, projects: []})
+                const uuid = res.data
+                commit('addGroup', { uuid, name, color })
+                return {success: true, message: `Группа проектов ${name} успешно добавлена.`}
+            }catch(e: any) {
+                console.log(e)
+            }
+        },
+
+        async deleteGroup({commit}, group: ProjectGroup) {
+            // Делаем запрос на сервер на добавление группы проектов
+            try {
+                const res = await ProjectsService.deleteProjectGroup(group.uuid)
+                commit('deleteGroup', group)
+                return {success: true, message: `Группа проектов ${group.name} успешно удалена.`}
+            }catch(e: any) {
+                console.log(e)
+                // if (e.response) {
+                //     return { success: false, message: `Ошибка добавления группы проектов: ${e.response?.data.message}`}
+                // } else {
+                //     return { success: false, message: `Ошибка авторизации: ${e.message}`}
+                // }
+            }
         }
         
     },
@@ -190,7 +222,6 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         editGroup(state, {group, name, color}) {
             const targetGroup = state.groups.find((gr) => {return gr == group})
-            console.log(group, state.groups)
             if (!targetGroup) {
                 console.error('Vuex: Группа проектов для изменения не найдена')
                 return
@@ -204,18 +235,23 @@ const Projects: Module<IProjectsState, IRootState> = {
         },
 
         addGroup(state, {uuid, name, color}) {
-            state.groups.push(new ProjectGroup('uuidOfNewGroup', name, color))
+            state.groups.push(new ProjectGroup(uuid, name, color))
+        },
+
+        deleteGroup(state, group) {
+            state.groups = state.groups.filter((gr) => gr !== group)
+            state.projects = state.projects.filter((pr) => pr.group !== group)
         },
 
         setProjects(state, projects): void {
             state.projects = projects
         },
 
-        setTaskState(state, { task, taskState }) {
+        setTaskState(_, { task, taskState }) {
             task.setState(taskState)
         },
 
-        modifyTask(state, {task, name}) {
+        modifyTask(_, {task, name}) {
             task.name = name
         },
 
@@ -233,11 +269,11 @@ const Projects: Module<IProjectsState, IRootState> = {
             
         },
 
-        changeProjectDeadline(state, {project, deadline}) {
+        changeProjectDeadline(_, {project, deadline}) {
             project.deadline = deadline
         },
 
-        changeProjectName(state, {project, name}) {
+        changeProjectName(_, {project, name}) {
             project.name = name
         },
 

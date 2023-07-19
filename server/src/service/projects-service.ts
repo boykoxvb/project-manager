@@ -58,7 +58,7 @@ class ProjectsService {
         const group = await this.getGroup(group_id, user_id)
         if (name) group.name = name
         if (color) group.color = color
-        return await projectGroupsRep.save(group)
+        return new ProjectGroupDto(await projectGroupsRep.save(group))
     }
 
     async deleteGroup(user_id: string, group_id: string) {

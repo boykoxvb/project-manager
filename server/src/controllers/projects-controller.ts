@@ -20,7 +20,7 @@ class ProjectsController {
     async addGroup(req, res, next) {
         try {
             const user_id = req.userData.id
-            const { name, color } = req.body
+            const { name, color } = req.body.projectGroup
             const newGroup = await projectsService.addGroup(user_id, { name, color })
             return res.send(newGroup.id)
         } catch (e) {
@@ -32,7 +32,7 @@ class ProjectsController {
         try {
             const user_id = req.userData.id
             const group_id = req.params.id 
-            const { name, color } = req.body
+            const { name, color } = req.body.changes
             const updatedGroup = await projectsService.changeGroup(user_id, group_id, {name, color})
             return res.send(updatedGroup)
         } catch (e) {

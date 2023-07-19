@@ -13,6 +13,7 @@
           :choosed="choosedGroup == group"
           @choosed="chooseGroup(group)"
           @edit="openEditGroup(group)"
+          @delete="deleteGroup(group)"
           />
           <div 
           class="group-item group-add"
@@ -36,7 +37,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, Ref } from 'vue'
 import { useStore } from '@/store'
-import * as PM from '@/classes'
+import { ProjectGroup } from '@/classes'
 import ProjectGroupAddEdit from './ProjectGroupAddEdit.vue'
 
 export default defineComponent ({
@@ -54,10 +55,10 @@ export default defineComponent ({
         const addProjectDialog = ref(false)
 
         const groups = computed(() => store.getters['Projects/allGroups'])
-        const choosedGroup: Ref<PM.ProjectGroup | null> = ref(null)
-        const editingGroup: Ref<PM.ProjectGroup | null> = ref(null)
+        const choosedGroup: Ref<ProjectGroup | null> = ref(null)
+        const editingGroup: Ref<ProjectGroup | null> = ref(null)
 
-        const chooseGroup = (group: PM.ProjectGroup) => {
+        const chooseGroup = (group: ProjectGroup) => {
             if (choosedGroup.value != group) {
               choosedGroup.value = group
               store.commit('Projects/setFilterState', {group: group})
@@ -67,7 +68,7 @@ export default defineComponent ({
             }
         }
 
-        const openEditGroup = (group: PM.ProjectGroup) => {
+        const openEditGroup = (group: ProjectGroup) => {
             editingGroup.value = group
         }
 
@@ -76,16 +77,20 @@ export default defineComponent ({
         }
 
         const openAddGroup = () => {
-          editingGroup.value = new PM.ProjectGroup('', '', 'default')
+          editingGroup.value = new ProjectGroup('', '', 'default')
         }
 
-        const addEditGroup = (payload: any) => {
+        const addEditGroup = async (payload: any) => {
             if (payload.uuid) {
-              store.dispatch('Projects/editGroup', {group: editingGroup.value, name: payload.name, color: payload.color})
+              await store.dispatch('Projects/editGroup', {group: editingGroup.value, changes: payload})
             } else {
-              store.dispatch('Projects/addGroup', {name: payload.name, color: payload.color})
+              await store.dispatch('Projects/addGroup', {name: payload.name, color: payload.color})
             }
             editingGroup.value = null
+        }
+
+        const deleteGroup = async (group: ProjectGroup) => {
+          await store.dispatch('Projects/deleteGroup', group)
         }
 
         
@@ -103,6 +108,8 @@ export default defineComponent ({
             cancelChanges,
             addEditGroup,
             openAddGroup,
+
+            deleteGroup,
         }
     }
 
