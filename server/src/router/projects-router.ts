@@ -19,10 +19,10 @@ projectsRouter.post('/groups', authMiddleware, projectsController.addGroup)
 projectsRouter.put('/groups/:id', authMiddleware, projectsController.changeGroup)
 projectsRouter.delete('/groups/:id', authMiddleware, projectsController.deleteGroup)
 
-projectsRouter.post('/groups/test', projectsController.test)
+// projectsRouter.post('/groups/test', projectsController.test)
 
-projectsRouter.post('/', authMiddleware, projectsController.addProject)
-projectsRouter.put('/:id', authMiddleware, projectsController.changeProject)
+// projectsRouter.post('/', authMiddleware, projectsController.addProject)
+projectsRouter.put('/', authMiddleware, projectsController.changeProject)
 projectsRouter.delete('/:id', authMiddleware, projectsController.deleteProject)
 
 

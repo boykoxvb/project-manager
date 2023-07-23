@@ -31,17 +31,15 @@ export default class Project implements IDateString {
         if (dto) {
             this.uuid = dto.uuid ?? ""
             this.name = dto.name ?? ""
-            this.deadline = dto.deadline ?? new Date()
+            this.deadline = dto.deadline ? new Date(dto.deadline) : undefined
             this.tasks = dto.tasks ? dto.tasks.map((task) => new Task(undefined, undefined, task)) : []
             this._state = dto.state ?? ProjectState.STARTED
-        }else if (uuid && name) {
-            this.uuid = uuid
-            this.name = name
+        }else {
+            this.uuid = uuid ?? ''
+            this.name = name ?? ''
             this.deadline = deadline
             this.tasks = []
             this._state = ProjectState.STARTED
-        }else {
-            throw 'UUID или NAME у проекта не прошли проверку'
         }
     }
 

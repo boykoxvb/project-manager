@@ -77,7 +77,8 @@ class ProjectsService {
 
 
     // Проекты
-    async addProject(user_id: string, {name, group_id, deadline}) {
+    async addProject(user_id: string, projectDto: ProjectDto) {
+        const { name, group_id, deadline } = projectDto
         const user = await userService.getUserById(user_id) 
         const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user.id}}})
         const newProject = new Project(name, user, group, ProjectState.STARTED, deadline)
@@ -85,11 +86,12 @@ class ProjectsService {
         return newProject
     }
 
-    async changeProject(user_id: string, project_id: string, {name, group_id, deadline}) {
-        const project = await this.getProject(user_id, project_id)
+    async changeProject(user_id: string, projectDto: ProjectDto) {
+        const { name, group_id, deadline } = projectDto
+        const project = await this.getProject(user_id, projectDto.uuid)
         if (name) project.name = name
         if (group_id) project.project_group = await this.getGroup(group_id, user_id)
-        if (deadline) project.deadline = deadline
+        if (deadline) project.deadline = deadline == new Date(0) ? deadline : null
         return await projectsRep.save(project)
     }
 

@@ -51,43 +51,44 @@ class ProjectsController {
         }
     }
 
-    async test(req, res, next) {
-        try {
-            const gr = req.body
-            const groupDto = new ProjectGroupDto(gr)
-            console.log(groupDto)
-            // await projectsService.deleteGroup(user_id, group_id)
-            // return res.send({success: true})
-            return res.send(groupDto)
-        } catch (e) {
-            next(e)
-        }
-    }
+    // async test(req, res, next) {
+    //     try {
+    //         const gr = req.body
+    //         const groupDto = new ProjectGroupDto(gr)
+    //         console.log(groupDto)
+    //         // await projectsService.deleteGroup(user_id, group_id)
+    //         // return res.send({success: true})
+    //         return res.send(groupDto)
+    //     } catch (e) {
+    //         next(e)
+    //     }
+    // }
 
 
     // Projects
-    async addProject(req, res, next) {
-        try {
-            const user_id = req.userData.id
-            const { name, group_id, deadline } = req.body
-            const newProject = await projectsService.addProject(user_id, {name, group_id, deadline})
-            return res.send(newProject.id)
-        } catch (e) {
-            next(e)
-        }
-    }
+    // async addProject(req, res, next) {
+    //     try {
+    //         const user_id = req.userData.id
+    //         const { name, group_id, deadline } = req.body
+    //         const newProject = await projectsService.addProject(user_id, {name, group_id, deadline})
+    //         return res.send(newProject.id)
+    //     } catch (e) {
+    //         next(e)
+    //     }
+    // }
     
     async changeProject(req, res, next) {
         try {
             const user_id = req.userData.id
-            // Как правильно типизировать передаваемый JSON??
-            // project: ProjectDto
-            const { project } = req.body
-            // const updatedProject = await projectsService.changeProject(user_id, uuid, {name, group_id, deadline})
-
-
+            const { projectDto } = req.body
+            console.log(projectDto)
+            if (projectDto.uuid) {
+                return res.send(await projectsService.changeProject(user_id, projectDto))
+            } else {
+                return res.send(await projectsService.addProject(user_id, projectDto))
+            }
         } catch (e) {
-
+            next(e)
         }
     }
 

@@ -143,7 +143,8 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('modifyTask', {task, name})
         },
 
-        async addNew({commit}, group?) {
+        async addNew({commit}, group?: ProjectGroup) {
+
             if (group) {
                 commit('addProjectInGroup', {group})
                 return
@@ -156,12 +157,15 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('addTask', project)
         },
 
-        async projectChanged({commit}, buffer) {
-            await new Promise(resolve => setTimeout(resolve, 1000)) // Имитация сервера
-            buffer.deadline ? commit('changeProjectDeadline', {project: buffer.project, deadline: buffer.deadline}) : ''
-            buffer.name ? commit('changeProjectName', {project: buffer.project, name: buffer.name}) : ''
-            buffer.groupName ? commit('changeProjectGroup', {project: buffer.project, groupName: buffer.groupName}) : ''
-
+        async projectChanged({commit}, changes) {
+            const projectDto = ProjectDto.convertFromObject(changes.project)
+            if (changes.deadline) projectDto.deadline = changes.deadline
+            if (changes.name) projectDto.name = changes.name
+            // if (changes.groupName) projectDto.groupName = changes.groupName
+            const res = await ProjectsService.changeProject(projectDto)
+            changes.deadline ? commit('changeProjectDeadline', {project: changes.project, deadline: changes.deadline}) : ''
+            changes.name ? commit('changeProjectName', {project: changes.project, name: changes.name}) : ''
+            changes.groupName ? commit('changeProjectGroup', {project: changes.project, groupName: changes.groupName}) : ''
         },
 
         async delete({commit}, {project}) {
@@ -290,8 +294,8 @@ const Projects: Module<IProjectsState, IRootState> = {
             // Пушим новый проект в массив проектов, в группы не добавляем. 
             // Проектом эта сущность становится после первого сохранения
 
-            if (!state.projects.find((proj) => proj.name == '' || proj.group == null /* || proj.uuid == '' */)) {
-                const newProject = new Project('', '')
+            if (!state.projects.find((proj) => proj.name == '' || proj.group == null)) {
+                const newProject = new Project()
                 state.projects.push(newProject)
                 state.choosedProject = newProject
             }

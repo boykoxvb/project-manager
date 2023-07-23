@@ -3,11 +3,13 @@ import {Axios, AxiosResponse} from 'axios'
 import IAuthResponse from '@/classes/interfaces/IAuthResponse'
 import ProjectGroupDto from './dto/project-group-dto'
 import ResultDto from './dto/result-dto'
+import { ProjectDto } from './dto'
 
 const PROJ_PATH = '/projects'
 
 export default class ProjectsService {
 
+    // Groups
     static async getAllGroups(): Promise<AxiosResponse<Array<ProjectGroupDto>>> {
         return $api.get(`${PROJ_PATH}/groups/all`)
     }
@@ -24,6 +26,11 @@ export default class ProjectsService {
         return $api.delete(`${PROJ_PATH}/groups/${group_id}`)
     }
 
+
+    // Projects
+    static async changeProject(projectDto: ProjectDto): Promise<AxiosResponse<Array<ProjectDto>>> {
+        return $api.put(`${PROJ_PATH}/`, {projectDto})
+    }
 
 
     // static async registrate(name: string, login: string, email: string, password: string): Promise<AxiosResponse<IAuthResponse>> {

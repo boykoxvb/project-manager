@@ -2,7 +2,7 @@
     <div class="main-container">
       <div class="header">
         <div class="search">
-          <input type="text" :value="searchTerm" @input="searchChange" class="search-input" placeholder="Search">
+          <input type="text" :value="searchTerm" @input="searchChange" class="search-input" placeholder="Поиск">
         </div>
         <div class="instruments">
           <!-- <div class="bell-icon">

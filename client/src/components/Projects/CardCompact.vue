@@ -150,9 +150,15 @@ export default defineComponent ({
 
         // Сохраняем какое-либо измененное поле в буфер
         const projectChanged = ({deadline, name, groupName}: ProjectManager.IProjectChangeset) => {
+            console.log(`CardCompact deadline: ${((deadline as Event)?.target as HTMLInputElement).value}`)
             try {
                 const deadlineValue =  typeof deadline == 'string' ? deadline : (deadline?.target as HTMLInputElement).value
-                deadlineValue ? projectBuffer.deadline = new Date(deadlineValue.toString()) : ''
+                if (deadlineValue == '') {
+                    projectBuffer.deadline = new Date(0)
+                    console.log(projectBuffer.deadline)
+                } else {
+                    deadlineValue != null ? projectBuffer.deadline = new Date(deadlineValue.toString()) : ''
+                }
 
                 const nameValue =  typeof name == 'string' ? name : (name?.target as HTMLInputElement).value
                 nameValue ? projectBuffer.name = nameValue : ''
