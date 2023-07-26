@@ -19,7 +19,7 @@ export default class ProjectDto {
     }
 
     public static convertFromObject(project: Project) {
-        return new ProjectDto(project.uuid, project.name, project.group.uuid, project.deadline, project.state, project.tasks.map((task) => TaskDto.convertFromObject(task)))
+        return new ProjectDto(project.uuid, project.name, project.group?.uuid, project.deadline, project.state, project.tasks.map((task) => TaskDto.convertFromObject(task)))
     }
 }
 

@@ -4,15 +4,29 @@
         <input class="default-input" :value="selected" type="text" placeholder="Группа проекта" readonly="true">
         <v-icon icon="mdi-menu-down" :class="{'transparent': disabled}"></v-icon>
 
-        <div v-if="!disabled" class="menu" :class="{'menu-shown' : isMenuShown}">
-            <div class="menu-element"
-            v-for="el in menu"
-            :key="el"
-            @click="choice(el)"
-            >
-                {{ el }}
-            </div>
-        </div>
+
+        <v-menu activator="parent" :disabled="disabled">
+                    <v-list>
+                        <v-list-item
+                            v-for="item, index in menu"
+                            :key="index"
+                            :value="index"
+                            @click="choice(item)"
+                        >
+                            <v-list-item-title
+                            style="display: flex;">
+                                <div class="color-name">
+                                    {{ item.name }}
+                                </div>
+                                <div class="color-picker"
+                                :class="{[`color-${item.color}`]: true }"
+                                style="height: 20px; width: 20px; border-radius: 50%; margin-left: 10px;"
+                                >
+                                </div>
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
 
     </div>
 </template>
@@ -21,11 +35,17 @@
 
 import { type PropType, defineComponent, ref, onUnmounted, watch } from 'vue'
 
+interface IGroupItem {
+    name: string, 
+    color: string,
+    key: string,
+}
+
 export default defineComponent ({
     name: 'vbChoosableInput',
     props: {
         select: { type: String, required: false },
-        menu: { type: Object as PropType<Array<string>>, required: true },
+        menu: { type: Object as PropType<Array<IGroupItem>>, required: true },
         disabled: { type: Boolean, required: false}
     },
 
@@ -38,9 +58,9 @@ export default defineComponent ({
             isMenuShown.value = !isMenuShown.value;
         }
 
-        const choice = (menuElement: string) => {
-            selected.value = menuElement
-            emit('select-changed', selected.value)
+        const choice = (menuElement: IGroupItem) => {
+            selected.value = menuElement.name
+            emit('select-changed', menuElement)
         }
 
         watch(props, () => {

@@ -28,7 +28,7 @@ export default class ProjectsService {
 
 
     // Projects
-    static async changeProject(projectDto: ProjectDto): Promise<AxiosResponse<Array<ProjectDto>>> {
+    static async changeProject(projectDto: ProjectDto): Promise<AxiosResponse<ProjectDto>> {
         return $api.put(`${PROJ_PATH}/`, {projectDto})
     }
 

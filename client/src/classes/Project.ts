@@ -34,7 +34,7 @@ export default class Project implements IDateString {
             this.deadline = dto.deadline ? new Date(dto.deadline) : undefined
             this.tasks = dto.tasks ? dto.tasks.map((task) => new Task(undefined, undefined, task)) : []
             this._state = dto.state ?? ProjectState.STARTED
-        }else {
+        } else {
             this.uuid = uuid ?? ''
             this.name = name ?? ''
             this.deadline = deadline

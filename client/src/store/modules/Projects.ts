@@ -161,14 +161,25 @@ const Projects: Module<IProjectsState, IRootState> = {
             const projectDto = ProjectDto.convertFromObject(changes.project)
             if (changes.deadline) projectDto.deadline = changes.deadline
             if (changes.name) projectDto.name = changes.name
-            // if (changes.groupName) projectDto.groupName = changes.groupName
+            if (changes.groupId) projectDto.group_id = changes.groupId
+
             const res = await ProjectsService.changeProject(projectDto)
+
             changes.deadline ? commit('changeProjectDeadline', {project: changes.project, deadline: changes.deadline}) : ''
             changes.name ? commit('changeProjectName', {project: changes.project, name: changes.name}) : ''
-            changes.groupName ? commit('changeProjectGroup', {project: changes.project, groupName: changes.groupName}) : ''
+            changes.groupId ? commit('changeProjectGroup', {project: changes.project, group_id: changes.groupId}) : ''
+
+            console.log(res.data)
+            if (!changes.project.uuid) {
+                commit('setEmptyProject', res.data.uuid)
+            }
         },
 
         async delete({commit}, {project}) {
+            if (project.uuid == '') {
+                commit('deleteProject', {project})
+                return
+            }
             await new Promise(resolve => setTimeout(resolve, 1000))
             commit('deleteProject', {project})
         },
@@ -259,22 +270,20 @@ const Projects: Module<IProjectsState, IRootState> = {
             task.name = name
         },
 
-        changeProjectGroup(state, {project, groupName}) {
+        changeProjectGroup(state, {project, group_id}) {
             // Ищем группу по имени
-            const targetGroup = state.groups.find((group: ProjectGroup) => group.name === groupName)
-            if (!targetGroup) throw new Error(`Группы с названием ${groupName} не существует во Vuex. Изменение группы проекта невозможно.`)
-
+            const targetGroup = state.groups.find((group: ProjectGroup) => group.uuid === group_id)
+            if (!targetGroup) throw new Error(`Группы с Id ${group_id} не существует во Vuex. Изменение группы проекта невозможно.`)
             const oldGroup = project.group
             project.group = targetGroup
             targetGroup.projects.push(project)
-
             if (!oldGroup) return
             oldGroup.projects = oldGroup.projects.filter((pr: Project) => pr !== project)
             
         },
 
         changeProjectDeadline(_, {project, deadline}) {
-            project.deadline = deadline
+            project.deadline = deadline.toString() !== new Date(0).toString() ? deadline : null
         },
 
         changeProjectName(_, {project, name}) {
@@ -283,11 +292,7 @@ const Projects: Module<IProjectsState, IRootState> = {
 
 
         deleteProject(state, {project}) {
-
             state.projects = state.projects.filter((pr: Project) => pr !== project)
-
-            // const group = state.groups.find((gr) => gr === project.group)
-            // group.projects = group.projects.filter((pr: Project) => pr !== project)
         },
 
         addEmptyProject(state) {
@@ -301,11 +306,21 @@ const Projects: Module<IProjectsState, IRootState> = {
             }
         },
 
+        setEmptyProject(state, uuid) {
+            const target = state.projects.find((pr) => pr.uuid == '')
+            if (target) {
+                target.uuid = uuid
+            }else{
+                throw 'Пустого проекта не существует'
+            }
+        },
+
         addProjectInGroup(state, {group}) {
             const newProject = new Project('', '')
             console.log(group)
             group.addProject(newProject)
             state.projects.push(newProject)
+            state.choosedProject = newProject
             return
         },
 

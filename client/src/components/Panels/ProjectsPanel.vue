@@ -107,7 +107,6 @@ export default defineComponent ({
         const store = useStore()
         store.dispatch('Projects/fetchGroups')
 
-
         const addProjectDialog = ref(false)
         const choosedGroup = computed(() => store.getters['Projects/filterState'].groupFilter)
 
@@ -126,8 +125,9 @@ export default defineComponent ({
         const addNewProject = async () => {
             if (choosedGroup.value) {
                 await store.dispatch('Projects/addNew', choosedGroup.value)
+            } else {
+                await store.dispatch('Projects/addNew')
             }
-            store.dispatch('Projects/addNew')
         }
 
         
