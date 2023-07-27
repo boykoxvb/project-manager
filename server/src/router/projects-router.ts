@@ -23,7 +23,10 @@ projectsRouter.delete('/groups/:id', authMiddleware, projectsController.deleteGr
 
 // projectsRouter.post('/', authMiddleware, projectsController.addProject)
 projectsRouter.put('/', authMiddleware, projectsController.changeProject)
-projectsRouter.delete('/:id', authMiddleware, projectsController.deleteProject)
+projectsRouter.delete('/', authMiddleware, projectsController.deleteProject)
 
+projectsRouter.post('/tasks', authMiddleware, projectsController.addTask)
+projectsRouter.put('/tasks', authMiddleware, projectsController.changeTask)
+projectsRouter.delete('/tasks', authMiddleware, projectsController.deleteTask)
 
 export { projectsRouter }

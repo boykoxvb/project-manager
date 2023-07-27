@@ -86,7 +86,7 @@ const Projects: Module<IProjectsState, IRootState> = {
             return state.filterState
         },
 
-        availableGroupColors(state) {
+        availableGroupColors() {
             return ['default','lime','orange','ocean','sky','pink','red']
         }
 
@@ -133,15 +133,30 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('setProjects', [].concat(...projectGroups.map((group: any) => group.projects)))
         },
 
-        finishTask({commit}, {project, task}) {
-            // Отправляем на сервер запрос с завершением этого таска 
-            commit('setTaskState', { task: task, taskState: TaskState.FINISHED})
+        async addTask({commit}, project: Project) {
+
+            //* Генерим временный uuid, чтобы не дожидаться ответа от сервера
+            const uuid = Math.random().toString()
+            commit('addTask', {project, uuid})
+            const res = await ProjectsService.addTask(new TaskDto('', ''), ProjectDto.convertFromObject(project))
+            const newUUID = res.data.uuid
+            commit('setTaskUUID', {project, uuid, newUUID})
         },
 
         async taskModified({commit}, {task, name}) {
-            // Отправляем запрос
+            const taskDto = TaskDto.convertFromObject(task)
+            taskDto.name = name
+            const res = await ProjectsService.changeTask(taskDto)
             commit('modifyTask', {task, name})
         },
+
+        async finishTask({commit}, {project, task}) {
+            // Отправляем на сервер запрос с завершением этого таска 
+            const res = await ProjectsService.deleteTask(task.uuid)
+            commit('setTaskState', { task: task, taskState: TaskState.FINISHED})
+        },
+
+
 
         async addNew({commit}, group?: ProjectGroup) {
 
@@ -153,26 +168,18 @@ const Projects: Module<IProjectsState, IRootState> = {
             commit('addEmptyProject')
         },
 
-        addTask({commit}, project: Project) {
-            commit('addTask', project)
-        },
+        async projectChanged({commit}, {project, changes}) {
 
-        async projectChanged({commit}, changes) {
-            const projectDto = ProjectDto.convertFromObject(changes.project)
-            if (changes.deadline) projectDto.deadline = changes.deadline
-            if (changes.name) projectDto.name = changes.name
-            if (changes.groupId) projectDto.group_id = changes.groupId
-
+            const projectDto = ProjectDto.convertFromObject(changes)
             const res = await ProjectsService.changeProject(projectDto)
 
-            changes.deadline ? commit('changeProjectDeadline', {project: changes.project, deadline: changes.deadline}) : ''
-            changes.name ? commit('changeProjectName', {project: changes.project, name: changes.name}) : ''
-            changes.groupId ? commit('changeProjectGroup', {project: changes.project, group_id: changes.groupId}) : ''
-
-            console.log(res.data)
-            if (!changes.project.uuid) {
+            if (!changes.uuid) {
                 commit('setEmptyProject', res.data.uuid)
             }
+
+            changes.deadline ? commit('changeProjectDeadline', {project: project, deadline: changes.deadline}) : ''
+            changes.name ? commit('changeProjectName', {project: project, name: changes.name}) : ''
+            changes.group.uuid ? commit('changeProjectGroup', {project: project, group_id: changes.group.uuid}) : ''
         },
 
         async delete({commit}, {project}) {
@@ -180,8 +187,8 @@ const Projects: Module<IProjectsState, IRootState> = {
                 commit('deleteProject', {project})
                 return
             }
-            await new Promise(resolve => setTimeout(resolve, 1000))
             commit('deleteProject', {project})
+            await ProjectsService.deleteProject(project.uuid)
         },
 
         async editGroup({commit}, {group, changes}) {
@@ -272,6 +279,7 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         changeProjectGroup(state, {project, group_id}) {
             // Ищем группу по имени
+            console.log(project, group_id)
             const targetGroup = state.groups.find((group: ProjectGroup) => group.uuid === group_id)
             if (!targetGroup) throw new Error(`Группы с Id ${group_id} не существует во Vuex. Изменение группы проекта невозможно.`)
             const oldGroup = project.group
@@ -336,8 +344,13 @@ const Projects: Module<IProjectsState, IRootState> = {
             state.sortState.set(sort, asc)
         },
 
-        addTask(state, project: Project) {
-            project.addTask(new Task('', ''))
+        addTask(_, {project, uuid}) {
+            project.addTask(new Task(uuid, ''))
+        },
+
+        setTaskUUID(_, {project, uuid, newUUID}) {
+            const task = project.tasks.find((t: Task) => t.uuid === uuid)
+            task.uuid = newUUID
         },
 
         setFilterState(state, {name, group, states}) {

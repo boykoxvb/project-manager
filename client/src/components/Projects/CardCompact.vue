@@ -13,7 +13,7 @@
                     </div>
                     <input 
                     v-if="isEditing" 
-                    :value="project.deadline?.toISOString().slice(0, 10)"
+                    :value="projectBuffer.deadline?.toISOString().slice(0, 10)"
                     @input="projectChanged({deadline: $event})"
                     class="date-input" 
                     type="date" 
@@ -30,11 +30,7 @@
                         size="small"></v-icon>
                     </div>
                     <div class="tools-button tools-delete" v-if="choosedProject">
-                        <v-icon 
-                        @click.stop="deleteProject()"
-                        v-if="!isEditing"
-                        icon="mdi-delete-outline" 
-                        size="small"></v-icon>
+                        <vb-icon-timer v-if="!isEditing" @timeout="deleteProject()"></vb-icon-timer>
                     </div>
                     <div class="tools-button tools-ok">
                         <v-icon 
@@ -97,8 +93,8 @@
 <script lang="ts">
 
 import { type PropType, onMounted, defineComponent, ref, computed, reactive, watch } from 'vue'
-import { vbProgressBar, vbChoosableInput } from '@/components'
-import * as ProjectManager from '@/classes'
+import { vbProgressBar, vbChoosableInput, vbIconTimer } from '@/components'
+import { Project, ProjectGroup, IProjectChangeset } from '@/classes'
 import { useStore } from '@/store'
 
 export default defineComponent ({
@@ -106,9 +102,10 @@ export default defineComponent ({
     components: {
         vbProgressBar,
         vbChoosableInput,
+        vbIconTimer,
     },
     props: {
-        project: { type: Object as PropType<ProjectManager.Project>, required: true },
+        project: { type: Object as PropType<Project>, required: true },
     },
 
     setup(props) {
@@ -116,7 +113,7 @@ export default defineComponent ({
         const store = useStore()
 
         const projectContainer = ref<HTMLElement | null>(null)
-        const groups = computed(() => store.getters['Projects/allGroups'].map((group: ProjectManager.ProjectGroup) => {return {name: group.name, color: group.color, key: group.uuid}}))
+        const groups = computed(() => store.getters['Projects/allGroups'].map((group: ProjectGroup) => {return {name: group.name, color: group.color, key: group.uuid}}))
 
         /* ВЫБОР АКТИВНОГО ПРОЕКТА */
         const choosedProject = computed(() => store.getters['Projects/choosedProject'] === props.project)
@@ -143,11 +140,19 @@ export default defineComponent ({
         const isLoading = ref(false)
         const isNew = ref(props.project.uuid == '')
 
-        const hasChanges = ref(false)
 
-        // const hasChanges = computed(() => {
-        //     return Boolean(projectBuffer.deadline)
-        // })
+        const hasChanges = computed(() => {
+            return Boolean(
+                (isNew.value && projectBuffer.name && projectBuffer.group?.uuid) || 
+                (!isNew.value && 
+                (
+                        projectBuffer.name && projectBuffer.name != props.project.name || 
+                        projectBuffer.group?.uuid && projectBuffer.group?.uuid != props.project.group?.uuid || 
+                        projectBuffer.deadline && projectBuffer.deadline != props.project.deadline
+                ))
+            )
+        })
+
 
         if (isNew.value) {
             isEditing.value = true
@@ -155,14 +160,11 @@ export default defineComponent ({
 
 
         // Объект, который хранит изменения проекта перед отправкой в стор
-        var projectBuffer: any = ref({ project: props.project, deadline: props.project?.deadline, groupId: props.project?.group?.uuid, name: props.project?.name})
-
-        watch(projectBuffer, () => {
-            console.log('СРАБОТАЛО')
-        })
+        const projectBuffer = reactive(new Project(props.project.uuid, props.project.name, props.project.deadline))
+        projectBuffer.setGroup(props.project.group)
 
         // Сохраняем какое-либо измененное поле в буфер
-        const projectChanged = ({deadline, name, group}: ProjectManager.IProjectChangeset) => {
+        const projectChanged = ({deadline, name, group}: IProjectChangeset) => {
             try {
                 const deadlineValue =  typeof deadline == 'string' ? deadline : (deadline?.target as HTMLInputElement).value
                 if (deadlineValue == '') {
@@ -177,21 +179,12 @@ export default defineComponent ({
                 }
 
                 if (group) {
-                    projectBuffer.groupId = group?.key
+                    projectBuffer.setGroup(groups.value.find((gr: ProjectGroup) => gr.uuid = group.key))
                 }
-
-                hasChanges.value = !!(isNew.value && projectBuffer.name && projectBuffer.groupId) || 
-                (!isNew.value && 
-                    (
-                        projectBuffer.name && projectBuffer.name != props.project.name || 
-                        projectBuffer.groupId && projectBuffer.groupId != props.project.group.uuid || 
-                        projectBuffer.deadline && projectBuffer.deadline != props.project.deadline
-                    ))
 
             } catch (e) {
                 console.error(`Не удалось сохранить изменения проекта в буфер обмена: ${e}`)
             }
-
         }
 
 
@@ -199,18 +192,25 @@ export default defineComponent ({
         const saveChanges = async () => {
             isLoading.value = true
 
-            await store.dispatch('Projects/projectChanged', projectBuffer)
+            await store.dispatch('Projects/projectChanged', {project: props.project, changes: projectBuffer})
             isLoading.value = false
             isEditing.value = false
-            projectBuffer = reactive({ project: props.project, deadline: props.project?.deadline, groupId: props.project?.group?.uuid, name: props.project?.name})
+            clearProjectBuffer()
         }
 
         const cancelChanges = () => {
             isEditing.value = false
-            projectBuffer = reactive({ project: props.project, deadline: props.project?.deadline, groupId: props.project?.group?.uuid, name: props.project?.name})
             if (isNew.value) {
                 deleteProject()
             }
+            clearProjectBuffer()
+        }
+
+        const clearProjectBuffer = () => {
+            projectBuffer.uuid = props.project.uuid ?? ''
+            projectBuffer.name = props.project.name
+            projectBuffer.deadline = props.project.deadline
+            projectBuffer.setGroup(props.project.group)
         }
 
         /* Отслеживание дедлайна */

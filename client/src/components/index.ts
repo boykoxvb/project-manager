@@ -2,6 +2,7 @@ export { default as vbProgressBar } from '@/components/atom-components/vb-progre
 export { default as vbiIconButtonBase } from '@/components/atom-components/vbi-icon-button-base.vue'
 export { default as vbChoosableInput } from '@/components/atom-components/vb-choosable-input.vue'
 export { default as vbTransition } from '@/components/atom-components/vb-transition.vue'
+export { default as vbIconTimer } from '@/components/atom-components/vb-icon-timer.vue'
 
 export { default as TaskCard } from '@/components/Projects/TaskCard.vue'
 export { default as GroupItem } from '@/components/Projects/GroupItem.vue'

@@ -4,36 +4,36 @@ export default function useFormRules() {
   const nameRules = ref([
     (value: string) => {
       if (value) return true
-      return 'Обязательное поле'
+      return ''
     }
   ])
 
   const loginRules = ref([
     (value: string) => {
       if (value) return true
-      return 'Обязательное поле'
+      return ''
     }
   ])
 
   const emailRules = ref([
     (value: string) => {
       if (value) return true
-      return 'Обязательное поле'
+      return ''
     },
     (value: string) => {
       if (/.+@.+\..+/.test(value)) return true
-      return 'Неверный email'
+      return ''
     },
   ])
 
   const passwordRules = ref([
     (value: string) => {
       if (value) return true
-      return 'Обязательное поле'
+      return ''
     },
     (value: string) => {
       if (value.length > 6) return true
-      return 'Слишком короткий пароль'
+      return ''
     },
   ])
 

@@ -1,5 +1,5 @@
 <template>
-
+  <vb-icon-timer></vb-icon-timer>
 </template>
   
   <script lang="ts">
@@ -8,6 +8,7 @@
   import * as ProjectManager from '@/classes'
   import { vbProgressBar, HeaderPanel, CardCompact, ProjectsPanel, TaskCard, RedactorPanel, vbChoosableInput } from '@/components'
   import { useStore } from '@/store'
+  import vbIconTimer from '@/components/atom-components/vb-icon-timer.vue';
   
   export default defineComponent({
     name: 'ComponentTest',

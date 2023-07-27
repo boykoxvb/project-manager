@@ -3,7 +3,7 @@ import {Axios, AxiosResponse} from 'axios'
 import IAuthResponse from '@/classes/interfaces/IAuthResponse'
 import ProjectGroupDto from './dto/project-group-dto'
 import ResultDto from './dto/result-dto'
-import { ProjectDto } from './dto'
+import { ProjectDto, TaskDto } from './dto'
 
 const PROJ_PATH = '/projects'
 
@@ -31,6 +31,25 @@ export default class ProjectsService {
     static async changeProject(projectDto: ProjectDto): Promise<AxiosResponse<ProjectDto>> {
         return $api.put(`${PROJ_PATH}/`, {projectDto})
     }
+
+    static async deleteProject(project_id: string): Promise<AxiosResponse<ResultDto>> {
+        return $api.delete(`${PROJ_PATH}/`, {data: { project_id }})
+    }
+
+    // Tasks
+
+    static async addTask(taskDto: TaskDto, projectDto: ProjectDto): Promise<AxiosResponse<TaskDto>> {
+        return $api.post(`${PROJ_PATH}/tasks`, {taskDto, projectDto})
+    }
+
+    static async changeTask(taskDto: TaskDto): Promise<AxiosResponse<TaskDto>> {
+        return $api.put(`${PROJ_PATH}/tasks`, {taskDto})
+    }
+
+    static async deleteTask(task_id: string): Promise<AxiosResponse<ResultDto>> {
+        return $api.delete(`${PROJ_PATH}/tasks`, {data: { task_id }})
+    }
+
 
 
     // static async registrate(name: string, login: string, email: string, password: string): Promise<AxiosResponse<IAuthResponse>> {

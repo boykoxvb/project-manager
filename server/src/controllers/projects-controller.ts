@@ -51,19 +51,6 @@ class ProjectsController {
         }
     }
 
-    // async test(req, res, next) {
-    //     try {
-    //         const gr = req.body
-    //         const groupDto = new ProjectGroupDto(gr)
-    //         console.log(groupDto)
-    //         // await projectsService.deleteGroup(user_id, group_id)
-    //         // return res.send({success: true})
-    //         return res.send(groupDto)
-    //     } catch (e) {
-    //         next(e)
-    //     }
-    // }
-
 
     // Projects
     // async addProject(req, res, next) {
@@ -81,7 +68,6 @@ class ProjectsController {
         try {
             const user_id = req.userData.id
             const { projectDto } = req.body
-            console.log(projectDto)
             if (projectDto.uuid) {
                 return res.send(await projectsService.changeProject(user_id, projectDto))
             } else {
@@ -95,62 +81,53 @@ class ProjectsController {
     async deleteProject(req, res, next) {
         try {
             const user_id = req.userData.id
+            const { project_id } = req.body
+
+            await projectsService.deleteProject(user_id, project_id)
+            return res.send({success: true})
 
         } catch (e) {
-
+            next(e)
         }
     }
 
 
+    // Tasks
 
-    // async registration(req, res, next) {
-    //     try {
-    //         const errors = validationResult(req)
-    //         if (!errors.isEmpty()) {
-    //             return next(ApiError.BadRequrest('Ошибка при валидации', errors.array()))
-    //         }
-    //         const {login, name, email, password} = req.body
-    //         const userData = await userService.registration(login, name, email, password)
-    //         res.cookie('refresh_token', userData.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-    //         return res.send(userData)
-    //     } catch (e) {
-    //         next(e)
-    //     }
-    // }
+    async addTask(req, res, next) {
+        try {
+            const user_id = req.userData.id
+            const { taskDto, projectDto } = req.body
+            return res.send(await projectsService.addTask(user_id, projectDto, taskDto))
+        } catch (e) {
+            next(e)
+        }
+    } 
 
-    // async login(req, res, next) {
-    //     try {
-    //         const {email, password} = req.body
-    //         const userData = await userService.login(email, password)
-    //         res.cookie('refresh_token', userData.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-    //         return res.send(userData)
-    //     } catch (e) {
-    //         next(e)
-    //     }
-    // }
+    async changeTask(req, res, next) {
+        try {
+            const user_id = req.userData.id
+            const { taskDto, projectDto } = req.body
+            return res.send(await projectsService.changeTask(taskDto))
+        } catch (e) {
+            next(e)
+        }
+    } 
 
-    // async logout(req, res, next) {
-    //     try {
-    //         const {refresh_token} = req.cookies
-    //         const token = await userService.logout(refresh_token)
-    //         res.clearCookie('refresh_token')
-    //         return res.json(token)
-    //     } catch (e) {
-    //         next(e)
-    //     }
-    // }
+    async deleteTask(req, res, next) {
+        try {
+            //! По сути если не указывать юзера, то кто угодно сможет по UUID таски удалять
+            //! Но если добавлять проверку, будет страдать скорость - нужно решить
+            const user_id = req.userData.id
+            const { task_id } = req.body
 
+            await projectsService.deleteTask(task_id)
+            return res.send({success: true})
 
-    // async refresh(req, res, next) {
-    //     try {
-    //         const {refresh_token} = req.cookies
-    //         const userData = await userService.refresh(refresh_token)
-    //         res.cookie('refresh_token', userData.refresh_token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-    //         return res.send(userData)
-    //     } catch (e) {
-    //         next(e)
-    //     }
-    // }
+        } catch (e) {
+            next(e)
+        }
+    }
 
 }
 

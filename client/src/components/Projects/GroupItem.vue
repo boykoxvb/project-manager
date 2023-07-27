@@ -23,18 +23,7 @@
                         icon="mdi-pencil-outline" 
                         size="small"></v-icon>
                     </div>
-                    <div class="tools-button tools-delete">
-                        <v-icon 
-                        v-if="!isDeleting"
-                        @click.stop="deleteGroup()"
-                        icon="mdi-delete-outline" 
-                        size="small"></v-icon>
-                        <v-icon 
-                        v-if="isDeleting"
-                        @click.stop="deleteGroup()"
-                        icon="mdi-cancel" 
-                        size="small"></v-icon>
-                    </div>
+                    <vb-icon-timer @timeout="deleteGroup()" ></vb-icon-timer>
                 </div>
             </div>
         </div>
@@ -44,11 +33,15 @@
 <script lang="ts">
 import { defineComponent, type PropType, ref } from 'vue'
 import * as ProjectManager from '@/classes'
+import vbIconTimer from '../atom-components/vb-icon-timer.vue';
 
 export default defineComponent({
     props: {
         group: { type: Object as PropType<ProjectManager.ProjectGroup>, required: true },
         choosed: { type: Boolean, required: false},
+    },
+    components: {
+        vbIconTimer
     },
     setup(props, {emit}) {
         const hovered = ref(false);
@@ -65,11 +58,7 @@ export default defineComponent({
         }
 
         const deleteGroup = () => {
-            isDeleting.value = !isDeleting.value
-            clearTimeout(deleteTimeout.value)
-            deleteTimeout.value = setTimeout(() => {
-                emit('delete')
-            }, 3000)
+            emit('delete')
         }
 
         return {
@@ -131,6 +120,7 @@ export default defineComponent({
         .tools {
             display: flex;
             justify-content: center;
+            align-items: center;
             margin-left: 5px;
 
             &-button {

@@ -101,6 +101,38 @@ class ProjectsService {
         return project
     } 
 
+    async deleteProject(user_id: string, project_id: string) {
+        const res = await projectsRep.delete({id: project_id, user: {id: user_id}})
+        if (res.affected == 0) {
+            throw ApiError.NotFound(`Проект с id ${project_id} не найден`)
+        }
+    }
+
+
+    // Tasks
+    async addTask(user_id: string, projectDto: ProjectDto, taskDto: TaskDto) {
+        const { name } = taskDto
+        const project = await this.getProject(user_id, projectDto.uuid)
+        const newTask = new Task(name, project)
+        await tasksRep.save(newTask)
+        return new TaskDto(newTask)
+    }
+
+    async changeTask(taskDto: TaskDto) {
+        const { name, uuid } = taskDto
+        const task = await tasksRep.findOne({where: {id: uuid}})
+        task.name = name
+        await tasksRep.save(task)
+        return new TaskDto(task)
+    }
+
+    async deleteTask(task_id: string) {
+        const res = await tasksRep.delete({id: task_id})
+        if (res.affected == 0) {
+            throw ApiError.NotFound(`Задача с id ${task_id} не найдена`)
+        }
+    }
+
     // async addProject(user_id: string, {name, group_id, deadline}) {
     //     const user = await userService.getUserById(user_id) 
     //     const group = await projectGroupsRep.findOne({ relations: {user: true}, where: {id: group_id, user: {id: user.id}}})

@@ -28,7 +28,6 @@ export default function useFormRules() {
         const regResult = await store.dispatch('User/registrate', {name: name.value, login: login.value, email: email.value, password: password.value})
         regLoading.value = false
         if (regResult.success) {
-            // Временное решение чтобы не показывать форму активации
             // const authResult = await store.dispatch('User/authorizate', {email: email.value, password: password.value})
             // if (authResult.success) {
                 

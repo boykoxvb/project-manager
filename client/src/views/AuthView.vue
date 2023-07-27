@@ -74,7 +74,6 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { useStore } from '@/store/index'
 import router from '@/router';
-import cookie from 'js-cookie'
 
   
   export default defineComponent({
