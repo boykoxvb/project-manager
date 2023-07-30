@@ -152,7 +152,7 @@ const Projects: Module<IProjectsState, IRootState> = {
 
         async finishTask({commit}, {project, task}) {
             // Отправляем на сервер запрос с завершением этого таска 
-            const res = await ProjectsService.deleteTask(task.uuid)
+            const res = await ProjectsService.finishTask(task.uuid)
             commit('setTaskState', { task: task, taskState: TaskState.FINISHED})
         },
 

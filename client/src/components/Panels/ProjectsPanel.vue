@@ -153,8 +153,7 @@ export default defineComponent ({
 
 <style lang="scss" scoped>
 
-@use '@/components/scss/group-colors.scss';
-@use '@/components/scss/highlighting.scss';
+@import '@/components/scss/index.scss';
 
 .add-project {
     border-radius: 10%;
@@ -175,11 +174,10 @@ export default defineComponent ({
   font-size: 24px;
   background-color: rgba($color: #fcfcfc, $alpha: 1.0);
   border-radius: 30px;
-  min-height: 92vh;
-  max-height: 92vh;
   padding: 15px;
   box-sizing: border-box;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   overflow: hidden;
   font: {
@@ -291,17 +289,18 @@ export default defineComponent ({
 
     .projects {
         display: block;
-        flex-grow: 1;
-        max-width: 100%;
+        // flex-grow: 1;
         overflow: auto;
+        @include scrollbar;
 
         &-grid {
-                padding: 10px;
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 15px;
-                justify-content: center;
-                grid-auto-flow: row;
+            padding: 10px;
+            display: grid;
+            grid-gap: 16px;
+            grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+            grid-auto-columns: minmax(220px,1fr);
+
+
         }
 
 

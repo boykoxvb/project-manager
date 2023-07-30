@@ -1,0 +1,14 @@
+$bp_mobile: 760px;
+$bp_desctop: 1920px;
+
+@mixin desktop() {
+    @media (min-width: $bp_mobile) {
+        @content;
+    }
+}
+
+@mixin mobile() {
+    @media (max-width: $bp_mobile) {
+        @content;
+    }
+}

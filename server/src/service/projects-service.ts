@@ -6,7 +6,7 @@ import ApiError from '../exceptions/api-error'
 import userService from './user-service'
 import { group } from 'console'
 import ProjectGroupDto from '../dto/project-groups-dto'
-import TaskDto from '../dto/task-dto'
+import TaskDto, { TaskState } from '../dto/task-dto'
 
 const projectsRep = AppDataSource.getRepository(Project)
 const projectGroupsRep = AppDataSource.getRepository(ProjectGroup)
@@ -118,6 +118,10 @@ class ProjectsService {
         return new TaskDto(newTask)
     }
 
+    async getTaskById(task_id: string) {
+        return await tasksRep.findOne({where: {id: task_id}})
+    }
+
     async changeTask(taskDto: TaskDto) {
         const { name, uuid } = taskDto
         const task = await tasksRep.findOne({where: {id: uuid}})
@@ -126,11 +130,11 @@ class ProjectsService {
         return new TaskDto(task)
     }
 
-    async deleteTask(task_id: string) {
-        const res = await tasksRep.delete({id: task_id})
-        if (res.affected == 0) {
-            throw ApiError.NotFound(`Задача с id ${task_id} не найдена`)
-        }
+    async finishTask(task_id: string) {
+        const task = await this.getTaskById(task_id)
+        task.state = TaskState.FINISHED
+        const res = await tasksRep.save(task)
+        return res
     }
 
     // async addProject(user_id: string, {name, group_id, deadline}) {

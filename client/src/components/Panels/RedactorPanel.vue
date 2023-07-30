@@ -24,7 +24,7 @@
 
             </div>
 
-            <div @click="addTask" class="task-add__button">
+            <div @click="addTask"  class="task-add__button">
                 <v-icon icon="mdi-plus" size="x-large"></v-icon>
             </div>
         </div>
@@ -86,6 +86,7 @@ export default defineComponent ({
             finishTask,
             showedTasks,
             closeProject,
+            isEmptyTaskExists,
         }
         
     }
@@ -94,12 +95,12 @@ export default defineComponent ({
 
 
 <style lang="scss" scoped>
+@import '@/components/scss/index.scss';
+
 .redactor-panel {
-    padding: 20px;
+    padding: 15px;
     position: relative;
-    min-height: 92vh;
-    max-height: 92vh;
-    min-width: 380px;
+    min-width: 320px;
     display: flex;
     height: 100%;
     flex-direction: column;
@@ -118,13 +119,13 @@ export default defineComponent ({
     }
 
     .panel-row__header {
+        padding: 10px;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         font-family: Tahoma, Geneva, sans-serif;
         font-size: 1.3em;
         font-weight: 600;
-        padding: 0 0 20px 0;
         box-sizing: border-box;
 
         .project__name {
@@ -145,8 +146,10 @@ export default defineComponent ({
     }
 
     .panel-row__tasks {
+        padding: 10px;
         overflow-x: hidden;
         overflow-y: auto !important;
+        @include scrollbar;
 
         .task-add__button {
     

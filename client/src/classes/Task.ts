@@ -18,7 +18,7 @@ export default class Task {
         if (dto) {
             this.uuid = dto.uuid ?? ""
             this.name = dto.name ?? ""
-            this._state = TaskState.STARTED
+            this._state = dto.state ?? TaskState.STARTED
         } else {
             this.uuid = uuid ?? ''
             this.name = name ?? ''

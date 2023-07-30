@@ -46,8 +46,8 @@ export default class ProjectsService {
         return $api.put(`${PROJ_PATH}/tasks`, {taskDto})
     }
 
-    static async deleteTask(task_id: string): Promise<AxiosResponse<ResultDto>> {
-        return $api.delete(`${PROJ_PATH}/tasks`, {data: { task_id }})
+    static async finishTask(task_id: string): Promise<AxiosResponse<TaskDto>> {
+        return $api.put(`${PROJ_PATH}/tasks/finish`, {data: { task_id }})
     }
 
 

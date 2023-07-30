@@ -106,23 +106,22 @@ class ProjectsController {
 
     async changeTask(req, res, next) {
         try {
-            const user_id = req.userData.id
-            const { taskDto, projectDto } = req.body
+            // const user_id = req.userData.id
+            const { taskDto } = req.body
             return res.send(await projectsService.changeTask(taskDto))
         } catch (e) {
             next(e)
         }
     } 
 
-    async deleteTask(req, res, next) {
+    async finishTask(req, res, next) {
         try {
-            //! По сути если не указывать юзера, то кто угодно сможет по UUID таски удалять
-            //! Но если добавлять проверку, будет страдать скорость - нужно решить
-            const user_id = req.userData.id
+            // const user_id = req.userData.id
             const { task_id } = req.body
 
-            await projectsService.deleteTask(task_id)
-            return res.send({success: true})
+            const task = await projectsService.finishTask(task_id)
+            console.log(task)
+            return res.send(task)
 
         } catch (e) {
             next(e)

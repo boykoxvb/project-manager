@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm"
 import { Project } from "./Project"
+import { TaskState } from "../../../dto/task-dto"
 
 @Entity('tasks')
 export class Task {
@@ -10,6 +11,9 @@ export class Task {
 
     @Column()
     name: string
+
+    @Column({default: TaskState.STARTED})
+    state: number
 
     @ManyToOne(() => Project, (project) => project.id, {
         onDelete: 'CASCADE',
@@ -28,6 +32,7 @@ export class Task {
     ) {
         this.name = name
         this.project = project
+        this.state = TaskState.STARTED
     }
 
 }

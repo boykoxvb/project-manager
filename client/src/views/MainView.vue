@@ -1,29 +1,18 @@
 <template>
-  <!-- <vb-progress-bar :progress="70" :falseProgress="30" :height="10"></vb-progress-bar> -->
-  <!-- <HeaderPanel></HeaderPanel>
-  <ProjectsPanel></ProjectsPanel> -->
-  <!-- <RedactorPanel :project="testProject"></RedactorPanel> -->
+
   <div class="layout">
     <div class="navbar">
       <header-panel></header-panel>
     </div>
     <div class="main">
-      <div class="navigation">
-        <!-- <v-icon icon="mdi-home-circle-outline" size="x-large"></v-icon> 
-        <v-icon icon="mdi-home-circle"></v-icon>  -->
-        <!-- <div class="navigation__element">
-          <v-btn icon="mdi-home" color="black"></v-btn>
-        </div> -->
-        
-      </div>
       
       <div class="content">
-        <div class="projects-panel">
+        <div class="projects-panel" :class="{'maxh': choosedProject, 'col-span': !choosedProject}">
           <projects-panel
           @project:choosed="chooseProject($event)"
           ></projects-panel>
         </div>
-        <div v-if="choosedProject" class="redactor-panel">
+        <div v-if="choosedProject && choosedProject.uuid != ''" class="redactor-panel">
           <redactor-panel :project="choosedProject"></redactor-panel>
         </div>
       </div>
@@ -59,15 +48,6 @@ export default defineComponent({
 
     const choosedProject = computed(() => store.getters['Projects/choosedProject'])
     
-    
-    // const testProject: ProjectManager.Project = 
-    //     reactive(new ProjectManager.Project
-    //                 ('uuid', 'TestProject', new Date(), new Date(), 'Описание проекта')
-    //             )
-
-    // testProject.addTask(new ProjectManager.Task('uuid', 'Погулять с собакой'))
-    // testProject.addTask(new ProjectManager.Task('uuid', 'Выпить пива'))
-
     return {
         chooseProject,
         choosedProject
@@ -78,6 +58,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+
+@use '@/components/scss/index.scss';
+@import '@/components/scss/breakpoints.scss';
+
 
 .layout {
   display: flex;
@@ -99,36 +83,54 @@ export default defineComponent({
     flex-wrap: nowrap;
     background-color: #eaf0f4;
 
-    .navigation {
-      min-height: 100%;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-
-      &__element {
-        padding: 0 15px;
-      }
-    }
-
     .content {
       padding: 0 20px;
       flex-grow: 1;
-      height: 94vh;
+      min-height: 94vh;
+      max-height: 94vh;
       box-sizing: border-box;
-      flex-grow: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding-bottom: 20px;
+
+      .maxh {
+        height: 50vh;
+      }
+
+      .col-span {
+        @include desktop {
+          grid-column: span 2;
+        }
+      }
+
+      @include mobile {
+        flex-grow: 1;
+      }
+
+      @include desktop {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+      }
 
       .projects-panel {
         flex-grow: 1;
-        grid-column-start: 1;
-        grid-column-end: 4;
+        display: flex;
+        max-height: 94vh;
+
+        @include desktop {
+          height: 94vh;
+        }
       }
 
       .redactor-panel {
-        grid-column-start: 4;
+        height: 40vh;
+
+        @include desktop {
+          grid-column-start: 2;
+          height: 94vh;
+        }
+
       }
     }
 
