@@ -1,5 +1,5 @@
 export default interface IUserDto {
-    email: string,
-    is_activated: boolean,
-    id: string,
+  email: string
+  is_activated: boolean
+  id: string
 }

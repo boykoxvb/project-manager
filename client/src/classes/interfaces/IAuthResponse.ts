@@ -1,7 +1,7 @@
-import IUserDto from "./IUserDto";
+import IUserDto from './IUserDto'
 
 export default interface IAuthResponse {
-    access_token?: string,
-    refresh_token?: string,
-    user?: IUserDto,
+  access_token?: string
+  refresh_token?: string
+  user?: IUserDto
 }

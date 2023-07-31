@@ -13,6 +13,3 @@ export { default as ProjectGroups } from '@/components/Projects/ProjectGroups.vu
 export { default as HeaderPanel } from '@/components/Panels/HeaderPanel.vue'
 export { default as ProjectsPanel } from '@/components/Panels/ProjectsPanel.vue'
 export { default as RedactorPanel } from '@/components/Panels/RedactorPanel.vue'
-
-
-

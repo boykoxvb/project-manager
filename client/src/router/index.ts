@@ -3,40 +3,35 @@ import TestView from '@/views/MainView.vue'
 import AuthVIew from '@/views/AuthView.vue'
 import ComponentTest from '@/views/ComponentTest.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
-import { store, useStore } from '@/store'
-import AuthService from '@/services/auth-service'
+import { store } from '@/store'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: TestView
+    component: TestView,
   },
   {
     path: '/auth',
     name: 'auth',
-    component: AuthVIew
+    component: AuthVIew,
   },
   {
     path: '/registration',
     name: 'registration',
-    component: RegistrationView
+    component: RegistrationView,
   },
   {
     path: '/testing',
     name: 'test',
-    component: ComponentTest
+    component: ComponentTest,
   },
-
-
-
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
-
 
 router.beforeEach(async (to, from, next) => {
   // Тут проверяем нужна ли проверка авторизации
@@ -47,11 +42,13 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  const res = await store.dispatch('User/checkAuth')
-  if (!res.success) {
-    next({name: 'auth'})
+  // const res = await store.dispatch('User/checkAuth')
+  const access = await store.getters['User/accessToken']
+  console.log(access)
+  if (!access) {
+    next({ name: 'auth' })
     return
-  }else{
+  } else {
     next()
     return
   }

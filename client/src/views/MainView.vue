@@ -1,45 +1,35 @@
 <template>
-
   <div class="layout">
     <div class="navbar">
-      <header-panel></header-panel>
+      <header-panel />
     </div>
     <div class="main">
-      
       <div class="content">
-        <div class="projects-panel" :class="{'maxh': choosedProject, 'col-span': !choosedProject}">
-          <projects-panel
-          @project:choosed="chooseProject($event)"
-          ></projects-panel>
+        <div class="projects-panel" :class="{ maxh: choosedProject, 'col-span': !choosedProject }">
+          <projects-panel @project:choosed="chooseProject($event)" />
         </div>
         <div v-if="choosedProject && choosedProject.uuid != ''" class="redactor-panel">
-          <redactor-panel :project="choosedProject"></redactor-panel>
+          <redactor-panel :project="choosedProject" />
         </div>
       </div>
     </div>
-    
-    
   </div>
 </template>
 
 <script lang="ts">
-
-import { defineComponent, reactive, computed } from 'vue';
+import { defineComponent, computed } from 'vue'
 import * as ProjectManager from '@/classes'
-import { vbProgressBar, HeaderPanel, ProjectsPanel, TaskCard, RedactorPanel } from '@/components'
+import { HeaderPanel, ProjectsPanel, RedactorPanel } from '@/components'
 import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'TestView',
   components: {
-    vbProgressBar,
     HeaderPanel,
     ProjectsPanel,
-    TaskCard,
-    RedactorPanel
+    RedactorPanel,
   },
-  setup(props) {
-
+  setup() {
     const store = useStore()
 
     const chooseProject = (project: ProjectManager.Project) => {
@@ -47,21 +37,18 @@ export default defineComponent({
     }
 
     const choosedProject = computed(() => store.getters['Projects/choosedProject'])
-    
-    return {
-        chooseProject,
-        choosedProject
-    }
 
-  }
-});
+    return {
+      chooseProject,
+      choosedProject,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>
-
 @use '@/components/scss/index.scss';
 @import '@/components/scss/breakpoints.scss';
-
 
 .layout {
   display: flex;
@@ -130,12 +117,8 @@ export default defineComponent({
           grid-column-start: 2;
           height: 94vh;
         }
-
       }
     }
-
   }
-
-  
 }
 </style>

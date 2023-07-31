@@ -1,30 +1,27 @@
 <template>
-    <transition :name="name">
-        <slot></slot>
-    </transition>
+  <transition :name="name">
+    <slot></slot>
+  </transition>
 </template>
-  
-<script lang="ts">
 
+<script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent ({
-    name: 'vb-transition',
-    props: {
-        name: { type: String, required: true },
-    },
-    setup(props) {
-        const name = props.name
-        return {
-            name
-        }
+export default defineComponent({
+  name: 'vb-transition',
+  props: {
+    name: { type: String, required: true },
+  },
+  setup(props) {
+    const name = props.name
+    return {
+      name,
     }
-    
+  },
 })
 </script>
-  
-<style lang="scss" scoped>
 
+<style lang="scss" scoped>
 //fade
 .fade-enter-active,
 .fade-leave-active {
@@ -35,7 +32,4 @@ export default defineComponent ({
 .fade-leave-to {
   opacity: 0;
 }
-
 </style>
-
-  

@@ -6,10 +6,9 @@ import User from './modules/User'
 
 import { IRootState } from './interfaces'
 
-
 export const key: InjectionKey<Store<IRootState>> = Symbol()
 
-export function useStore () {
+export function useStore() {
   return baseUseStore(key)
 }
 
@@ -18,16 +17,11 @@ export const store = createStore({
     userId: 'UUID of UserId',
   },
 
-  mutations: {
-    
-  },
+  mutations: {},
 
   modules: {
     Projects: Projects,
     Auth: Auth,
     User: User,
-  }
-
+  },
 })
-
-
