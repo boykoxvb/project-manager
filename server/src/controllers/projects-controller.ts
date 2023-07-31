@@ -118,7 +118,7 @@ class ProjectsController {
         try {
             // const user_id = req.userData.id
             const { task_id } = req.body
-
+            console.log(req.body)
             const task = await projectsService.finishTask(task_id)
             console.log(task)
             return res.send(task)

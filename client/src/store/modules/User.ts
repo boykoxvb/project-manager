@@ -2,6 +2,7 @@ import * as ProjectManager from '@/classes'
 import { Module } from 'vuex'
 import { IRootState, IUserState } from '@/store/interfaces'
 import AuthService from '@/services/auth-service'
+import router from '@/router'
 
 
 const User: Module<IUserState, IRootState> = {
@@ -80,6 +81,7 @@ const User: Module<IUserState, IRootState> = {
         async logout({commit}) {
             try {
                 await AuthService.logout()
+                router.push('/auth')
                 commit('setUser')
                 return { success: true, message: `Успешный логаут`}
             } catch (e: any) {

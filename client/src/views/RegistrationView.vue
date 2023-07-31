@@ -104,8 +104,8 @@
   
 import { computed, defineComponent } from 'vue';
 import router from '@/router';
-import useFormRules from '@/components/User/modules/useFormRules'
-import useRegistrationForm from '@/components/User/modules/useRegistrationForm'
+import useFormRules from '@/components/composables/useFormRules'
+import useRegistrationForm from '@/components/composables/useRegistrationForm'
   
   export default defineComponent({
     name: 'AuthView',

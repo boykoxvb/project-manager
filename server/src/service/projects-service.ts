@@ -118,7 +118,7 @@ class ProjectsService {
         return new TaskDto(newTask)
     }
 
-    async getTaskById(task_id: string) {
+    async getTaskById(task_id: string): Promise<Task> {
         return await tasksRep.findOne({where: {id: task_id}})
     }
 

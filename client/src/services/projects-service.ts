@@ -47,7 +47,7 @@ export default class ProjectsService {
     }
 
     static async finishTask(task_id: string): Promise<AxiosResponse<TaskDto>> {
-        return $api.put(`${PROJ_PATH}/tasks/finish`, {data: { task_id }})
+        return $api.put(`${PROJ_PATH}/tasks/finish`, { task_id })
     }
 
 

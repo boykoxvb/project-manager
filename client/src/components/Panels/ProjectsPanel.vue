@@ -40,33 +40,12 @@
                         ></v-icon>
                     </div>
                 </div>
-                <!-- <div class="info-header-date">
-                    <span>{{ new Date().getDate().toString() + ' ' + new Date().getMonth().toString()}}</span> 
-                </div> -->
             </div>
 
             <div class="project__groups">
                 <project-groups/>
             </div>
 
-            <div class="info-panel">
-                <!-- <div class="state-filters">
-                    <div
-                    class="info-panel__project-count border-black" :class="{}">
-                        <span>{{ projectsInProgressNumber }}</span> 
-                        <span class="project-state">В процессе</span>
-                    </div>
-                    <div class="info-panel__project-count border-black">
-                        <span>16</span> 
-                        <span class="project-state">Incoming</span>
-                    </div>
-                    <div class="info-panel__project-count">
-                        <span> {{ projectsFinishedNumber }}</span> 
-                        <span class="project-state">Готовые</span>
-                    </div>
-                </div>   -->
-                
-            </div>
         </div>
 
 
@@ -114,10 +93,6 @@ export default defineComponent ({
         const projects = computed(() => store.getters['Projects/filteredProjects'])
         const sortState = computed(() => store.getters['Projects/sortState'])
 
-        const projectsInProgressNumber = computed(() => store.getters['Projects/allProjects'].filter((project: PM.Project) => project.state === PM.ProjectState.STARTED).length)
-        const projectsFinishedNumber = computed(() => store.getters['Projects/allProjects'].filter((project: PM.Project) => project.state === PM.ProjectState.FINISHED).length)
-
-
         const setSortState = (sort: string, asc: boolean | null) => {
             store.commit('Projects/setSortState', {sort, asc})
         }
@@ -142,8 +117,6 @@ export default defineComponent ({
             setSortState,
             choosedGroup,
 
-            projectsInProgressNumber,
-            projectsFinishedNumber,
         }
     }
 

@@ -13,14 +13,14 @@
           </div> -->
           <div class="user">
             <!-- <div class="user-photo"></div> -->
-            <div class="user-name">{{username}}</div>
+            <!-- <div class="user-name">{{username}}</div> -->
             <div class="exit">
               <v-icon icon="mdi-exit-to-app">
                 
               </v-icon>
               <v-menu activator="parent">
                 <v-list-item>
-                  <v-btn variant="tonal" color="error">
+                  <v-btn @click="logout" variant="tonal" color="error">
                     Выйти
                   </v-btn>
                 </v-list-item>
@@ -48,11 +48,14 @@ export default defineComponent ({
   setup(props) {
     const store = useStore()
     const username = computed(() => store.getters['User/email'])
-    
     const searchTerm = computed(() => store.getters['Projects/filterState'].nameSearch)
 
     const searchChange = (event: Event) => {
       store.commit('Projects/setFilterState', {name: (event?.target as HTMLInputElement).value})
+    }
+
+    const logout = () => {
+      store.dispatch('User/logout')
     }
 
 
@@ -60,6 +63,7 @@ export default defineComponent ({
       username,
       searchTerm,
       searchChange,
+      logout,
     }
   }
   
@@ -90,7 +94,7 @@ export default defineComponent ({
         padding: 5px 15px;
         border-radius: 40px;
         background-color: rgba($color: #fcfcfc, $alpha: 1.0);
-        margin: 12px 0;
+        margin: 3% 0;
         
       }
 
