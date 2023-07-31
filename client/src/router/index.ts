@@ -42,10 +42,8 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // const res = await store.dispatch('User/checkAuth')
-  const access = await store.getters['User/accessToken']
-  console.log(access)
-  if (!access) {
+  const res = await store.dispatch('User/checkAuth')
+  if (!res.success) {
     next({ name: 'auth' })
     return
   } else {

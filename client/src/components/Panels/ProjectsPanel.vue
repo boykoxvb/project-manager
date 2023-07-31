@@ -3,9 +3,7 @@
     <div class="info">
       <div class="info-header">
         <div class="info-header-projects">
-          <span v-if="choosedGroup?.name" class="group">
-            {{ 'Проекты / ' + choosedGroup.name }}
-          </span>
+          <span v-if="choosedGroup?.name" class="group"> Проекты </span>
           <span v-else> Проекты </span>
         </div>
         <div class="sorting">

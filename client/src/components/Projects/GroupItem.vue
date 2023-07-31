@@ -5,15 +5,13 @@
     @click="chooseGroup"
   >
     <div class="group-color" :class="{ [`color-${group.color}`]: true }" v-if="!choosed"></div>
-    <div class="group-name" v-if="choosed">
-      <div class="group__expanded">
-        {{ group.name }}
-        <div class="tools">
-          <div class="tools-button tools-edit">
-            <v-icon @click.stop="editGroup()" icon="mdi-pencil-outline" size="small"></v-icon>
-          </div>
-          <vb-icon-timer @timeout="deleteGroup()"></vb-icon-timer>
+    <div class="group__expanded" v-if="choosed">
+      <p class="group__name">{{ group.name }}</p>
+      <div class="tools">
+        <div class="tools-button tools-edit">
+          <v-icon @click.stop="editGroup()" icon="mdi-pencil-outline" size="small"></v-icon>
         </div>
+        <vb-icon-timer @timeout="deleteGroup()"></vb-icon-timer>
       </div>
     </div>
   </div>
@@ -74,11 +72,7 @@ export default defineComponent({
 
 .container {
   cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
+  flex: 0 0 auto;
   font-size: 15px;
   border-radius: 10px;
   padding: 5px;
@@ -102,6 +96,12 @@ export default defineComponent({
     display: flex;
     padding: 0 5px;
     white-space: nowrap;
+
+    .group__name {
+      max-width: 150px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
 
     .tools {
       display: flex;

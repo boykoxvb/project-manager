@@ -106,18 +106,15 @@ export default defineComponent({
 @use '@/components/scss/highlighting.scss';
 
 .project-group__container {
-  display: flex;
-  flex-wrap: nowrap;
-  height: 50px;
   // overflow: auto;
 
   .group-items {
     display: flex;
-    flex-wrap: wrap;
-    // overflow: auto;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     align-items: center;
-    align-content: center;
-    // justify-content: center;
+    min-width: 0;
+    max-width: calc(100vw - 90px);
 
     .group-add {
       width: 30px;

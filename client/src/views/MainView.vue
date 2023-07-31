@@ -92,7 +92,7 @@ export default defineComponent({
       }
 
       @include mobile {
-        flex-grow: 1;
+        // flex-grow: 1;
       }
 
       @include desktop {

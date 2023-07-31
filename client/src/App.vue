@@ -1,25 +1,20 @@
 <template>
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
-import { useStore } from "@/store"
+import { useStore } from '@/store'
 import { defineComponent } from 'vue'
 
-export default defineComponent ({
+export default defineComponent({
   name: 'App',
   setup() {
     const store = useStore()
-    store.dispatch('User/checkAuth')
+    // store.dispatch('User/checkAuth')
 
-    return {
-
-    }
-  }
-  
+    return {}
+  },
 })
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>
