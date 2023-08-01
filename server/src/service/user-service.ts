@@ -80,7 +80,6 @@ class UserService {
     const user = await userRep.findOne({ where: { id: userData.id } })
     const userDto = new UserDto(user)
     const tokens = tokenService.generateTokens({ ...userDto })
-    console.log(`refresh новый ${tokens.refresh_token}`)
     await tokenService.saveToken(user, tokens.refresh_token)
     return {
       ...tokens,

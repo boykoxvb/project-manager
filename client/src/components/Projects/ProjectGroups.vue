@@ -102,8 +102,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use '@/components/scss/group-colors.scss';
-@use '@/components/scss/highlighting.scss';
+@import '@/components/scss/index.scss';
 
 .project-group__container {
   // overflow: auto;
@@ -115,6 +114,7 @@ export default defineComponent({
     align-items: center;
     min-width: 0;
     max-width: calc(100vw - 90px);
+    @include scrollbar();
 
     .group-add {
       width: 30px;

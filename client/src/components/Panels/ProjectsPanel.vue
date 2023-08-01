@@ -154,7 +154,6 @@ export default defineComponent({
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
-      margin-bottom: 10px;
 
       .sorting {
         display: flex;
