@@ -9,9 +9,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
+RUN npm install -g ts-node
 
 # Bundle app source
 COPY . .
 
 EXPOSE 5000
-CMD [ "nodemon", "index.ts" ]
+CMD [ "ts-node", "index.ts" ]

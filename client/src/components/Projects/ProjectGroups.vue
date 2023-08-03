@@ -116,9 +116,14 @@ export default defineComponent({
     max-width: calc(100vw - 90px);
     @include scrollbar();
 
+    @include desktop {
+      flex-wrap: wrap;
+    }
+
     .group-add {
       width: 30px;
       height: 30px;
+      margin: 10px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
