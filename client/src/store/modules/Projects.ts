@@ -297,7 +297,6 @@ const Projects: Module<IProjectsState, IRootState> = {
 
     changeProjectGroup(state, { project, group_id }) {
       // Ищем группу по имени
-      console.log(project, group_id)
       const targetGroup = state.groups.find((group: ProjectGroup) => group.uuid === group_id)
       if (!targetGroup)
         throw new Error(
@@ -344,7 +343,6 @@ const Projects: Module<IProjectsState, IRootState> = {
 
     addProjectInGroup(state, { group }) {
       const newProject = new Project('', '')
-      console.log(group)
       group.addProject(newProject)
       state.projects.push(newProject)
       state.choosedProject = newProject

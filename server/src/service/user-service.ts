@@ -31,10 +31,10 @@ class UserService {
     const userDto = new UserDto(user)
     const tokens = tokenService.generateTokens({ ...userDto })
     await tokenService.saveToken(user, tokens.refresh_token)
-    await mailService.sendActivationMail(
-      email,
-      `${process.env.API_URL}/api/activate/${activation_link}`
-    )
+    // await mailService.sendActivationMail(
+    //   email,
+    //   `${process.env.API_URL}/api/activate/${activation_link}`
+    // )
 
     return {
       ...tokens,
