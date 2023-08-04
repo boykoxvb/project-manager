@@ -140,7 +140,7 @@ export default defineComponent({
   flex-direction: column;
   overflow: hidden;
   font: {
-    family: 'MS Sans Serif';
+    family: 'Open Sans', sans-serif;
     weight: 600;
   }
 

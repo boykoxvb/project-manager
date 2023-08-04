@@ -89,7 +89,7 @@ export default defineComponent({
   text-align: center;
   transition: 0.3s;
   font: {
-    family: 'MS Sans Serif';
+    family: 'Open Sans', sans-serif;
   }
   display: inline-block;
   outline: none;

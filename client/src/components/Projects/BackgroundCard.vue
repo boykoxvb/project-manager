@@ -167,7 +167,7 @@ export default defineComponent({
   text-align: center;
   transition: 0.3s;
   font: {
-    family: 'MS Sans Serif';
+    family: 'Open Sans', sans-serif;
     weight: 400;
   }
   display: block;
@@ -209,7 +209,7 @@ export default defineComponent({
 
     border-radius: 20px;
     font: {
-      family: 'MS Sans Serif';
+      family: 'Open Sans', sans-serif;
       size: 1rem;
     }
 

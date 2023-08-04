@@ -102,7 +102,7 @@ export default defineComponent({
   border-radius: 30px;
 
   font: {
-    family: 'MS Sans Serif';
+    family: 'Open Sans', sans-serif;
   }
 
   .panel-row {

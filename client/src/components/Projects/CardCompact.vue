@@ -265,7 +265,7 @@ export default defineComponent({
   text-align: center;
   transition: 0.3s;
   font: {
-    family: 'MS Sans Serif';
+    family: Tahoma, Geneva, sans-serif;
   }
   display: block;
   outline: none;
@@ -306,7 +306,7 @@ export default defineComponent({
 
     border-radius: 20px;
     font: {
-      family: 'MS Sans Serif';
+      family: Tahoma, Geneva, sans-serif;
       size: 1rem;
     }
 
