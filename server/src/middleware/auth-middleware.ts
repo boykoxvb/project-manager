@@ -1,4 +1,4 @@
-import IUserData from "../dto/interfaces/IUserData";
+// import IUserData from "../dto/interfaces/IUserData";
 import ApiError from "../exceptions/api-error";
 import tokenService from "../service/token-service";
 

@@ -2,7 +2,7 @@ const Router = require('express').Router
 const authRouter = new Router()
 import userController from "../controllers/user-controller"
 import { body } from "express-validator"
-import authMiddleware from "../middleware/auth-middleware"
+// import authMiddleware from "../middleware/auth-middleware"
 
 authRouter.post('/registration',
     body('email').isEmail(),
