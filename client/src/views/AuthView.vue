@@ -385,7 +385,7 @@ export default defineComponent({
       }
 
       100% {
-        transform: translateY(-130vh) rotate(540deg);
+        transform: translateY(-130vh) rotate(360deg);
         opacity: 0.5;
         border-radius: 50%;
       }

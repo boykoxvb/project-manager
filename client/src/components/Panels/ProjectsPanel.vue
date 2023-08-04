@@ -219,22 +219,22 @@ export default defineComponent({
         }
       }
 
-      .project-group__container {
-        display: flex;
+      // .project-group__container {
+      //   display: flex;
 
-        .project-group__item {
-          padding: 5px 20px;
-          font-size: 0.6em;
-          font-weight: 500;
-          border-radius: 10px;
-        }
-      }
+      //   .project-group__item {
+      //     padding: 5px 20px;
+      //     font-size: 0.6em;
+      //     font-weight: 500;
+      //     border-radius: 10px;
+      //   }
+      // }
 
-      .separator {
-        width: 1px;
-        height: 100%;
-        background-color: #3b3b3b;
-      }
+      // .separator {
+      //   width: 1px;
+      //   height: 100%;
+      //   background-color: #3b3b3b;
+      // }
     }
   }
 
