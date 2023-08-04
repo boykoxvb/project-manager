@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+import { defineComponent, computed } from 'vue'
 import * as ProjectManager from '@/classes'
 import {
   vbProgressBar,
@@ -15,7 +15,6 @@ import {
   vbChoosableInput,
 } from '@/components'
 import { useStore } from '@/store'
-import vbIconTimer from '@/components/atom-components/vb-icon-timer.vue'
 
 export default defineComponent({
   name: 'ComponentTest',

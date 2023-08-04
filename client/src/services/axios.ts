@@ -1,11 +1,9 @@
 import axios from 'axios'
 import { store } from '@/store'
 
-export const BASE_URL = 'http://95.165.161.124:5000' // Пока что настройки тут храним
-
 const $api = axios.create({
   withCredentials: true,
-  baseURL: BASE_URL,
+  baseURL: process.env.VUE_APP_CORE_URL,
   timeout: 3000,
 })
 

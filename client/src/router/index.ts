@@ -2,7 +2,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import TestView from '@/views/MainView.vue'
 import AuthVIew from '@/views/AuthView.vue'
 import ComponentTest from '@/views/ComponentTest.vue'
-import RegistrationView from '@/views/RegistrationView.vue'
 import { store } from '@/store'
 
 const routes: Array<RouteRecordRaw> = [

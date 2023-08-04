@@ -104,15 +104,6 @@ export default defineComponent({
         align-items: center;
         cursor: pointer;
 
-        &-photo {
-          margin: auto 7px;
-          border-radius: 50%;
-          width: 32px;
-          height: 32px;
-          background-image: url('@/assets/portrait.jpg');
-          background-size: contain;
-        }
-
         &-name {
           display: flex;
           flex-wrap: wrap;

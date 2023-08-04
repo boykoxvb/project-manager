@@ -1,4 +1,4 @@
-import $api, { BASE_URL } from './axios'
+import $api from './axios'
 import axios, { AxiosResponse } from 'axios'
 import IAuthResponse from '@/classes/interfaces/IAuthResponse'
 
@@ -23,6 +23,6 @@ export default class AuthService {
   }
 
   static async refresh(): Promise<AxiosResponse<IAuthResponse>> {
-    return axios.get(`${BASE_URL}/auth/refresh`, { withCredentials: true })
+    return axios.get(`${process.env.VUE_APP_CORE_URL}/auth/refresh`, { withCredentials: true })
   }
 }
