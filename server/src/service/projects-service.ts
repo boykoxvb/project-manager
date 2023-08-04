@@ -148,7 +148,7 @@ class ProjectsService {
   async fillNewUserWithDemo(user: User) {
     try {
       const demoGroup = await this.addGroup(user.id, {
-        name: 'Демо группа проектов',
+        name: 'Демо группа',
         color: 'ocean',
       })
       const demoProject = new Project('Демо-проект', user, demoGroup, 7, undefined)
@@ -158,7 +158,12 @@ class ProjectsService {
         new TaskDto(new Task('Поменять название демо-проекта', demoProject)),
         new TaskDto(new Task('Поменять дедлайн демо-проекта', demoProject)),
       ]
-      await this.addProject(user.id, new ProjectDto(demoProject, demoTasks))
+      const demoProjectDto = new ProjectDto(demoProject)
+      await this.addProject(user.id, demoProjectDto)
+
+      for (let t of demoTasks) {
+        await this.addTask(user.id, demoProjectDto, t)
+      }
       return true
     } catch (e) {
       console.error(`Не удалось добавить демо-данные для пользователя ${user.id}:

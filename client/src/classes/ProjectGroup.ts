@@ -19,10 +19,10 @@ export default class ProjectGroup {
             return newProject
           })
         : []
-    } else if (uuid && name && color) {
-      this.uuid = uuid
-      this.name = name
-      this.color = color
+    } else {
+      this.uuid = uuid ?? ''
+      this.name = name ?? ''
+      this.color = color ?? ''
       this.projects = []
     }
   }

@@ -13,8 +13,7 @@
           </div>
           <input
             v-if="isEditing"
-            :value="projectBuffer.deadline?.toISOString().slice(0, 10)"
-            @input="projectChanged({ deadline: $event })"
+            :value="project.deadline?.toISOString().slice(0, 10)"
             class="date-input"
             type="date"
             :name="`${project.uuid}-deadline__input`"
@@ -31,14 +30,6 @@
           </div>
           <div class="tools-button tools-delete" v-if="choosedProject">
             <vb-icon-timer v-if="!isEditing" @timeout="deleteProject()"></vb-icon-timer>
-          </div>
-          <div class="tools-button tools-ok">
-            <v-icon
-              v-if="isEditing && hasChanges"
-              @click.stop="saveChanges()"
-              icon="mdi-check-outline"
-              size="small"
-            ></v-icon>
           </div>
           <div class="tools-button tools-close">
             <v-icon
@@ -60,8 +51,7 @@
             class="default-input"
             :class="{ editing: isEditing }"
             type="text"
-            @input="projectChanged({ name: $event })"
-            :value="projectBuffer.name"
+            :value="project.name"
             :readonly="!isEditing"
             placeholder="Название проекта"
           />
@@ -71,9 +61,8 @@
           <vb-choosable-input
             v-if="isEditing"
             :disabled="!isEditing"
-            @select-changed="projectChanged({ group: $event })"
             :select="project?.group?.name"
-            :menu="groups"
+            :menu="[]"
           >
           </vb-choosable-input>
         </div>
@@ -95,7 +84,7 @@ import { Project, ProjectGroup, IProjectChangeset } from '@/classes'
 import { useStore } from '@/store'
 
 export default defineComponent({
-  name: 'CardCompact',
+  name: 'BackgroundCard',
   components: {
     vbProgressBar,
     vbChoosableInput,
@@ -105,15 +94,9 @@ export default defineComponent({
     project: { type: Object as PropType<Project>, required: true },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore()
-
     const projectContainer = ref<HTMLElement | null>(null)
-    const groups = computed(() =>
-      store.getters['Projects/allGroups'].map((group: ProjectGroup) => {
-        return { name: group.name, color: group.color, key: group.uuid }
-      })
-    )
 
     /* ВЫБОР АКТИВНОГО ПРОЕКТА */
     const choosedProject = computed(
@@ -133,7 +116,7 @@ export default defineComponent({
 
     /* УДАЛЕНИЕ ПРОЕКТА */
     const deleteProject = async () => {
-      await store.dispatch('Projects/delete', { project: props.project })
+      emit('deleted')
     }
 
     /* ВНЕСЕНИЕ ИЗМЕНЕНИЙ */
@@ -141,77 +124,13 @@ export default defineComponent({
     const isLoading = ref(false)
     const isNew = ref(props.project.uuid == '')
 
-    const hasChanges = computed(() => {
-      return Boolean(
-        (isNew.value && projectBuffer.name && projectBuffer.group?.uuid) ||
-          (!isNew.value &&
-            ((projectBuffer.name && projectBuffer.name != props.project.name) ||
-              (projectBuffer.group?.uuid &&
-                projectBuffer.group?.uuid != props.project.group?.uuid) ||
-              (projectBuffer.deadline && projectBuffer.deadline != props.project.deadline)))
-      )
-    })
-
-    if (isNew.value) {
-      isEditing.value = true
-    }
-
     // Объект, который хранит изменения проекта перед отправкой в стор
-    const projectBuffer = reactive(
-      new Project(props.project.uuid, props.project.name, props.project.deadline)
-    )
-    projectBuffer.setGroup(props.project.group)
-
-    // Сохраняем какое-либо измененное поле в буфер
-    const projectChanged = ({ deadline, name, group }: IProjectChangeset) => {
-      try {
-        const deadlineValue =
-          typeof deadline == 'string' ? deadline : (deadline?.target as HTMLInputElement).value
-        if (deadlineValue == '') {
-          projectBuffer.deadline = new Date(0)
-        } else {
-          deadlineValue != null ? (projectBuffer.deadline = new Date(deadlineValue.toString())) : ''
-        }
-
-        const nameValue = typeof name == 'string' ? name : (name?.target as HTMLInputElement).value
-        if (nameValue) {
-          projectBuffer.name = nameValue
-        }
-
-        if (group) {
-          projectBuffer.setGroup(groups.value.find((gr: ProjectGroup) => (gr.uuid = group.key)))
-        }
-      } catch (e) {
-        console.error(`Не удалось сохранить изменения проекта в буфер обмена: ${e}`)
-      }
-    }
-
-    // Если юзер нажал сохранить - отправляем в стор
-    const saveChanges = async () => {
-      isLoading.value = true
-
-      await store.dispatch('Projects/projectChanged', {
-        project: props.project,
-        changes: projectBuffer,
-      })
-      isLoading.value = false
-      isEditing.value = false
-      clearProjectBuffer()
-    }
 
     const cancelChanges = () => {
       isEditing.value = false
       if (isNew.value) {
         deleteProject()
       }
-      clearProjectBuffer()
-    }
-
-    const clearProjectBuffer = () => {
-      projectBuffer.uuid = props.project.uuid ?? ''
-      projectBuffer.name = props.project.name
-      projectBuffer.deadline = props.project.deadline
-      projectBuffer.setGroup(props.project.group)
     }
 
     /* Отслеживание дедлайна */
@@ -221,18 +140,6 @@ export default defineComponent({
     )
     const deadline = computed(() => props.project.deadline)
 
-    setInterval(() => {
-      currentDateTime.value = new Date()
-      if (!props.project.deadline) return
-      if (currentDateTime.value > props.project.deadline) {
-        deadlineIsExpired.value = true
-      }
-    }, 120000)
-
-    watch(deadline, () => {
-      deadlineIsExpired.value = deadline.value ? deadline.value < currentDateTime.value : false
-    })
-
     onMounted(() => {
       if (props?.project?.group?.color) {
         projectContainer.value?.style.setProperty('--group-color', props?.project?.group?.color)
@@ -240,19 +147,14 @@ export default defineComponent({
     })
 
     return {
-      groups,
       projectContainer,
       chooseProject,
       choosedProject,
       isEditing,
       deleteProject,
-      projectChanged,
-      saveChanges,
       cancelChanges,
       deadlineIsExpired,
       isLoading,
-      hasChanges,
-      projectBuffer,
     }
   },
 })
@@ -266,6 +168,7 @@ export default defineComponent({
   transition: 0.3s;
   font: {
     family: 'MS Sans Serif';
+    weight: 400;
   }
   display: block;
   outline: none;

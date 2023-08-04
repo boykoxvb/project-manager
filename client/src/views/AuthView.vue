@@ -142,16 +142,12 @@
     </v-snackbar>
   </div>
   <div class="circles">
-    <card-compact class="card" :project="bgProjects[0]"></card-compact>
-    <card-compact class="card" :project="bgProjects[1]"></card-compact>
-    <card-compact class="card" :project="bgProjects[2]"></card-compact>
-    <card-compact class="card" :project="bgProjects[3]"></card-compact>
-    <card-compact class="card" :project="bgProjects[4]"></card-compact>
-    <card-compact class="card" :project="bgProjects[5]"></card-compact>
-    <card-compact class="card" :project="bgProjects[6]"></card-compact>
-    <card-compact class="card" :project="bgProjects[7]"></card-compact>
-    <card-compact class="card" :project="bgProjects[8]"></card-compact>
-    <card-compact class="card" :project="bgProjects[9]"></card-compact>
+    <background-card
+      v-for="(project, index) in bgProjects"
+      :key="project.uuid + index"
+      class="card"
+      :project="project"
+    ></background-card>
   </div>
 </template>
 
@@ -163,9 +159,13 @@ import useBackgroundProjects from '@/components/composables/useBackgroundProject
 
 import useFormRules from '@/components/composables/useFormRules'
 import useRegistrationForm from '@/components/composables/useRegistrationForm'
+import BackgroundCard from '@/components/Projects/BackgroundCard.vue'
 
 export default defineComponent({
   name: 'AuthView',
+  components: {
+    BackgroundCard,
+  },
 
   setup() {
     const store = useStore()
@@ -213,7 +213,7 @@ export default defineComponent({
       changeView()
     }
 
-    const { bgProjects } = useBackgroundProjects()
+    let { bgProjects } = useBackgroundProjects()
 
     // Регистрация
     const { nameRules, loginRules, emailRules, passwordRules } = useFormRules()

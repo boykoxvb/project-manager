@@ -9,6 +9,7 @@ export { default as GroupItem } from '@/components/Projects/GroupItem.vue'
 
 export { default as CardCompact } from '@/components/Projects/CardCompact.vue'
 export { default as ProjectGroups } from '@/components/Projects/ProjectGroups.vue'
+export { default as BackgroundCard } from '@/components/Projects/BackgroundCard.vue'
 
 export { default as HeaderPanel } from '@/components/Panels/HeaderPanel.vue'
 export { default as ProjectsPanel } from '@/components/Panels/ProjectsPanel.vue'

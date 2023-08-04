@@ -10,7 +10,6 @@ export default defineComponent({
   name: 'App',
   setup() {
     const store = useStore()
-    // store.dispatch('User/checkAuth')
 
     return {}
   },

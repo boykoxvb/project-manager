@@ -1,0 +1,8 @@
+{
+  "name": "Projest",
+  "description": "Приложение для управления проектами",
+  "short_name": "Projest",
+  "start_url": "/",
+  "lang": "ru",
+  "display": "fullscreen"
+}

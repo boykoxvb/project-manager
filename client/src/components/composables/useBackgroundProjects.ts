@@ -5,11 +5,11 @@ export default function useBackgroundProjects() {
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
 
-  const bgProjects = reactive([
+  let bgProjects = reactive([
     new Project('1', 'Найти уже'),
     new Project('2', 'Научиться летать', tomorrow),
     new Project('3', 'Понять смысл', tomorrow),
-    new Project('4', 'Искать дзен', tomorrow),
+    new Project('4', 'Поиск дзена', tomorrow),
     new Project('5', 'Навести суету', tomorrow),
     new Project('6', 'Купить феррари', new Date()),
     new Project('7', 'Не числануться'),
