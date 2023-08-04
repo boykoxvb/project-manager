@@ -30,6 +30,7 @@
 
         <v-btn
           variant="outlined"
+          :disabled="!isAuthValid"
           :loading="authLoading"
           @click="attemptAuth(authEmail, authPassword)"
         >
@@ -169,6 +170,8 @@ export default defineComponent({
   setup() {
     const store = useStore()
 
+    // Авторизация
+
     const authEmail = ref('')
     const authPassword = ref('')
 
@@ -176,6 +179,10 @@ export default defineComponent({
     const authError = reactive({
       status: false,
       message: '',
+    })
+
+    const isAuthValid = computed(() => {
+      return !!(authEmail.value && authPassword.value)
     })
 
     const isAuthView = ref(true)
@@ -229,6 +236,7 @@ export default defineComponent({
 
       isAuthView,
       changeView,
+      isAuthValid,
 
       // Регистрция
       nameRules,
@@ -253,13 +261,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import '@/components/scss';
 .container {
   height: 100%;
   width: 200%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  background: #eaf0f4;
+  background: $bg-light;
   position: absolute;
   left: 0;
   transition: 1s;
@@ -294,7 +303,7 @@ export default defineComponent({
     margin: 20px;
     width: 450px;
     border-radius: 30px;
-    background-color: #e4e4e4be;
+    background-color: $bg-form;
     z-index: 2;
     display: flex;
     flex-direction: column;
@@ -319,7 +328,7 @@ export default defineComponent({
     padding: 20px;
     width: 450px;
     border-radius: 30px;
-    background-color: #e4e4e4be;
+    background-color: $bg-form;
     z-index: 2;
     display: flex;
     flex-direction: column;

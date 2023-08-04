@@ -2,17 +2,20 @@ import { reactive } from 'vue'
 import { Project, ProjectGroup, Task, TaskState } from '@/classes'
 
 export default function useBackgroundProjects() {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+
   const bgProjects = reactive([
-    new Project('1', 'Опять эта'),
-    new Project('2', 'Научиться летать', new Date()),
-    new Project('3', 'Понять смысл', new Date()),
-    new Project('4', 'Тестовый 4', new Date(new Date().getMilliseconds() + 1000 * 60 * 60 * 25)),
-    new Project('5', 'Тестовый 5', new Date()),
-    new Project('6', 'Тестовый 6', new Date()),
-    new Project('7', 'Тестовый 7', new Date()),
-    new Project('8', 'Тестовый 8', new Date()),
-    new Project('9', 'Сдаться', new Date()),
-    new Project('10', 'Тестовый 10', new Date()),
+    new Project('1', 'Найти уже'),
+    new Project('2', 'Научиться летать', tomorrow),
+    new Project('3', 'Понять смысл', tomorrow),
+    new Project('4', 'Искать дзен', tomorrow),
+    new Project('5', 'Навести суету', tomorrow),
+    new Project('6', 'Купить феррари', new Date()),
+    new Project('7', 'Не числануться'),
+    new Project('8', 'Перевернуть календарь', new Date('2023-09-03')),
+    new Project('9', 'И снова', tomorrow),
+    new Project('10', 'Че купить?', tomorrow),
   ])
 
   const bgGroups = reactive([

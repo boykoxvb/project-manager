@@ -6,6 +6,7 @@ import tokenService from './token-service'
 import UserDto from '../dto/user-dto'
 import ApiError from '../exceptions/api-error'
 import IUserData from '../dto/interfaces/IUserData'
+import projectsService from './projects-service'
 
 const bcrypt = require('bcrypt')
 
@@ -28,6 +29,7 @@ class UserService {
     let user = new User(name, login, hashPassword, email, activation_link)
     user = await userRep.save(user)
 
+    await projectsService.fillNewUserWithDemo(user)
     const userDto = new UserDto(user)
     const tokens = tokenService.generateTokens({ ...userDto })
     await tokenService.saveToken(user, tokens.refresh_token)

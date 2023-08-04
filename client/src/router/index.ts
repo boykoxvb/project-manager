@@ -16,11 +16,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'auth',
     component: AuthVIew,
   },
-  {
-    path: '/registration',
-    name: 'registration',
-    component: RegistrationView,
-  },
+  // {
+  //   path: '/registration',
+  //   name: 'registration',
+  //   component: RegistrationView,
+  // },
   {
     path: '/testing',
     name: 'test',

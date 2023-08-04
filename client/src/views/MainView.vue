@@ -47,8 +47,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use '@/components/scss/index.scss';
-@import '@/components/scss/breakpoints.scss';
+@import '@/components/scss/index.scss';
+// @import '@/components/scss/breakpoints.scss';
 
 .layout {
   display: flex;
@@ -68,7 +68,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    background-color: #eaf0f4;
+    background-color: $bg-light;
 
     .content {
       padding: 0 20px;
@@ -91,9 +91,9 @@ export default defineComponent({
         }
       }
 
-      @include mobile {
-        // flex-grow: 1;
-      }
+      // @include mobile {
+      //   // flex-grow: 1;
+      // }
 
       @include desktop {
         display: grid;
