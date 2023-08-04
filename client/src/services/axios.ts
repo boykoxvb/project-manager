@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { store } from '@/store'
 
-export const BASE_URL = 'http://192.168.1.11:5000' // Пока что настройки тут храним
+export const BASE_URL = 'http://95.165.161.124:5000' // Пока что настройки тут храним
 
 const $api = axios.create({
   withCredentials: true,
