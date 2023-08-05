@@ -53,14 +53,14 @@ export default defineComponent({
 .layout {
   display: flex;
   flex-direction: column;
-  min-width: 100%;
-  min-height: 100%;
+  min-width: 100vw;
+  min-height: 100svh;
   box-sizing: border-box;
   overflow: hidden;
 
   .navbar {
     display: block;
-    height: 6vh;
+    height: 6svh;
     box-sizing: border-box;
   }
 
@@ -73,8 +73,8 @@ export default defineComponent({
     .content {
       padding: 0 20px;
       flex-grow: 1;
-      min-height: 94vh;
-      max-height: 94vh;
+      min-height: 94svh;
+      max-height: 94svh;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -82,7 +82,7 @@ export default defineComponent({
       padding-bottom: 20px;
 
       .maxh {
-        height: 50vh;
+        height: 50svh;
       }
 
       .col-span {
@@ -103,19 +103,19 @@ export default defineComponent({
       .projects-panel {
         flex-grow: 1;
         display: flex;
-        max-height: 94vh;
+        max-height: 94svh;
 
         @include desktop {
-          height: 94vh;
+          height: 94svh;
         }
       }
 
       .redactor-panel {
-        height: 40vh;
+        height: 40svh;
 
         @include desktop {
           grid-column-start: 2;
-          height: 94vh;
+          height: 94svh;
         }
       }
     }

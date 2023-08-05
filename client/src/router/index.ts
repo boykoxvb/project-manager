@@ -35,7 +35,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   // Тут проверяем нужна ли проверка авторизации
   if (to.name) {
-    if (['auth', 'registration'].includes(to.name.toString())) {
+    if (['auth'].includes(to.name.toString())) {
       next()
       return
     }

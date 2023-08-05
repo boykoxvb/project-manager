@@ -260,12 +260,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use '@/components/scss/index.scss';
-
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 .default-input {
   text-align: center;
   transition: 0.3s;
   font: {
-    family: Tahoma, Geneva, sans-serif;
+    family: 'Open Sans', sans-serif;
+    weight: 600;
   }
   display: block;
   outline: none;
@@ -290,7 +291,9 @@ export default defineComponent({
 }
 
 .full-container {
+  font-weight: initial;
   display: inline-block;
+  // opacity: 0.9;
   --group-color: #efefef; // Цвет группы по умолчанию
 
   transition: 0.5s;
@@ -306,8 +309,9 @@ export default defineComponent({
 
     border-radius: 20px;
     font: {
-      family: Tahoma, Geneva, sans-serif;
+      family: 'Open Sans', sans-serif;
       size: 1rem;
+      weight: 600;
     }
 
     &:hover {
@@ -325,6 +329,7 @@ export default defineComponent({
       .deadline {
         width: 100%;
         font-size: 0.9rem;
+        font-weight: 500;
         height: fit-content;
         color: rgba(34, 60, 80, 0.6);
 

@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000
 app.use(express.json())
 app.use(
   cors({
-    origin: ['http://95.165.161.124', 'http://projest.ru', 'http://www.projest.ru'],
+    origin: [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3],
     credentials: true,
   })
 )
