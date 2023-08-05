@@ -3,7 +3,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 import {} from 'cors'
 import { authRouter } from './src/router/auth-router'
-require('dotenv').config()
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 import errorMiddleware from './src/middleware/error-middleware'
 import { projectsRouter } from './src/router/projects-router'
 
