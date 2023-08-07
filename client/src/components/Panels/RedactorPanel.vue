@@ -56,7 +56,7 @@ export default defineComponent({
     const isEmptyTaskExists = computed(() => props.project.tasks.find((task) => task.name == ''))
 
     const addTask = () => {
-      if (isEmptyTaskExists.value) return
+      // if (isEmptyTaskExists.value) return
       store.dispatch('Projects/addTask', props.project)
     }
 
@@ -115,7 +115,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    font-family: Tahoma, Geneva, sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-size: 1.3em;
     font-weight: 600;
     box-sizing: border-box;

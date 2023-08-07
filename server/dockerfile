@@ -15,4 +15,4 @@ RUN npm install -g ts-node
 COPY . .
 
 EXPOSE 5000
-CMD [ "ts-node", "index.ts" ]
+CMD ["npm", "start"]

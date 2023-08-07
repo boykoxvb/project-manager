@@ -99,7 +99,7 @@ export default defineComponent({
 
     .task__label {
       color: rgba(#000000, 0.7);
-      font-family: Tahoma, Geneva, sans-serif;
+      font-family: "Open Sans", sans-serif;
       font-size: 1.2em;
       outline: none;
       background-color: inherit;

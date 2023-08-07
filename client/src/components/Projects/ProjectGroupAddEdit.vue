@@ -134,7 +134,7 @@ export default defineComponent({
     &__input {
       margin-left: 5px;
       color: rgba(#000000, 0.7);
-      font-family: Tahoma, Geneva, sans-serif;
+      font-family: "Open Sans", sans-serif;
       font-size: 0.8em;
       outline: none;
       background-color: inherit;
