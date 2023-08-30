@@ -91,10 +91,6 @@ export default defineComponent({
         }
       }
 
-      // @include mobile {
-      //   // flex-grow: 1;
-      // }
-
       @include desktop {
         display: grid;
         grid-template-columns: 2fr 1fr;
