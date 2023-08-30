@@ -91,6 +91,8 @@ export default defineComponent({
         }
       }
 
+      // New comment
+
       @include desktop {
         display: grid;
         grid-template-columns: 2fr 1fr;
