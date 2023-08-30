@@ -16,6 +16,7 @@ class ProjectsService {
     const projectGroups = await projectGroupsRep.find({
       relations: { user: true },
       where: { user: { id: user_id } },
+      order: {create_date: 'ASC'},
     })
 
     const projectGroupsDto: Array<ProjectGroupDto> = []
@@ -26,6 +27,7 @@ class ProjectsService {
           project_group: { id: gr.id },
           user: { id: user_id },
         },
+        order: {create_date: 'ASC'},
       })
       const projectsDtoArray: Array<ProjectDto> = []
       await Promise.all(
@@ -36,6 +38,7 @@ class ProjectsService {
               where: {
                 project: { id: pr.id },
               },
+              order: {create_date: 'ASC'},
             })
             .then((t) => t.map((task) => new TaskDto(task)))
           projectsDtoArray.push(new ProjectDto(pr, tasksDtoArray))
