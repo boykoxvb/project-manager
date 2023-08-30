@@ -87,10 +87,13 @@ export default defineComponent({
 
       .col-span {
         @include desktop {
-          flex-direction: row;
           grid-column: span 2;
         }
       }
+
+      // @include mobile {
+      //   // flex-grow: 1;
+      // }
 
       @include desktop {
         display: grid;
@@ -100,7 +103,7 @@ export default defineComponent({
       .projects-panel {
         flex-grow: 1;
         display: flex;
-        max-height: calc(94svh - 20px);
+        max-height: 94svh;
 
         @include desktop {
           height: 94svh;
@@ -112,7 +115,7 @@ export default defineComponent({
 
         @include desktop {
           grid-column-start: 2;
-          height: calc(94svh - 20px);
+          height: 94svh;
         }
       }
     }
